@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
-const Home = require("./home");
+const cors = require("cors");
+const CSV = require("./csv");
 class App {
     constructor() {
         this.express = express();
@@ -12,13 +13,14 @@ class App {
     }
     // Configure Express middleware.
     middleware() {
+        this.express.use(cors());
         this.express.use(logger('dev'));
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
     }
     // Configure API endpoints.
     routes() {
-        Home.init(this.express);
+        CSV.init(this.express);
     }
 }
 exports.default = new App().express;

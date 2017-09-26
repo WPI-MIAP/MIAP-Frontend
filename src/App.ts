@@ -1,8 +1,9 @@
-import * as path from 'path';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import * as Home from './home';
+import * as cors from 'cors'
+
+import * as CSV from './csv';
 
 class App {
     public express: express.Application;
@@ -15,6 +16,7 @@ class App {
 
     // Configure Express middleware.
     private middleware(): void {
+        this.express.use(cors());
         this.express.use(logger('dev'));
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({extended: false}));
@@ -22,7 +24,7 @@ class App {
 
     // Configure API endpoints.
     private routes(): void {
-        Home.init(this.express);
+        CSV.init(this.express);
     }
 }
 
