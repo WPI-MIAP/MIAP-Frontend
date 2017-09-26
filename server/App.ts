@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
-import * as cors from 'cors'
+import * as cors from 'cors';
 
 import * as CSV from './csv';
 
@@ -16,6 +16,7 @@ class App {
 
     // Configure Express middleware.
     private middleware(): void {
+        this.express.use(express.static('public'));
         this.express.use(cors());
         this.express.use(logger('dev'));
         this.express.use(bodyParser.json());

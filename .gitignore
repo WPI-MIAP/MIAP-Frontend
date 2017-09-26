@@ -38,3 +38,5 @@ build
 typings
 
 .idea
+storage/*
+public

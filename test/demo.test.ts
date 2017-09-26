@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import {} from 'jasmine';
 import chaiHttp = require('chai-http');
 
-import app from '../src/App';
+import app from '../server/App';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
