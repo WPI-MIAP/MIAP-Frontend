@@ -10,6 +10,8 @@ class App {
 
     constructor() {
         this.express = express();
+        this.express.set('view engine', 'pug');
+        this.express.set('views', __dirname + '/../../resources/views');
         this.middleware();
         this.routes();
     }
