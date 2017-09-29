@@ -3,7 +3,7 @@ import * as multer from 'multer';
 import CSVController from './CSVController';
 
 /**
- * This is where we register the routes, route middlewares for this feature
+ * This is where we register the routes, route middlewares for this resource
  *
  * @param {express.Application} express singleton express app instance
  */
