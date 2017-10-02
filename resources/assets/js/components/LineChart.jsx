@@ -44,18 +44,18 @@ export default class LineChart extends Component {
 
         let transform='translate(' + margin.left + ',' + margin.top + ')';
 		
-		let yAxis = d3.axisLeft(y).ticks(5);
-		let xAxis = d3.axisBottom(x)
-			.tickValues(data.map((d, i) => {
-				return i > 0 ? d.day : null
-			})
-			.splice(1)
-			.ticks(4);
+		// let yAxis = d3.axisLeft(y).ticks(5);
+		// let xAxis = d3.axisBottom(x)
+		// 	.tickValues(data.map((d, i) => {
+		// 		return i > 0 ? d.day : null
+		// 	})
+		// 	.splice(1)
+		// 	.ticks(4);
 
-		let yGrid = d3.axisLeft(y)
-			.ticks(5)
-			.tickSize(-w, 0, 0)
-			.tickFormat("");
+		// let yGrid = d3.axisLeft(y)
+		// 	.ticks(5)
+		// 	.tickSize(-w, 0, 0)
+		// 	.tickFormat("");
 
 	
 		return (
