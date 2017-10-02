@@ -1,0 +1,40 @@
+CLASS,BRAND,GENERIC
+"Radioactive Diagnostic Agent [EPC],Positron Emitting Activity [MoA]",Amyvid,Florbetapir F 18
+"Antiarrhythmic [EPC],Cytochrome P450 2D6 Inhibitor [EPC],Cytochrome P450 2D6 Inhibitors [MoA]",Quinidine Gluconate,Quinidine Gluconate
+"GLP-1 Receptor Agonist [EPC],Glucagon-Like Peptide 1 [Chemical/Ingredient],Glucagon-like Peptide-1 (GLP-1) Agonists [MoA]",Trulicity,Dulaglutide
+"Interleukin-17A Antagonist [EPC],Interleukin-17A Antagonists [MoA]",TALTZ,ixekizumab
+"Androgen [EPC],Androgen Receptor Agonists [MoA],Androstanes [Chemical/Ingredient]",AXIRON,testosterone
+"Serotonin Reuptake Inhibitor [EPC],Serotonin Uptake Inhibitors [MoA]",Prozac,Fluoxetine hydrochloride
+"Norepinephrine Reuptake Inhibitor [EPC],Norepinephrine Uptake Inhibitors [MoA]",Strattera,Atomoxetine hydrochloride
+"Atypical Antipsychotic [EPC],Serotonin Reuptake Inhibitor [EPC],Serotonin Uptake Inhibitors [MoA]",Symbyax,Olanzapine and Fluoxetine hydrochloride
+"Norepinephrine Uptake Inhibitors [MoA],Serotonin and Norepinephrine Reuptake Inhibitor [EPC],Serotonin Uptake Inhibitors [MoA]",Cymbalta,Duloxetine hydrochloride
+Atypical Antipsychotic [EPC],Zyprexa,Olanzapine
+"Estrogen Agonist/Antagonist [EPC],Selective Estrogen Receptor Modulators [MoA]",Evista,Raloxifene hydrochloride
+"Phosphodiesterase 5 Inhibitor [EPC],Phosphodiesterase 5 Inhibitors [MoA]",Cialis,Tadalafil
+"Decreased Platelet Aggregation [PE],P2Y12 Platelet Inhibitor [EPC],P2Y12 Receptor Antagonists [MoA]",Effient,Prasugrel hydrochloride
+"Nucleic Acid Synthesis Inhibitors [MoA],Nucleoside Metabolic Inhibitor [EPC]",Gemzar,Gemcitabine hydrochloride
+"Insulin [Chemical/Ingredient],Insulin Analog [EPC]",Humalog,Insulin lispro
+"Folate Analog Metabolic Inhibitor [EPC],Folic Acid Metabolism Inhibitors [MoA]",Alimta,Pemetrexed disodium
+"Vascular Endothelial Growth Factor Receptor 2 Antagonist [EPC],VEGFR2 Inhibitors [MoA]",CYRAMZA,ramucirumab
+"Insulin [Chemical/Ingredient],Insulin Analog [EPC]",BASAGLAR,Insulin glargine
+"Epidermal Growth Factor Receptor Antagonist [EPC],HER1 Antagonists [MoA]",Portrazza,necitumumab
+"Parathyroid Hormone [Chemical/Ingredient],Parathyroid Hormone Analog [EPC]",Forteo,Teriparatide
+"Insulin [Chemical/Ingredient],Insulin [EPC]",Humulin,Insulin human
+"Hepatitis C Virus NS5A Inhibitor [EPC],P-Glycoprotein Inhibitors [MoA],Organic Anion Transporting Polypeptide 1B1 Inhibitors [MoA],Organic Anion Transporting Polypeptide 1B3 Inhibitors [MoA],Breast Cancer Resistance Protein Inhibitors [MoA]",DAKLINZA,daclatasvir
+"Corticosteroid [EPC],Corticosteroid Hormone Receptor Agonists [MoA]",HALOG,Halcinonide
+"T Lymphocyte Costimulation Activity Blockade [PE],Selective T Cell Costimulation Blocker [EPC],CD80-directed Antibody Interactions [MoA],CD86-directed Antibody Interactions [MoA]",NULOJIX,BELATACEPT
+"Kinase Inhibitor [EPC],Protein Kinase Inhibitors [MoA],Cytochrome P450 3A4 Inhibitors [MoA]",SPRYCEL,dasatinib
+"Antimetabolite [EPC],Urea [Chemical/Ingredient]",HYDREA,HYDROXYUREA
+"Factor Xa Inhibitor [EPC],Factor Xa Inhibitors [MoA]",ELIQUIS,apixaban
+"Sodium-Glucose Cotransporter 2 Inhibitor [EPC],Sodium-Glucose Transporter 2 Inhibitors [MoA]",FARXIGA,DAPAGLIFLOZIN
+"Hepatitis B Virus Nucleoside Analog Reverse Transcriptase Inhibitor [EPC],Nucleoside Analog [Chemical/Ingredient],Nucleoside Reverse Transcriptase Inhibitors [MoA]",BARACLUDE,entecavir
+"Human Immunodeficiency Virus Nucleoside Analog Reverse Transcriptase Inhibitor [EPC],Nucleoside Analog [Chemical/Ingredient],Nucleoside Reverse Transcriptase Inhibitors [MoA]",ZERIT,Stavudine
+"Decreased Cytokine Activity [PE],Selective T Cell Costimulation Modulator [EPC],Recombinant Fusion Proteins [Chemical/Ingredient]",ORENCIA,abatacept
+"Monobactam Antibacterial [EPC],Monobactams [Chemical/Ingredient]",AZACTAM,AZTREONAM
+"SLAMF7-directed Immunostimulatory Antibody [EPC],SLAMF7-directed Antibody Interactions [MoA],Antibodies, Monoclonal [Chemical/Ingredient]",EMPLICITI,elotuzumab
+"CTLA-4-directed Blocking Antibody [EPC],CTLA-4-directed Antibody Interactions [MoA],Increased T Lymphocyte Activation [PE]",YERVOY,ipilimumab
+"HIV Protease Inhibitors [MoA],Protease Inhibitor [EPC],UGT1A1 Inhibitors [MoA],UDP Glucuronosyltransferases Inhibitors [MoA],Cytochrome P450 3A4 Inhibitors [MoA],Cytochrome P450 3A Inhibitors [MoA],Cytochrome P450 2C8 Inhibitors [MoA]",REYATAZ,ATAZANAVIR
+"HIV Protease Inhibitors [MoA],Protease Inhibitor [EPC],UGT1A1 Inhibitors [MoA],UDP Glucuronosyltransferases Inhibitors [MoA],Cytochrome P450 3A4 Inhibitors [MoA],Cytochrome P450 3A Inhibitors [MoA],Cytochrome P450 2C8 Inhibitors [MoA],Cytochrome P450 3A Inhibitors [MoA],Cytochrome P450 3A Inhibitor [EPC],P-Glycoprotein Inhibitors [MoA],Cytochrome P450 2D6 Inhibitors [MoA],Organic Anion Transporting Polypeptide 1B1 Inhibitors [MoA],Organic Anion Transporting Polypeptide 1B3 Inhibitors [MoA],Breast Cancer Resistance Protein Inhibitors [MoA]",EVOTAZ,atazanavir and cobicistat
+"Programmed Death Receptor-1 Blocking Antibody [EPC],Programmed Death Receptor-1-directed Antibody Interactions [MoA]",OPDIVO,nivolumab
+"Dipeptidyl Peptidase 4 Inhibitor [EPC],Dipeptidyl Peptidase 4 Inhibitors [MoA]",ONGLYZA,SAXAGLIPTIN
+"Dipeptidyl Peptidase 4 Inhibitor [EPC],Dipeptidyl Peptidase 4 Inhibitors [MoA],Biguanide [EPC],Biguanides [Chemical/Ingredient]",KOMBIGLYZE,SAXAGLIPTIN AND METFORMIN HYDROCHLORIDE
