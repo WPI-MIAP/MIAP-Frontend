@@ -19,7 +19,7 @@ gulp.task('clean', function () {
  * Lint all custom TypeScript files.
  */
 gulp.task('tslint', () => {
-  return gulp.src('src/**/*.ts')
+  return gulp.src('server/**/*.ts')
     .pipe(tslint( { 
       formatter: 'prose'
     }))
@@ -55,8 +55,8 @@ gulp.task('watch', shell.task([
  * Copy config files
  */
 gulp.task('configs', (cb) => {
-  return gulp.src("src/configurations/*.json")
-    .pipe(gulp.dest('./build/src/configurations'));
+  return gulp.src("server/configurations/*.json")
+    .pipe(gulp.dest('./build/server/configurations'));
 });
 
 /**
