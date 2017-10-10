@@ -5,13 +5,11 @@
 ### Install dependencies for client and server application
 
 Open your favorite Terminal and run the following command. Make sure you have the latest npm and node version. In the root directory of the application, run these commands to get started.
-
 ```
 $ npm install
 $ npm install -g gulp
 $ npm install -g nodemon
 ```
-
 ### To build front-end React app 
 
 The following commands build and bundle react app into plain js (choose one of the following). The compiled javascript file will be in public/ directory
