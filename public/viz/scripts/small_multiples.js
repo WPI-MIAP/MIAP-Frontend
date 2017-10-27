@@ -2,12 +2,7 @@
 /*as there is a pin option, before loading anything, it checks for th pinned drugs and try to visualize them on their location first*/
 
 var pinned_drugs=[];
-
-/**
- * Function to build the galaxy view
- * @param list List of the data to include in the galaxy view
- * @param check Whether the drugs are selected
- */
+    
 function build_Galaxy(list,check) {
   // console.log("Hi")
   var selected_drugs;
@@ -41,7 +36,7 @@ function build_Galaxy(list,check) {
       }
     }
 
-  var SmallMultiples, plotData, setupIsoytpe, transformData, menu,  data_all, DME_LIST=[];
+var SmallMultiples, plotData, setupIsoytpe, transformData, menu,  data_all, DME_LIST=[];
 
 /*part of code taken from internet, bascially builds those small multiples, so sets the skeleton for it first*/
 SmallMultiples = function() {
@@ -125,7 +120,7 @@ SmallMultiples = function() {
       .domain([1,100])
       .range([8,24]);         
 
-    var tooltip = d3.select("body") 
+    var tooltip = d3.select("body")
           .append("div")
           .attr("class", "toolTip");
 
@@ -1182,10 +1177,6 @@ function remove_duplicates(data){
 }
 // ).call(this);  //end function
 
-/**
- * Determines whether a value is a number or not
- * @param n
- */
 function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
 }
