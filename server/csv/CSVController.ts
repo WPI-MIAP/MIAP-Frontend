@@ -41,4 +41,18 @@ import * as csv from 'csvtojson';
 				res.send(data);
 			});
  	}
+
+ 	public async getDrugs(req: Request, res: Response, next: NextFunction) {
+ 		let csvFilePath = __dirname + '/../../../storage/drugs.csv';
+
+ 		let data = [];
+		csv()
+			.fromFile(csvFilePath)
+			.on('json',(jsonObj) => {
+				data.push(jsonObj);
+			})
+			.on('done',(error) => {
+				res.send(data);
+			});
+ 	}	
 }

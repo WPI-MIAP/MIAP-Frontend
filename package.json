@@ -46,6 +46,7 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
+    "axios": "0.17.0",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "3.3.7",
     "chai-http": "^3.0.0",
@@ -53,6 +54,7 @@
     "cors": "2.8.4",
     "csv": "2.0.0",
     "csv-parse": "2.0.0",
+    "csv-write-stream": "2.0.0",
     "csvtojson": "1.1.9",
     "d3": "4.10.2",
     "debug": "^2.2.0",
@@ -63,6 +65,7 @@
     "pug": "2.0.0-rc.4",
     "react": "16.0.0",
     "react-dom": "16.0.0",
+    "react-vis-force": "0.3.1",
     "shelljs": "0.7.8"
   }
 }
