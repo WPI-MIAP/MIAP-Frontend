@@ -42,10 +42,31 @@ export default class MainView extends Component {
 
 		return (
 			<div className="MainView">
-				<div className="row">
-					<div className="col-md-4">Hi</div>
-					<div className="col-md-4">Hi</div>
-					<div className="col-md-4">Hi</div>
+				<div className="MainView__Cards row">
+					<div className="col-md-4">
+						<div className="card">
+							<div className="card-block">
+								<h3 className="card-title">Number of Drugs</h3>
+								<p className="card-text">{this.state.nodes.length} Drugs</p>
+							</div>
+						</div>
+					</div>
+					<div className="col-md-4">
+						<div className="card">
+							<div className="card-block">
+								<h3 className="card-title">Number of Interactions</h3>
+								<p className="card-text">{this.state.links.length} interactions</p>
+							</div>
+						</div>
+					</div>
+					<div className="col-md-4">
+						<div className="card">
+							<div className="card-block">
+								<h3 className="card-title">This is a demo card</h3>
+								<p className="card-text">{this.state.links.length} interactions</p>
+							</div>
+						</div>
+					</div>
 				</div>
 				<DndTree 
 					nodes={this.state.nodes}

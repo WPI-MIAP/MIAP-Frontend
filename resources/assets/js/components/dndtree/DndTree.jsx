@@ -8,8 +8,8 @@ export default class DndTree extends Component {
 		super(props);
 
 		this.state = {
-			width: 500,
-			height: 500
+			width: 600,
+			height: 600
 		};
 	}
 
@@ -30,7 +30,7 @@ export default class DndTree extends Component {
 			<div className='DndTree'>
 			{ this.props.links.length > 0 && this.props.nodes.length > 0 ?
 				(<InteractiveForceGraph
-					simulationOptions={{ height: this.state.height }}
+					simulationOptions={{ height: this.state.height, width: this.state.width }}
 					labelAttr="label"
 					highlightDependencies
 					zoom
