@@ -9,18 +9,24 @@ export default class MainView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			nodes: [],
-			links: []
+			drugLinks: [],
+			links: [],
+			maxLinks: 0
 		}
 	}
 
 	componentDidMount() {
 		axios.get('/csv/drugs')
 		.then(response => {
-			const nodes = response.data;
-			this.setState(
-				{ nodes }
-				);
+			const drugLinks = response.data;
+			const maxLinks = _.max(_.map(_.values(drugLinks), links => {
+				return links.length;
+			}));
+
+			this.setState({
+				drugLinks,
+				maxLinks
+			});
 		}).catch(error => {
 			console.log(error);
 		});
@@ -28,23 +34,25 @@ export default class MainView extends Component {
 		axios.get('/csv/rules')
 		.then(response => {
 			const links = response.data;
-			this.setState(
+			this.setState (
 				{ links }
-				);
+			);
+
+
 		}).catch(error => {
 			console.log(error);
 		});
 	}
 
 	render() {
-		const nodes = this.state.nodes;
+		const drugLinks = this.state.drugLinks;
 		const links = this.state.links;
 		return (
 			<div className="MainView">
 				<div className="MainView__Cards row">
 					<div className="col-md-4">
 						<Card title="Number of Drugs"
-							text={this.state.nodes.length + ' Drugs'}
+							text={Object.keys(this.state.drugLinks).length + ' Drugs'}
 						/>
 					</div>
 					<div className="col-md-4">
@@ -59,8 +67,9 @@ export default class MainView extends Component {
 					</div>
 				</div>
 				<DndTree 
-					nodes={this.state.nodes}
+					drugLinks={this.state.drugLinks}
 					links={this.state.links}
+					maxLinks={this.state.maxLinks}
 				/>
 			</div>	
 		)
