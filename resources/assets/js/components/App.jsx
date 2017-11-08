@@ -38,8 +38,6 @@ export default class App extends Component {
 		this.state.mql.removeListener(this.mediaQueryChanged);
 	}
 
-	
-
 	render() {
 		const sidebarContent = <SideBarContent />
 
