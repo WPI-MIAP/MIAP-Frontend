@@ -7,11 +7,6 @@ import * as _ from 'lodash';
 export default class DndTree extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			width: 600,
-			height: 600
-		};
 	}
 
 	render() {
@@ -65,12 +60,14 @@ export default class DndTree extends Component {
 		});
 
 		return (
-			<div className='DndTree'>
+			<div className='DndTree'
+				style={{width: this.props.width + 'px', height: this.props.height + 'px'}}
+			>
 			{ this.props.links.length > 0 && Object.keys(this.props.drugLinks).length > 0 ?
 				(<InteractiveForceGraph
 					simulationOptions={{ 
-						height: this.state.height, 
-						width: this.state.width,
+						height: this.props.height, 
+						width: this.props.width,
 						radiusMargin: 100
 					}}
 					labelAttr="label"

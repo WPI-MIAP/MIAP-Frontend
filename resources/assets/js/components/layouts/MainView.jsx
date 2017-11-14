@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import DndTree from '../dndtree/DndTree';
 import Card from './Card';
 import axios from 'axios';
+import { Resizable, ResizableBox } from 'react-resizable';
 
 export default class MainView extends Component {
 	constructor(props) {
@@ -11,8 +12,12 @@ export default class MainView extends Component {
 		this.state = {
 			drugLinks: [],
 			links: [],
-			maxLinks: 0
+			maxLinks: 0,
+			width: 500,
+			height: 500
 		}
+
+		this.onResize = this.onResize.bind(this);
 	}
 
 	componentDidMount() {
@@ -44,6 +49,10 @@ export default class MainView extends Component {
 		});
 	}
 
+	onResize(event, {element, size}) {
+		this.setState({width: size.width, height: size.height});
+	}
+
 	render() {
 		const drugLinks = this.state.drugLinks;
 		const links = this.state.links;
@@ -66,11 +75,22 @@ export default class MainView extends Component {
 						/>
 					</div>
 				</div>
-				<DndTree 
-					drugLinks={this.state.drugLinks}
-					links={this.state.links}
-					maxLinks={this.state.maxLinks}
-				/>
+				<div className="MainView__Graphs">
+					<ResizableBox 
+						width={this.state.width} 
+						height={this.state.height} 
+						onResize={this.onResize}
+						minConstraints={[500, 500]}
+			      	>
+						<DndTree 
+							drugLinks={this.state.drugLinks}
+							links={this.state.links}
+							maxLinks={this.state.maxLinks}
+							width={this.state.width}
+							height={this.state.height}
+						/>
+	    		    </ResizableBox>
+				</div>
 			</div>	
 		)
 	}

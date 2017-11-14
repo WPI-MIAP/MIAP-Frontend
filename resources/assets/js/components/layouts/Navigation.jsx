@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navigation() {
+const Navigation = () => {
 	return (
 		<div className="Navigation">
 			<nav className="navbar navbar-inverse navbar-fixed-top">
@@ -13,3 +13,5 @@ export default function Navigation() {
 		</div>
 		)
 }
+
+export default Navigation;

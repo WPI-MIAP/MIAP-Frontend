@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function SideBarContent() {
+const SideBarContent = () => {
 	return (
 		<div className="SideBar">
 				<div className="SideBar__Header">
@@ -49,3 +49,5 @@ export default function SideBarContent() {
 			</div>
 		)
 }
+
+export default SideBarContent
