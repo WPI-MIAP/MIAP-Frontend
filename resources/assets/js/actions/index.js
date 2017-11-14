@@ -3,6 +3,12 @@ import axios from 'axios';
 STATE SHAPE
 {
 	selectedRule: 'all' | 'unknown' | 'known'
+	drugs: {
+		all: {
+			isFetching,
+			items: []
+		}
+	},
 	rules: {
 		all: {
 			isFetching
@@ -21,17 +27,17 @@ STATE SHAPE
 	}
 }
 ===================================================================== */
+export const setFilter = (filter) => {
+	return {
+		type: 'SET_FILTER',
+		filter
+	}
+}
+
 export const requestRules = (status) => {
 	return {
 		type: 'REQUEST_RULES',
 		status
-	}
-}
-
-export const requestDrugs = (drug) => {
-	return {
-		type: 'REQUEST_DRUGS',
-		drug
 	}
 }
 
@@ -44,10 +50,19 @@ export const receiveRules = (status, json) => {
 	}
 }
 
-export const selectRules = (status) => {
+export const requestDrugs = (status) => {
 	return {
-		type: 'SELECT_RULES',
+		type: 'REQUEST_DRUGS',
 		status
+	}
+}
+
+export const receiveDrugs = (status, json) => {
+	return {
+		type: 'RECEIVE_DRUGS',
+		status,
+		drugs: json,
+	    receivedAt: Date.now()
 	}
 }
 
@@ -58,6 +73,18 @@ export function fetchRules(status) {
 		return axios.get('/csv/rules')
 			.then(response => {
 				dispatch(receiveRules(status, response.data))
+			})
+	}
+}
+
+export function fetchDrugs(status) {
+	return function (dispatch) {
+		dispatch(requestDrugs(status));
+
+		return axios.get('/csv/drugs')
+			.then(response => {
+				console.log(response.data);
+				dispatch(receiveDrugs(status, response.data))
 			})
 	}
 }

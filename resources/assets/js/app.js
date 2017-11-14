@@ -4,7 +4,7 @@ import App from './components/App.jsx';
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import drugInteractionApp from './reducers'
-import { fetchRules } from './actions'
+import { fetchRules, fetchDrugs, setFilter } from './actions'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 
@@ -21,9 +21,9 @@ let store = createStore(
 	)
 );
 
+store.dispatch(setFilter('all'));
 store.dispatch(fetchRules('all'));
-store.dispatch(fetchRules('known'));
-store.dispatch(fetchRules('unknown'));
+store.dispatch(fetchDrugs('all'));
 
 render(
 	<Provider store={store}>
