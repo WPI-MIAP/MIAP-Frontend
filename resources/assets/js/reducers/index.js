@@ -1,12 +1,12 @@
-import { combineReducers } from 'redux'
 import visibilityFilter from './visibilityFilter'
+import { combineReducers } from 'redux'
 import { rulesByStatus } from './fetchRules'
 import { drugsByStatus } from './fetchDrugs'
 
 const drugInteractionApp = combineReducers({
-  visibilityFilter,
-  rulesByStatus,
-  drugsByStatus
+	visibilityFilter,
+	rulesByStatus,
+	drugsByStatus
 })
 
 export default drugInteractionApp

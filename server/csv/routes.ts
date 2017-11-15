@@ -13,7 +13,6 @@ export default function (app: express.Application) {
 	let upload = multer({ dest: 'storage/' });
 	let router = express.Router();
 
-	router.get('/', csvController.index);
 	router.get('/rules', csvController.getRules);
 	router.get('/drugs', csvController.getDrugs);
 	router.get('/dme', csvController.getDME);

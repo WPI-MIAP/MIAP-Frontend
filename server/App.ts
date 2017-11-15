@@ -12,6 +12,9 @@ class App {
         this.express = express();
         this.express.set('view engine', 'pug');
         this.express.set('views', __dirname + '/../../resources/views');
+        this.express.get('/', (req, res) => {
+            return res.render('index');
+        });
         this.middleware();
         this.routes();
     }
