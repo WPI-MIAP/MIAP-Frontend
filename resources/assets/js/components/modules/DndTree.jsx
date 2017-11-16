@@ -6,7 +6,7 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	return `
 		<div>Drugs: ${Drug1.name} - ${Drug2.name}</div>
 		<div>ADR: ${ADR}</div>
-		<div>Reports Count: 10</div>
+		<div>Reports Count: ${id.split(',').length}</div>
 		<div>Score: ${Score}</div>
 		<div>Status: ${status}</div>
 	`	

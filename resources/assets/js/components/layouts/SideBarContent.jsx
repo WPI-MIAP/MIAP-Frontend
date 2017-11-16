@@ -1,5 +1,7 @@
 import React from 'react';
+import SearchInput, {createFilter} from 'react-search-input'
 import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
+import SearchBarContainer from '../../containers/SearchBarContainer'
 
 const SideBarContent = () => {
 	return (
@@ -8,14 +10,7 @@ const SideBarContent = () => {
 				Menu
 				</div>
 				<div className="SideBar__Content">
-					<div className="navbar-form" role="search">
-						<div className="input-group add-on">
-							<input className="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text" />
-							<div className="input-group-btn">
-								<button className="btn btn-default" type="submit"><i className="glyphicon glyphicon-search"></i></button>
-							</div>
-						</div>
-					</div>
+					<SearchBarContainer />
 					<hr/>
 					<div className="input-group add-on">
 						<input className="form-control" placeholder="Score" type="text" />

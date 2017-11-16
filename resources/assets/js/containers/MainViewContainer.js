@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { fetchRules, fetchDrugs, setFilter } from '../actions'
-import MainView from '../components/layouts/MainView2'
+import MainView from '../components/layouts/MainView'
 
 const getVisibleRules = (rules, filter) => {
 	switch (filter) {
