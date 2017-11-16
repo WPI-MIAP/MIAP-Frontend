@@ -23,7 +23,11 @@ let store = createStore(
 
 store.dispatch(setFilter('all'));
 store.dispatch(fetchRules('all'));
+store.dispatch(fetchRules('known'));
+store.dispatch(fetchRules('unknown'));
 store.dispatch(fetchDrugs('all'));
+store.dispatch(fetchDrugs('known'));
+store.dispatch(fetchDrugs('unknown'));
 
 render(
 	<Provider store={store}>

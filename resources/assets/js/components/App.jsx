@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from 'react-sidebar';
 
 import Navigation from './layouts/Navigation';
-import VisibleDrugInteraction from '../containers/VisibleDrugInteraction';
+import MainViewContainer from '../containers/MainViewContainer';
 import SideBarContent from './layouts/SideBarContent'
 
 const mql = window.matchMedia(`(min-width: 800px)`);
@@ -55,7 +55,7 @@ export default class App extends Component {
 				onSetOpen={this.onSetSidebarOpen}
 			>
 				<Navigation />
-				<VisibleDrugInteraction />
+				<MainViewContainer />
 			</Sidebar>
 			);
 	}

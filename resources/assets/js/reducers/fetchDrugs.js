@@ -22,7 +22,6 @@ export const drugs = (
 		case 'RECEIVE_DRUGS':
 			return Object.assign({}, state, {
 				isFetching: false,
-				status: action.status,
 				items: action.drugs,
 		        lastUpdated: action.receivedAt
 			})

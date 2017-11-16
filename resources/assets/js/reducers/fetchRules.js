@@ -22,7 +22,6 @@ export const rules = (
 		case 'RECEIVE_RULES':
 			return Object.assign({}, state, {
 				isFetching: false,
-				status: action.status,
 				items: action.rules,
 		        lastUpdated: action.receivedAt
 			})

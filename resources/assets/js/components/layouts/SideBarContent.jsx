@@ -1,4 +1,5 @@
 import React from 'react';
+import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
 
 const SideBarContent = () => {
 	return (
@@ -20,18 +21,7 @@ const SideBarContent = () => {
 						<input className="form-control" placeholder="Score" type="text" />
 					</div>
 					<hr/>
-					<div className="input-group add-on">
-						Filter DDIs:
-						<div className="radio">
-							<label><input type="radio" name="optradio"/>Known DIARs</label>
-						</div>
-						<div className="radio">
-							<label><input type="radio" name="optradio"/>Unknown DIARs</label>
-						</div>
-						<div className="radio">
-							<label><input type="radio" name="optradio"/>Both</label>
-						</div>
-					</div>
+					<ChooseStatusContainer />
 					<hr/>
 					<div className="input-group add-on">
 						Score Criteria:

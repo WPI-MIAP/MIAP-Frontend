@@ -1,32 +1,5 @@
 import axios from 'axios';
-/* =====================================================================
-STATE SHAPE
-{
-	selectedRule: 'all' | 'unknown' | 'known'
-	drugs: {
-		all: {
-			isFetching,
-			items: []
-		}
-	},
-	rules: {
-		all: {
-			isFetching
-			items: [{},{},{}]
-		},
 
-		known: {
-			isFetching
-			items: []
-		},
-
-		unknown: {
-			isFetching
-			items: []
-		},
-	}
-}
-===================================================================== */
 export const setFilter = (filter) => {
 	return {
 		type: 'SET_FILTER',
@@ -70,7 +43,7 @@ export function fetchRules(status) {
 	return function (dispatch) {
 		dispatch(requestRules(status));
 
-		return axios.get('/csv/rules')
+		return axios.get('/csv/rules?status=' + status)
 			.then(response => {
 				dispatch(receiveRules(status, response.data))
 			})
@@ -81,10 +54,9 @@ export function fetchDrugs(status) {
 	return function (dispatch) {
 		dispatch(requestDrugs(status));
 
-		return axios.get('/csv/drugs')
+		return axios.get('/csv/drugs?status=' + status)
 			.then(response => {
-				console.log(response.data);
-				dispatch(receiveDrugs(status, response.data))
+				dispatch(receiveDrugs(status, Object.keys(response.data)))
 			})
 	}
 }
