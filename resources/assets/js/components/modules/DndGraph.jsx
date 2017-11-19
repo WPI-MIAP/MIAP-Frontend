@@ -69,7 +69,7 @@ const DndGraph = ({ nodes, links, width, height }) => {
 
 	return (
 		<div className='DndGraph'
-		style={{width: width + 'px', height: height + 'px'}}
+		style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
 		>
 		{ links.length > 0 && nodes.length > 0 ?
 			<Graph graph={graph} options={options} events={events} /> :

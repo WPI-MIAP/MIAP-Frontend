@@ -27,8 +27,6 @@ const getVisibleDrugs = (drugs, filter) => {
 const mapStateToProps = state => {
 	return {
 		links: getVisibleRules(state.rulesByStatus, state.visibilityFilter),
-		width: 500,
-		height: 500,
 		nodes: getVisibleDrugs(state.drugsByStatus, state.visibilityFilter)
 	}
 }

@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+export const selectDrug = (drug) => {
+	return {
+		type: 'SELECT_DRUG',
+		drug
+	}
+}
+
 export const setFilter = (filter) => {
 	return {
 		type: 'SET_FILTER',

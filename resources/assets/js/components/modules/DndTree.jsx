@@ -15,7 +15,7 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 const DndTree = ({ nodes, links, width, height }) => {
 	return (
 		<div className='DndTree'>
-			<h1>Hello world</h1>
+			<h1>Tree</h1>
 		</div>
 		)
 }
