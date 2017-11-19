@@ -7,6 +7,8 @@ import drugInteractionApp from './reducers'
 import { fetchRules, fetchDrugs, setFilter } from './actions'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 /**
  * Entry point of the React App
@@ -30,8 +32,10 @@ store.dispatch(fetchDrugs('known'));
 store.dispatch(fetchDrugs('unknown'));
 
 render(
+	<MuiThemeProvider>
 	<Provider store={store}>
 		<App />
-	</Provider>,
+	</Provider>
+	</MuiThemeProvider>,
 	document.getElementById('root')
 );

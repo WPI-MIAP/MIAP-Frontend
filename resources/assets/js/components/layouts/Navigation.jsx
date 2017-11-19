@@ -1,17 +1,17 @@
 import React from 'react';
+import AppBar from 'material-ui/AppBar';
+import SearchBarContainer from '../../containers/SearchBarContainer';
 
-const Navigation = () => {
+const Navigation = ({ onHandleToggle }) => {
+	
+
 	return (
-		<div className="Navigation">
-			<nav className="navbar navbar-inverse navbar-fixed-top">
-				<div className="container-fluid">
-					<div className="navbar-header">
-						<a className="navbar-brand navbar-brand--big" href="#">DIVA MQP</a>
-					</div>
-				</div>
-			</nav>
-		</div>
-		)
+		<AppBar
+			onLeftIconButtonTouchTap={onHandleToggle}
+		    title="Drug Interactions Visualization"
+		    iconElementRight={<SearchBarContainer />}
+		/>		
+	)
 }
 
 export default Navigation;
