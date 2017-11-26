@@ -1,9 +1,16 @@
-const drugSelector = (state = '', action) => {
+const drugSelector = (state = [], action) => {
 	switch (action.type) {
 		case 'SELECT_DRUG':
-			return action.drug
+		if (action.drug) {
+			return [action.drug]
+		}
+		return state
+
+		case 'ADD_DRUG':
+		return [...state, action.drug]
+
 		default: 
-			return state
+		return state
 	}
 }
 

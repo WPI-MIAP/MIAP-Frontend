@@ -1,20 +1,27 @@
 import axios from 'axios';
 
-export const selectDrug = (drug) => {
+export const selectDrug = drug => {
 	return {
 		type: 'SELECT_DRUG',
 		drug
 	}
 }
 
-export const setFilter = (filter) => {
+export const addDrug = drug => {
+	return {
+		type: 'ADD_DRUG',
+		drug
+	}
+}
+
+export const setFilter = filter => {
 	return {
 		type: 'SET_FILTER',
 		filter
 	}
 }
 
-export const requestRules = (status) => {
+export const requestRules = status => {
 	return {
 		type: 'REQUEST_RULES',
 		status
@@ -30,7 +37,7 @@ export const receiveRules = (status, json) => {
 	}
 }
 
-export const requestDrugs = (status) => {
+export const requestDrugs = status => {
 	return {
 		type: 'REQUEST_DRUGS',
 		status
@@ -63,7 +70,7 @@ export function fetchDrugs(status) {
 
 		return axios.get('/csv/drugs?status=' + status)
 			.then(response => {
-				dispatch(receiveDrugs(status, Object.keys(response.data)))
+				dispatch(receiveDrugs(status, response.data))
 			})
 	}
 }

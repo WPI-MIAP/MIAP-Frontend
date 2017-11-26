@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchDrugs, setFilter } from '../actions'
+import { fetchRules, fetchDrugs, setFilter, selectDrug } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getVisibleRules = (rules, filter) => {
@@ -16,11 +16,11 @@ const getVisibleRules = (rules, filter) => {
 const getVisibleDrugs = (drugs, filter) => {
 	switch (filter) {
 		case 'all':
-			return drugs.all.items
+			return Object.keys(drugs.all.items)
 		case 'known':
-			return drugs.known.items
+			return Object.keys(drugs.known.items)
 		case 'unknown':
-			return drugs.unknown.items 
+			return Object.keys(drugs.unknown.items)
 	}
 }
 
@@ -31,8 +31,17 @@ const mapStateToProps = state => {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		onClickNode: drug => {
+			return dispatch(selectDrug(drug))
+		}
+	}
+}
+
 const MainViewContainer = connect(
   mapStateToProps,
+  mapDispatchToProps
 )(MainView)
 
 export default MainViewContainer

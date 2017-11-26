@@ -12,7 +12,8 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const DndGraph = ({ nodes, links, width, height }) => {
+const DndGraph = ({ nodes, links, width, height, onClickNode }) => {
+	console.log()
 	const nodesArray = nodes.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
@@ -64,6 +65,7 @@ const DndGraph = ({ nodes, links, width, height }) => {
 	const events = {
 		select(event) {
 			const { nodes, edges } = event;
+			onClickNode(nodes[0]);
 		},
 	}
 

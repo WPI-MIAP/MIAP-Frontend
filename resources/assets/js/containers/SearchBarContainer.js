@@ -4,7 +4,7 @@ import SearchBarComponent from '../components/modules/SearchBarComponent'
 
 const mapStateToProps = state => {
 	return {
-		drugs: state.drugsByStatus.all.items
+		drugs: Object.keys(state.drugsByStatus.all.items)
 	}
 }
 
