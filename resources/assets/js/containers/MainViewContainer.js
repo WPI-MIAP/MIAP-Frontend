@@ -1,40 +1,54 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchDrugs, setFilter, selectDrug } from '../actions'
+import { fetchRules, fetchRulesByDrugName } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getVisibleRules = (rules, filter) => {
 	switch (filter) {
 		case 'all':
-			return rules.all.items
+			return rules.all.rules
 		case 'known':
-			return rules.known.items
+			return rules.known.rules
 		case 'unknown':
-			return rules.unknown.items
+			return rules.unknown.rules
 	}
 }
 
-const getVisibleDrugs = (drugs, filter) => {
+const getVisibleDrugs = (rules, filter) => {
 	switch (filter) {
 		case 'all':
-			return Object.keys(drugs.all.items)
+			return rules.all.drugs
 		case 'known':
-			return Object.keys(drugs.known.items)
+			return rules.known.drugs
 		case 'unknown':
-			return Object.keys(drugs.unknown.items)
+			return rules.unknown.drugs
+	}
+}
+
+const getIsFetching = (rules, filter) => {
+	switch (filter) {
+		case 'all':
+			return rules.all.isFetching
+		case 'known':
+			return rules.known.isFetching
+		case 'unknown':
+			return rules.unknown.isFetching
 	}
 }
 
 const mapStateToProps = state => {
 	return {
+		isFetching: getIsFetching(state.rulesByStatus, state.visibilityFilter),
 		links: getVisibleRules(state.rulesByStatus, state.visibilityFilter),
-		nodes: getVisibleDrugs(state.drugsByStatus, state.visibilityFilter)
+		nodes: getVisibleDrugs(state.rulesByStatus, state.visibilityFilter),
+		currentDrugs: state.currentDrugs
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onClickNode: drug => {
-			return dispatch(selectDrug(drug))
+			// console.log(drug);
+			dispatch(fetchRulesByDrugName(drug))
 		}
 	}
 }

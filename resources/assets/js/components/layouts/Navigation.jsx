@@ -8,7 +8,7 @@ const Navigation = ({ onHandleToggle }) => {
 	return (
 		<AppBar
 			onLeftIconButtonTouchTap={onHandleToggle}
-		    title="Drug Interactions Visualization"
+		    title="DIVA"
 		    iconElementRight={<SearchBarContainer />}
 		/>		
 	)

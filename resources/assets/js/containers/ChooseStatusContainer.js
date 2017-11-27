@@ -5,29 +5,29 @@ import ChooseStatus from '../components/modules/ChooseStatus'
 const getNumRules = (rules, filter) => {
 	switch (filter) {
 		case 'all':
-			return rules.all.items.length
+			return rules.all.rules.length
 		case 'known':
-			return rules.known.items.length
+			return rules.known.rules.length
 		case 'unknown':
-			return rules.unknown.items.length
+			return rules.unknown.rules.length
 	}
 }
 
 const getNumDrugs = (drugs, filter) => {
 	switch (filter) {
 		case 'all':
-			return drugs.all.items.length
+			return drugs.all.drugs.length
 		case 'known':
-			return drugs.known.items.length
+			return drugs.known.drugs.length
 		case 'unknown':
-			return drugs.unknown.items.length
+			return drugs.unknown.drugs.length
 	}
 }
 
 const mapStateToProps = state => {
   return {
   	numRules: getNumRules(state.rulesByStatus, state.visibilityFilter),
-  	numDrugs: getNumDrugs(state.drugsByStatus, state.visibilityFilter),
+  	numDrugs: getNumDrugs(state.rulesByStatus, state.visibilityFilter),
   }
 }
 

@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-export const selectDrug = drug => {
-	return {
-		type: 'SELECT_DRUG',
-		drug
-	}
-}
-
 export const addDrug = drug => {
 	return {
 		type: 'ADD_DRUG',
@@ -32,23 +25,25 @@ export const receiveRules = (status, json) => {
 	return {
 		type: 'RECEIVE_RULES',
 		status,
-		rules: json,
+		rules: json.rules,
+		drugs: json.drugs,
 	    receivedAt: Date.now()
 	}
 }
 
-export const requestDrugs = status => {
+export const requestDrugs = drug => {
 	return {
 		type: 'REQUEST_DRUGS',
-		status
+		drug
 	}
 }
 
-export const receiveDrugs = (status, json) => {
+export const receiveDrugs = (drug, json) => {
 	return {
 		type: 'RECEIVE_DRUGS',
-		status,
-		drugs: json,
+		drug,
+		rules: json.rules,
+		drugs: json.drugs,
 	    receivedAt: Date.now()
 	}
 }
@@ -64,13 +59,13 @@ export function fetchRules(status) {
 	}
 }
 
-export function fetchDrugs(status) {
+export function fetchRulesByDrugName(drug) {
 	return function (dispatch) {
-		dispatch(requestDrugs(status));
+		dispatch(requestDrugs(drug));
 
-		return axios.get('/csv/drugs?status=' + status)
+		return axios.get('/csv/rules?drug=' + drug)
 			.then(response => {
-				dispatch(receiveDrugs(status, response.data))
+				dispatch(receiveDrugs(drug, response.data))
 			})
 	}
 }

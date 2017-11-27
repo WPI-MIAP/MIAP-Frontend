@@ -10,7 +10,8 @@ export const selectedRules = (state = 'all', action) => {
 export const rules = (
 	state = {
 		isFetching: false,
-		items: []
+		rules: [],
+		drugs: []
 	},
 	action
 ) => {
@@ -22,7 +23,8 @@ export const rules = (
 		case 'RECEIVE_RULES':
 			return Object.assign({}, state, {
 				isFetching: false,
-				items: action.rules,
+				rules: action.rules,
+				drugs: action.drugs,
 		        lastUpdated: action.receivedAt
 			})
 		default:

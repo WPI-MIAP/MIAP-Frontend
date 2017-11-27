@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
 
+let network = null;
+
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	return `
 		<div>Drugs: ${Drug1.name} - ${Drug2.name}</div>
@@ -12,8 +14,11 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode }) => {
-	console.log()
+const setNetworkInstance = nw => {
+	network = nw;	
+}
+
+const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching }) => {
 	const nodesArray = nodes.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
@@ -64,8 +69,16 @@ const DndGraph = ({ nodes, links, width, height, onClickNode }) => {
 
 	const events = {
 		select(event) {
+			console.log(event)
 			const { nodes, edges } = event;
 			onClickNode(nodes[0]);
+			const options = {
+				position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
+				scale: 1,
+				offset: { x: 0, y: 0},
+				animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+			};
+			network.moveTo(options);
 		},
 	}
 
@@ -73,9 +86,9 @@ const DndGraph = ({ nodes, links, width, height, onClickNode }) => {
 		<div className='DndGraph'
 		style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
 		>
-		{ links.length > 0 && nodes.length > 0 ?
-			<Graph graph={graph} options={options} events={events} /> :
-			(<i className="MainView__Loading fa fa-spinner fa-pulse fa-3x fa-fw"></i>)
+		{ ! isFetching ?
+			<Graph graph={graph} options={options} events={events} getNetwork={setNetworkInstance}/> :
+			(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
 		}
 		</div>
 		)

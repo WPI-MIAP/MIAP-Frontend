@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 import DndGraph from '../modules/DndGraph';
-import DndTree from '../modules/DndTree';
+import DndTreeContainer from './DndTreeContainer';
 import { Resizable, ResizableBox } from 'react-resizable';
 import IconMenu from 'material-ui/IconMenu';
 import {GridList, GridTile} from 'material-ui/GridList';
 import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
-import DndTreeContainer from '../../containers/DndTreeContainer'
+import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
 
-const MainView = ({ nodes, links, width, height, onClickNode }) => {
+const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -48,11 +48,12 @@ const MainView = ({ nodes, links, width, height, onClickNode }) => {
 						width={width}
 						height={height} 
 						onClickNode={onClickNode}
+						isFetching={isFetching}
 					/>
 				</GridTile>
 
-				<GridTile
-					title='View 3'
+					<GridTile
+					title='Tree View'
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
 	          		titleBackground="#D62261"
@@ -62,7 +63,11 @@ const MainView = ({ nodes, links, width, height, onClickNode }) => {
 	          		}}
 	          		cols={2}
 		        >
-		        	<DndTreeContainer />
+					<DndTreeContainer 
+						currentDrugs={currentDrugs}
+						width={width}
+						height={height} 
+					/>
 				</GridTile>
 		    </GridList>
 		</div>	

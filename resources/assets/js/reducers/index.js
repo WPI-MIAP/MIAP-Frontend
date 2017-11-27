@@ -1,14 +1,12 @@
 import visibilityFilter from './visibilityFilter'
 import { combineReducers } from 'redux'
-import drugSelector from './drugSelector'
+import { currentDrugs } from './fetchCurrentDrug'
 import { rulesByStatus } from './fetchRules'
-import { drugsByStatus } from './fetchDrugs'
 
 const drugInteractionApp = combineReducers({
 	visibilityFilter,
 	rulesByStatus,
-	drugsByStatus,
-	drugSelector
+	currentDrugs,
 })
 
 export default drugInteractionApp

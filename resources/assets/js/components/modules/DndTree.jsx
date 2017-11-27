@@ -12,14 +12,14 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const DndTree = ({ nodes, links, width, height }) => {
-const nodesArray = nodes.map(node => ({
+const DndTree = ({ data }) => {
+	const nodesArray = data.drugs.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
 	}));
 
-	const edgesArray = links.map(link => ({
+	const edgesArray = data.rules.map(link => ({
 		from: link.Drug1.name, 
 		to: link.Drug2.name, 
 		value: link.Score, 
@@ -33,8 +33,8 @@ const nodesArray = nodes.map(node => ({
 	};
 
 	const options = {
-		height: height + 'px',
-		width: width + 'px',
+		height: 250 + 'px',
+		// width: 180 + 'px',
 		edges: {
 			color: "#000000",
 			arrows: {
@@ -64,22 +64,19 @@ const nodesArray = nodes.map(node => ({
 	const events = {
 		select(event) {
 			const { nodes, edges } = event;
-			console.log(nodes)
-			if (nodes !== undefined) {
-				onClickNode(nodes[0]);
-			}
+			console.log('hi')
 		},
 	}
 
 	return (
-		<div className='DndGraph'
-		style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
-		>
-		{ links.length > 0 && nodes.length > 0 ?
+		<div>
+		{
+			! data.isFetching ? 
 			<Graph graph={graph} options={options} events={events} /> :
-			(<i className="MainView__Loading fa fa-spinner fa-pulse fa-3x fa-fw"></i>)
+			<p>loading</p>
 		}
 		</div>
-		)}
+	)
+}
 
 export default DndTree
