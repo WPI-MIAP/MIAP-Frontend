@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchRulesByDrugName } from '../actions'
+import { fetchRules, fetchRulesByDrugName, clearSearchTerm } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getVisibleRules = (rules, filter) => {
@@ -40,14 +40,15 @@ const mapStateToProps = state => {
 		isFetching: getIsFetching(state.rulesByStatus, state.visibilityFilter),
 		links: getVisibleRules(state.rulesByStatus, state.visibilityFilter),
 		nodes: getVisibleDrugs(state.rulesByStatus, state.visibilityFilter),
-		currentDrugs: state.currentDrugs
+		currentDrugs: state.currentDrugs,
+		selectedDrug: state.selectDrug
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onClickNode: drug => {
-			// console.log(drug);
+			dispatch(clearSearchTerm())
 			dispatch(fetchRulesByDrugName(drug))
 		}
 	}

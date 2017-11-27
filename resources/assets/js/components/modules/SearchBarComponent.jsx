@@ -8,21 +8,24 @@ export default class SearchBarComponent extends React.Component {
 
         this.onUpdateInput  = this.onUpdateInput.bind(this);
         this.onNewRequest  = this.onNewRequest.bind(this);
+        this.state = {
+            value: ''
+        }
     }
 
-    onUpdateInput() {
-
+    onUpdateInput(input) {
+        this.setState({ value: input }) 
     }
 
-    onNewRequest(searchTerm) {
-        alert('test123!');
+    onNewRequest() {
+        this.props.handleSearchRequest(this.state.value)
     }
 
     render() {
         return (
             <SearchBar
-            onChange={() => console.log('onChange')}
-            onRequestSearch={() => console.log('onRequestSearch')}
+            onChange={this.onUpdateInput}
+            onRequestSearch={this.onNewRequest}
             dataSource={this.props.drugs}
             filter={AutoComplete.caseInsensitiveFilter}
             />    

@@ -7,6 +7,19 @@ export const addDrug = drug => {
 	}
 }
 
+export const selectDrug = drug => {
+	return {
+		type: 'SELECT_DRUG',
+		drug
+	}
+}
+
+export const clearSearchTerm = () => {
+	return {
+		type: 'CLEAR_SEARCH_TERM'
+	}
+}
+
 export const setFilter = filter => {
 	return {
 		type: 'SET_FILTER',

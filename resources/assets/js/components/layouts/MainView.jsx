@@ -9,7 +9,7 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
 
-const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching }) => {
+const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching, selectedDrug }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -35,7 +35,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title='Network View'
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="#D62261"
+	          		titleBackground="black"
 	          		style={{
 	          			border: '1px solid grey', 
 	          			boxSizing: 'border-box'
@@ -47,6 +47,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 						links={links}
 						width={width}
 						height={height} 
+						selectedDrug={selectedDrug}
 						onClickNode={onClickNode}
 						isFetching={isFetching}
 					/>
@@ -56,7 +57,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title='Tree View'
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="#D62261"
+	          		titleBackground="black"
 	          		style={{
 	          			border: '1px solid grey', 
 	          			boxSizing: 'border-box'

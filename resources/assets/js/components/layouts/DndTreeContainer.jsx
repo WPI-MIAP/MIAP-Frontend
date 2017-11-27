@@ -42,7 +42,7 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 				style={styles.gridTile}
 			>
 				{ currentDrugs[drug].isFetching ? 
-					<p>loading</p> :
+					(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
 					<DndTree data={currentDrugs[drug]}/>
 				}
 			</GridTile>

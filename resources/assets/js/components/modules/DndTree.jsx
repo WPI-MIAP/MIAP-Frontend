@@ -73,7 +73,7 @@ const DndTree = ({ data }) => {
 		{
 			! data.isFetching ? 
 			<Graph graph={graph} options={options} events={events} /> :
-			<p>loading</p>
+			(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
 		}
 		</div>
 	)

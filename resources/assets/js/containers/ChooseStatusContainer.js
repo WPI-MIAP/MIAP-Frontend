@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setFilter } from '../actions'
+import { setFilter, clearSearchTerm } from '../actions'
 import ChooseStatus from '../components/modules/ChooseStatus'
 
 const getNumRules = (rules, filter) => {
@@ -35,6 +35,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onClickRadio: filter => {
 			dispatch(setFilter(filter))
+			dispatch(clearSearchTerm())
 		}
 	}
 }

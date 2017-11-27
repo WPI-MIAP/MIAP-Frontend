@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchDrugs, setFilter } from '../actions'
+import { selectDrug, fetchRulesByDrugName } from '../actions'
 import SearchBarComponent from '../components/modules/SearchBarComponent'
 
 const mapStateToProps = state => {
@@ -8,8 +8,19 @@ const mapStateToProps = state => {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		handleSearchRequest: searchTerm => {
+			dispatch(selectDrug(searchTerm))
+			dispatch(fetchRulesByDrugName(searchTerm))
+		}
+	}
+}
+
 const SearchBarContainer = connect(
 	mapStateToProps,
+	mapDispatchToProps
 )(SearchBarComponent)
+
 
 export default SearchBarContainer 

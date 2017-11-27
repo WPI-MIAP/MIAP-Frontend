@@ -18,7 +18,7 @@ const setNetworkInstance = nw => {
 	network = nw;	
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching }) => {
+const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug }) => {
 	const nodesArray = nodes.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
@@ -80,6 +80,17 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching }) => {
 			};
 			network.moveTo(options);
 		},
+	}
+
+	if (selectedDrug !== '') {
+		const nodeId = network.getPositions([selectedDrug]);
+		const options = {
+			position: { x: nodeId[selectedDrug].x, y: nodeId[selectedDrug].y},
+			scale: 1,
+			offset: { x: 0, y: 0},
+			animation: true
+		}
+		network.moveTo(options)
 	}
 
 	return (
