@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 import DndGraph from '../modules/DndGraph';
+import InteractionProfile from '../modules/InteractionProfile';
 import DndTreeContainer from './DndTreeContainer';
 import { Resizable, ResizableBox } from 'react-resizable';
 import IconMenu from 'material-ui/IconMenu';
@@ -72,7 +73,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 				</GridTile>
 
 				<GridTile
-					title={'Interaction profile for: ' + Object.keys(currentDrugs)[Object.keys(currentDrugs).length - 1]}
+					title={'Interaction profile for: ' + selectedDrug}
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
 	          		titleBackground="black"
@@ -82,7 +83,10 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 	          		}}
 	          		cols={1.5}
 		        >
-					<h1>Hello world</h1>
+					<InteractionProfile 
+						mainDrug={selectedDrug} 
+						selectedDrugRules={currentDrugs[selectedDrug]}
+					/>
 				</GridTile>
 		    </GridList>
 		</div>	

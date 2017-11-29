@@ -82,16 +82,16 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		},
 	}
 
-	if (selectedDrug !== '') {
-		const nodeId = network.getPositions([selectedDrug]);
-		const options = {
-			position: { x: nodeId[selectedDrug].x, y: nodeId[selectedDrug].y},
-			scale: 1,
-			offset: { x: 0, y: 0},
-			animation: true
-		}
-		network.moveTo(options)
-	}
+	// if (selectedDrug !== '') {
+	// 	const nodeId = network.getPositions([selectedDrug]);
+	// 	const options = {
+	// 		position: { x: nodeId[selectedDrug].x, y: nodeId[selectedDrug].y},
+	// 		scale: 1,
+	// 		offset: { x: 0, y: 0},
+	// 		animation: true
+	// 	}
+	// 	network.moveTo(options)
+	// }
 
 	return (
 		<div className='DndGraph'
