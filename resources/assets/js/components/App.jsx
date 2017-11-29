@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import Board from './tic-tac-toe/Board';
+import Sidebar from 'react-sidebar';
+
+import Navigation from './layouts/Navigation';
+import MainViewContainer from '../containers/MainViewContainer';
 
 export default class App extends Component {
 	render() {
 		return (
-			<div className="game">
-				<div className="game-board">
-					<Board />
-				</div>
-				<div className="game-info">
-					<div>
-						{/* status */}
-					</div>
-					<ol>
-						{/* TODO */}
-					</ol>
-				</div>
+			<div>
+				<Navigation />
+				<MainViewContainer />
 			</div>
-		);
+		)
 	}
 }
+				
 
