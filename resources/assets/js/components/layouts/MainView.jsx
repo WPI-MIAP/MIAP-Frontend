@@ -53,22 +53,36 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					/>
 				</GridTile>
 
-					<GridTile
+				<GridTile
 					title='Tree View'
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
 	          		titleBackground="black"
 	          		style={{
 	          			border: '1px solid grey', 
-	          			boxSizing: 'border-box'
+	          			boxSizing: 'border-box',
 	          		}}
-	          		cols={2}
+	          		cols={1.5}
 		        >
 					<DndTreeContainer 
 						currentDrugs={currentDrugs}
 						width={width}
 						height={height} 
 					/>
+				</GridTile>
+
+				<GridTile
+					title={'Interaction profile for: ' + Object.keys(currentDrugs)[Object.keys(currentDrugs).length - 1]}
+					titlePosition="top"
+					actionIcon={ <ChooseStatusContainer /> }
+	          		titleBackground="black"
+	          		style={{
+	          			border: '1px solid grey', 
+	          			boxSizing: 'border-box',
+	          		}}
+	          		cols={1.5}
+		        >
+					<h1>Hello world</h1>
 				</GridTile>
 		    </GridList>
 		</div>	

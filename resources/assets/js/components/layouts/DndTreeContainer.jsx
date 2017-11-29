@@ -20,7 +20,7 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 		},
 		gridTile: {
 			border: '1px solid grey',
-			margin: '70px 10px 0 10px',
+			margin: '70px 30px 0 30px',
 		},
 		titleStyle: {
 			textAlign: 'center',
@@ -32,6 +32,7 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 		<GridList
 			cellHeight={250}
 			style={styles.gridList}
+			cols={1}
 		>
 		{Object.keys(currentDrugs).slice(0).reverse().map((drug) => (
 			<GridTile
