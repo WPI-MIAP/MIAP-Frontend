@@ -11,7 +11,6 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onClickRadio: sortByTerm => {
 			dispatch(sortBy(sortByTerm))
-			dispatch(clearSearchTerm())
 		}
 	}
 }

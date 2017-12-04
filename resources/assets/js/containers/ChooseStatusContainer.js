@@ -35,7 +35,6 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onClickRadio: filter => {
 			dispatch(setFilter(filter))
-			dispatch(clearSearchTerm())
 		}
 	}
 }

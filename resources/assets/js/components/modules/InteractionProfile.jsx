@@ -99,7 +99,6 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
 	const events = {
 		select(event) {
 			const { nodes, edges } = event;
-			console.log('hi')
 		},
 	}
 
