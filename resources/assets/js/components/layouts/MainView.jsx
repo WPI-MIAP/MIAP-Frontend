@@ -30,7 +30,6 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 				cols={5}
 				cellHeight={500}
 				padding={20}
-
 			>
 				<GridTile
 					title='Network View'
@@ -57,14 +56,14 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 				<GridTile
 					title='Tree View'
 					titlePosition="top"
-					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="black"
-	          		style={{
-	          			border: '1px solid grey', 
-	          			boxSizing: 'border-box',
-	          		}}
-	          		cols={1.5}
-		        >
+					actionIcon={ <TreeViewFilterContainer /> }
+					titleBackground="black"
+					style={{
+						border: '1px solid grey', 
+						boxSizing: 'border-box',
+					}}
+					cols={1.5}
+				>
 					<DndTreeContainer 
 						currentDrugs={currentDrugs}
 						width={width}
@@ -76,16 +75,16 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title={'Interaction profile for: ' + selectedDrug}
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="black"
-	          		style={{
-	          			border: '1px solid grey', 
-	          			boxSizing: 'border-box',
-	          		}}
-	          		cols={1.5}
-		        >
+          titleBackground="black"
+          style={{
+            border: '1px solid grey', 
+            boxSizing: 'border-box',
+          }}
+          cols={1.5}
+        >
 					<InteractionProfile 
 						mainDrug={selectedDrug} 
-						selectedDrugRules={currentDrugs[selectedDrug]}
+						rules={currentDrugs.find(el => el[0] == selectedDrug)}
 					/>
 				</GridTile>
 		    </GridList>

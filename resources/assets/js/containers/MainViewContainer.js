@@ -35,12 +35,29 @@ const getIsFetching = (rules, filter) => {
 	}
 }
 
+const filterTreeView = (currentDrugs, sortByTerm) => {
+	const currentDrugsArray = Object.keys(currentDrugs).map(function(key) {
+		return [key, currentDrugs[key]];
+	});
+
+	switch (sortByTerm) {
+		case 'latest':
+			return currentDrugsArray.reverse()
+		case 'name':
+			return _.sortBy(currentDrugsArray, [function(o) { return o[0]; }]);
+		case 'count':
+			return _.sortBy(currentDrugsArray, [function(o) { return o[1].rules.length; }]).reverse();
+		case 'severity':
+			return currentDrugsArray
+	}
+}
+
 const mapStateToProps = state => {
 	return {
 		isFetching: getIsFetching(state.rulesByStatus, state.visibilityFilter),
 		links: getVisibleRules(state.rulesByStatus, state.visibilityFilter),
 		nodes: getVisibleDrugs(state.rulesByStatus, state.visibilityFilter),
-		currentDrugs: state.currentDrugs,
+		currentDrugs: filterTreeView(state.currentDrugs, state.treeViewSorting),
 		selectedDrug: state.selectDrug
 	}
 }

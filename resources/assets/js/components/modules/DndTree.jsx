@@ -78,5 +78,5 @@ const DndTree = ({ data }) => {
 		</div>
 	)
 }
-
+	
 export default DndTree

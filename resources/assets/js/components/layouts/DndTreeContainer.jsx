@@ -28,23 +28,25 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 		},
 	};
 
+	console.log(currentDrugs)
+
 	return (
 		<GridList
 			cellHeight={250}
 			style={styles.gridList}
 			cols={1}
 		>
-		{Object.keys(currentDrugs).slice(0).reverse().map((drug) => (
+		{currentDrugs.map(drug => (
 			<GridTile
-				key={drug}
-				title={drug}
+				key={drug[0]}
+				title={drug[0]}
 				titleStyle={styles.titleStyle}
-		        titlePosition="top"
+				titlePosition="top"
 				style={styles.gridTile}
 			>
-				{ currentDrugs[drug].isFetching ? 
+				{ drug[1].isFetching ? 
 					(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-					<DndTree data={currentDrugs[drug]}/>
+					<DndTree data={drug[1]}/>
 				}
 			</GridTile>
 		))}

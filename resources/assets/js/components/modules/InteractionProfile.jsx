@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import Graph from 'react-graph-vis'
 import _ from 'lodash'
 
-const InteractionProfile = ({ mainDrug = '', selectedDrugRules = { drugs: [], rules: [] }}) => {
+const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [] } ] }) => {
 	let rankIdMap = {}
 	let id = 10000
+	const selectedDrugRules = rules[1]
 
 	const drugNodesArray = selectedDrugRules.drugs.map(node => ({
 		id: node, 
@@ -53,8 +54,6 @@ const InteractionProfile = ({ mainDrug = '', selectedDrugRules = { drugs: [], ru
 		edges: edgesArray
 	}
 
-	console.log(graph)
-
 	const options = {
 		height: 500 + 'px',
 		width: 500 + 'px',
@@ -69,9 +68,10 @@ const InteractionProfile = ({ mainDrug = '', selectedDrugRules = { drugs: [], ru
 				min: 1,
 				max: 5
 			},
-            smooth: {
-				"forceDirection": "none",
-				"roundness": 0.25            
+			smooth: {
+				type: 'cubicBezier',
+				forceDirection: "none",
+				roundness: 0.25            
 			}
 		},
 		nodes: {

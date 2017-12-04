@@ -20,6 +20,13 @@ export const clearSearchTerm = () => {
 	}
 }
 
+export const sortBy = sortBy => {
+	return {
+		type: 'SORT_BY',
+		sortBy
+	}
+}
+
 export const setFilter = filter => {
 	return {
 		type: 'SET_FILTER',
