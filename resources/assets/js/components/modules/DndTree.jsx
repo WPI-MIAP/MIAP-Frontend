@@ -12,20 +12,45 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const DndTree = ({ data }) => {
+const generateColor = score => {
+	if (score <= 0.0) {
+		return '#fecc5c'
+	} 
+	else if (score > 0.0 && score <= 0.01) {
+		return '#fd8d3c'
+	}
+	else if (score > 0.01 && score <= 0.2) {
+		return '#f03b20'
+	}
+	else if (score > 0.2) {
+		return 'hsl(0, 100%, 25%)'
+	}
+}
+
+const DndTree = ({ currentDrug, data }) => {
+	const sortedLinks = _.orderBy(data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
+	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+	const edgesArray = uniqueLinks.map(link => ({
+		from: link.Drug1.name, 
+		to: link.Drug2.name, 
+		title: generateTitle(link),
+		color: {
+			color: 'gray',
+			highlight: 'gray',
+			hover: 'gray',
+			opacity: 1.0
+		},
+	}));
+
 	const nodesArray = data.drugs.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
+		size: (data.rules.find(el => 
+			(el.Drug1.name == node || el.Drug2.name == node)
+		).status == 'known' && node != currentDrug) ? 5 : 10
 	}));
 
-	const edgesArray = data.rules.map(link => ({
-		from: link.Drug1.name, 
-		to: link.Drug2.name, 
-		value: link.Score, 
-		title: generateTitle(link),
-		dashes: link.status === 'known' 
-	}));
 
 	const graph = {
 		nodes: nodesArray,
@@ -41,15 +66,10 @@ const DndTree = ({ data }) => {
 				to:     {enabled: false, scaleFactor:1, type:'arrow'},
 				middle: {enabled: false, scaleFactor:1, type:'arrow'},
 				from:   {enabled: false, scaleFactor:1, type:'arrow'}
-			},
-			scaling: {
-				min: 1,
-				max: 5
 			}
 		},
 		nodes: {
 			shape: 'dot',
-			size: 10,
 			font: {
 				color: '#343434',
 			    size: 11, // px

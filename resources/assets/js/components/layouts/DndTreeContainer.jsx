@@ -28,8 +28,6 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 		},
 	};
 
-	console.log(currentDrugs)
-
 	return (
 		<GridList
 			cellHeight={250}
@@ -46,7 +44,7 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 			>
 				{ drug[1].isFetching ? 
 					(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-					<DndTree data={drug[1]}/>
+					<DndTree currentDrug={drug[0]} data={drug[1]}/>
 				}
 			</GridTile>
 		))}

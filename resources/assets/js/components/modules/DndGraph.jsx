@@ -18,6 +18,22 @@ const setNetworkInstance = nw => {
 	network = nw;	
 }
 
+// low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
+const generateColor = score => {
+	if (score <= 0.0) {
+		return '#fecc5c'
+	} 
+	else if (score > 0.0 && score <= 0.01) {
+		return '#fd8d3c'
+	}
+	else if (score > 0.01 && score <= 0.2) {
+		return '#f03b20'
+	}
+	else if (score > 0.2) {
+		return 'hsl(0, 100%, 25%)'
+	}
+}
+
 const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug }) => {
 	const nodesArray = nodes.map(node => ({
 		id: node, 
@@ -25,12 +41,20 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
 	}));
 
-	const edgesArray = links.map(link => ({
+	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
+	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+	const edgesArray = uniqueLinks.map(link => ({
 		from: link.Drug1.name, 
 		to: link.Drug2.name, 
-		value: link.Score, 
 		title: generateTitle(link),
-		dashes: link.status === 'known' 
+		dashes: link.status === 'known',
+		width: link.status === 'known' ? 2 : 4,
+		color: {
+			color: generateColor(link.Score),
+			highlight: generateColor(link.Score),
+			hover: generateColor(link.Score),
+			opacity: 1.0
+		},
 	}));
 
 	const graph = {
@@ -42,19 +66,15 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		height: height + 'px',
 		width: width + 'px',
 		edges: {
-			color: "#000000",
 			arrows: {
 				to:     {enabled: false, scaleFactor:1, type:'arrow'},
 				middle: {enabled: false, scaleFactor:1, type:'arrow'},
 				from:   {enabled: false, scaleFactor:1, type:'arrow'}
 			},
-			scaling: {
-				min: 1,
-				max: 5
-			}
 		},
 		nodes: {
 			shape: 'dot',
+			color: '#2C98F0',
 			size: 10,
 			font: {
 				color: '#343434',
