@@ -11413,8 +11413,8 @@ body {
 
 .MainView__Loading {
   position: relative;
-  top: 45%;
-  left: 45%;
+  top: 35%;
+  left: 40%;
 }
 
 .MainView__Cards {

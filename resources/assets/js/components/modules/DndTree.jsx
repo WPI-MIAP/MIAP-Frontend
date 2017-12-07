@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
 
+
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	return `
 		<div>Drugs: ${Drug1.name} - ${Drug2.name}</div>
@@ -40,6 +41,7 @@ const DndTree = ({ currentDrug, data }) => {
 			hover: 'gray',
 			opacity: 1.0
 		},
+		width: 3,
 	}));
 
 	const nodesArray = data.drugs.map(node => ({
@@ -48,7 +50,10 @@ const DndTree = ({ currentDrug, data }) => {
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
 		size: (data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
-		).status == 'known' && node != currentDrug) ? 5 : 10
+		).status == 'known' && node != currentDrug) ? 5 : 10,
+		color: node != currentDrug ? generateColor(data.rules.find(el => 
+			(el.Drug1.name == node || el.Drug2.name == node)
+		).Score) : '#349AED'
 	}));
 
 

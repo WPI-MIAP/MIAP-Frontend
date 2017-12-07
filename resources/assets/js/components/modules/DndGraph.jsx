@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
+import CircularProgress from 'material-ui/CircularProgress'
+
 
 let network = null;
 
@@ -119,7 +121,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		>
 		{ ! isFetching ?
 			<Graph graph={graph} options={options} events={events} getNetwork={setNetworkInstance}/> :
-			(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+			(<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
 		}
 		</div>
 		)

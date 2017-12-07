@@ -9,6 +9,14 @@ import IconMenu from 'material-ui/IconMenu';
 import {GridList, GridTile} from 'material-ui/GridList';
 import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import Paper from 'material-ui/Paper';
+import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
+import FontIcon from 'material-ui/FontIcon';
+
+const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
+const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
+const nearbyIcon = <IconLocationOn />;
 
 const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching, selectedDrug }) => {
 	const styles = {
@@ -35,7 +43,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title='Network View'
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="black"
+	          		titleBackground="#D62261"
 	          		style={{
 	          			border: '1px solid grey', 
 	          			boxSizing: 'border-box'
@@ -57,7 +65,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title='Tree View'
 					titlePosition="top"
 					actionIcon={ <TreeViewFilterContainer /> }
-					titleBackground="black"
+					titleBackground="#1BACC0"
 					style={{
 						border: '1px solid grey', 
 						boxSizing: 'border-box',
@@ -75,7 +83,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 					title={'Interaction profile for: ' + selectedDrug}
 					titlePosition="top"
 					actionIcon={ <ChooseStatusContainer /> }
-          titleBackground="black"
+          titleBackground="#8C2DA8"
           style={{
             border: '1px solid grey', 
             boxSizing: 'border-box',

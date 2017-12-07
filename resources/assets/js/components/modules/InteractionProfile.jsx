@@ -24,7 +24,11 @@ const styles = {
         fill: '#2c98f0',
         stroke: 'white'
       },
-      name: {},
+      name: {
+        fontFamily: "Helvetica",
+        fontWeight: 200,
+        fontSize: 10
+      },
       attributes: {},
     },
     leafNode: {
@@ -35,7 +39,11 @@ const styles = {
         fill: 'red',
         stroke: 'white' 
       },
-      name: {},
+      name: {
+        fontFamily: "Helvetica",
+        fontWeight: 200,
+        fontSize: 10
+      },
       attributes: {},
     },
   },
@@ -67,6 +75,7 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
       <Tree data={myTreeData} 
         translate={{x: 50, y: 250}}
         styles={styles}
+        depthFactor={200}
       />
       }
 

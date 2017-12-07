@@ -4,6 +4,8 @@ import Graph from 'react-graph-vis'
 import DndTree from '../modules/DndTree'
 import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
+import Subheader from 'material-ui/Subheader';
+
 
 const DndTreeContainer = ({ currentDrugs, width, height }) => {
 	const styles = {
@@ -19,10 +21,10 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 			overflowY: 'auto'
 		},
 		gridTile: {
-			border: '1px solid grey',
-			margin: '70px 30px 0 30px',
+			// border: '1px solid grey',
+			margin: '70px 30px 150px 30px',
 		},
-		titleStyle: {
+		subHeader: {
 			textAlign: 'center',
 			fontSize: '0.8em'
 		},
@@ -34,20 +36,21 @@ const DndTreeContainer = ({ currentDrugs, width, height }) => {
 			style={styles.gridList}
 			cols={1}
 		>
+		<div style={styles.gridTile}>
 		{currentDrugs.map(drug => (
-			<GridTile
-				key={drug[0]}
-				title={drug[0]}
-				titleStyle={styles.titleStyle}
-				titlePosition="top"
-				style={styles.gridTile}
-			>
-				{ drug[1].isFetching ? 
-					(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-					<DndTree currentDrug={drug[0]} data={drug[1]}/>
-				}
-			</GridTile>
+			<div style={{ border: '1px solid grey', marginBottom: 20 }}>
+				<Subheader style={styles.subHeader}>{drug[0]}</Subheader>
+				<GridTile
+					key={drug[0]}
+				>
+					{ drug[1].isFetching ? 
+						(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
+						<DndTree currentDrug={drug[0]} data={drug[1]}/>
+					}
+				</GridTile>
+			</div>
 		))}
+		</div>
 		</GridList>
 		)
 }
