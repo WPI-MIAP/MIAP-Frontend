@@ -7,7 +7,6 @@ import DndTreeContainer from './DndTreeContainer';
 import { Resizable, ResizableBox } from 'react-resizable';
 import IconMenu from 'material-ui/IconMenu';
 import {GridList, GridTile} from 'material-ui/GridList';
-import ChooseStatusContainer from '../../containers/ChooseStatusContainer'
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
@@ -18,7 +17,7 @@ const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
 const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
 
-const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching, selectedDrug }) => {
+const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching, selectedDrug, filter }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -40,16 +39,15 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 				padding={20}
 			>
 				<GridTile
-					title='Network View'
+					title='Overview'
 					titlePosition="top"
-					actionIcon={ <ChooseStatusContainer /> }
-	          		titleBackground="#D62261"
-	          		style={{
-	          			border: '1px solid grey', 
-	          			boxSizing: 'border-box'
-	          		}}
-	          		cols={2}
-		        >
+					titleBackground="#D62261"
+					style={{
+						// border: '1px solid grey', 
+						boxSizing: 'border-box'
+					}}
+					cols={2}
+				>
 					<DndGraph 
 						nodes={nodes}
 						links={links}
@@ -58,22 +56,25 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 						selectedDrug={selectedDrug}
 						onClickNode={onClickNode}
 						isFetching={isFetching}
+						filter={filter}
 					/>
 				</GridTile>
 
 				<GridTile
-					title='Tree View'
+					title='Galaxy View'
 					titlePosition="top"
 					actionIcon={ <TreeViewFilterContainer /> }
 					titleBackground="#1BACC0"
 					style={{
-						border: '1px solid grey', 
+						// border: '1px solid grey', 
 						boxSizing: 'border-box',
+						background: 'white'
 					}}
 					cols={1.5}
 				>
 					<DndTreeContainer 
 						currentDrugs={currentDrugs}
+						filter={filter}
 						width={width}
 						height={height} 
 					/>
@@ -82,11 +83,11 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 				<GridTile
 					title={'Interaction profile for: ' + selectedDrug}
 					titlePosition="top"
-					actionIcon={ <ChooseStatusContainer /> }
           titleBackground="#8C2DA8"
           style={{
-            border: '1px solid grey', 
-            boxSizing: 'border-box',
+            // border: '1px solid grey', 
+						boxSizing: 'border-box',
+						background: 'white'
           }}
           cols={1.5}
         >

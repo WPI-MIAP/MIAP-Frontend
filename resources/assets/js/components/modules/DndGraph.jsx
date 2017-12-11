@@ -36,7 +36,21 @@ const generateColor = score => {
 	}
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug }) => {
+const isHidden = (filter, status) => {
+	if (filter === 'all') {
+		return false
+	}
+
+	if (filter === 'known' && status === 'known') {
+		return false
+	} else if (filter === 'unknown' && status === 'unknown') {
+		return false
+	} else {
+		return true
+	}
+}
+
+const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter }) => {
 	const nodesArray = nodes.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
@@ -57,6 +71,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 			hover: generateColor(link.Score),
 			opacity: 1.0
 		},
+		hidden: isHidden(filter, link.status)
 	}));
 
 	const graph = {

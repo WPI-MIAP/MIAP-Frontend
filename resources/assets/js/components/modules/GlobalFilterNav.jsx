@@ -10,7 +10,7 @@ import TextField from 'material-ui/TextField';
 const styles = {
   root: {
     paddingTop: 20,
-    background: 'white',
+    background: '#F5F5F5',
   },
   selectField: {
     marginLeft: 26
@@ -22,35 +22,45 @@ const styles = {
 
 }
 
-const leftElement = (
-  <Toolbar style={styles.root}>
-    <ToolbarGroup firstChild={true}>
-      <SelectField
-        floatingLabelText="Filter DIARs"
-        value={1}
-        style={styles.selectField}
-        selectedMenuItemStyle={{ color: '#1FBCD3' }}
-      >
-        <MenuItem value={1} primaryText="All DIARs" />
-        <MenuItem value={2} primaryText="Known DIARs" />
-        <MenuItem value={3} primaryText="Unknown DIARs" />
-      </SelectField>
-      <TextField
-        style={styles.textField}
-        hintText="Score"
-      />
-    </ToolbarGroup>
-    <ToolbarGroup firstChild={true}>
-    </ToolbarGroup>
-  </Toolbar>
-)
+export default class GlobalFilterNav extends React.Component {
+  constructor(props) {
+    super(props)
 
-const GlobalFilterNav = ({ onHandleToggle }) => {
-	return (
-    <div>
-    {leftElement}
-    </div>
-	)
+    this.state = { value: 'all' }
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange(event, index, value) {
+    console.log(index + ' ' + value)
+    this.setState({ value })
+
+    this.props.onClick(value)
+  }
+
+  render() {
+    return (
+      <Toolbar style={styles.root}>
+        <ToolbarGroup firstChild={true}>
+          <SelectField
+            value={this.state.value}
+            onChange={this.handleChange}
+            floatingLabelText="Filter DIARs"
+            style={styles.selectField}
+            selectedMenuItemStyle={{ color: '#1FBCD3' }}
+          >
+            <MenuItem value='all' primaryText="All DIARs" />
+            <MenuItem value='known' primaryText="Known DIARs" />
+            <MenuItem value='unknown' primaryText="Unknown DIARs" />
+          </SelectField>
+          <TextField
+            style={styles.textField}
+            hintText="Score"
+          />
+        </ToolbarGroup>
+        <ToolbarGroup firstChild={true}>
+          <SearchBarContainer />
+        </ToolbarGroup>
+      </Toolbar>
+    )
+  }
 }
-
-export default GlobalFilterNav;

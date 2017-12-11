@@ -13,6 +13,22 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
+const isNodeHidden = (filter, rules, drug, currentDrug) => {
+	if (filter === 'all' || drug === currentDrug) {
+		return false
+	}
+
+	return ! (rules.find(el => (el.Drug1.name == drug || el.Drug2.name == drug)).status === filter && drug !== currentDrug)
+}
+
+const isEdgeHidden = (filter, status) => {
+	if (filter === 'all') {
+		return false
+	}
+
+	return ! ((filter === 'known' && status === 'known') || (filter === 'unknown' && status === 'unknown'))
+}
+
 const generateColor = score => {
 	if (score <= 0.0) {
 		return '#fecc5c'
@@ -28,7 +44,7 @@ const generateColor = score => {
 	}
 }
 
-const DndTree = ({ currentDrug, data }) => {
+const DndTree = ({ currentDrug, data, filter }) => {
 	const sortedLinks = _.orderBy(data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
 	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 	const edgesArray = uniqueLinks.map(link => ({
@@ -42,7 +58,8 @@ const DndTree = ({ currentDrug, data }) => {
 			opacity: 1.0
 		},
 		width: 3,
-	}));
+		hidden: isEdgeHidden(filter, link.status)
+	}))
 
 	const nodesArray = data.drugs.map(node => ({
 		id: node, 
@@ -51,16 +68,17 @@ const DndTree = ({ currentDrug, data }) => {
 		size: (data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).status == 'known' && node != currentDrug) ? 5 : 10,
+		hidden: isNodeHidden(filter, data.rules, node, currentDrug),
 		color: node != currentDrug ? generateColor(data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).Score) : '#349AED'
-	}));
+	}))
 
 
 	const graph = {
 		nodes: nodesArray,
 		edges: edgesArray
-	};
+	}
 
 	const options = {
 		height: 250 + 'px',
@@ -84,7 +102,7 @@ const DndTree = ({ currentDrug, data }) => {
 		interaction:{
 			hover: true,
 		}
-	};
+	}
 
 	const events = {
 		select(event) {

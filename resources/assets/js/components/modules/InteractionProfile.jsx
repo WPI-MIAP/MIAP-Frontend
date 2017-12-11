@@ -76,6 +76,7 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
         translate={{x: 50, y: 250}}
         styles={styles}
         depthFactor={200}
+        seperation={{ siblings: 1, nonSiblings: 2}}
       />
       }
 
