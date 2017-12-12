@@ -17,7 +17,7 @@ const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
 const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
 
-const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFetching, selectedDrug, filter, score }) => {
+const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, deleteNode, currentDrugs, isFetching, selectedDrug, filter, score }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -79,6 +79,8 @@ const MainView = ({ nodes, links, width, height, onClickNode, currentDrugs, isFe
 						score={score}
 						width={width}
 						height={height} 
+						onClickNode={showDetailNode}
+						onDeleteNode={deleteNode}
 					/>
 				</GridTile>
 

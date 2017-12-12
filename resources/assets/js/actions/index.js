@@ -27,6 +27,13 @@ export const clearSearchTerm = () => {
 	}
 }
 
+export const deleteDrug = drug => {
+	return {
+		type: 'DELETE_DRUG',
+		drug
+	}
+}
+
 export const sortBy = sortBy => {
 	return {
 		type: 'SORT_BY',

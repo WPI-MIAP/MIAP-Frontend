@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export const drugs = (
 	state = {
 		isFetching: false,
@@ -27,11 +29,13 @@ export const currentDrugs = (state = {}, action) => {
 	switch (action.type) {
 	    case 'RECEIVE_DRUGS':
 	    case 'REQUEST_DRUGS':
-	    	if (! action.drug) return state
-			return Object.assign({}, state, {
-				[action.drug]: drugs(state[action.drug], action)
-			})
+	    	if (! action.drug) { return state }
+				return Object.assign({}, state, {
+					[action.drug]: drugs(state[action.drug], action)
+				})
+			case 'DELETE_DRUG':
+				return _.omit(state, [action.drug])
 	    default:
-			return state
+				return state
 	}
 }
