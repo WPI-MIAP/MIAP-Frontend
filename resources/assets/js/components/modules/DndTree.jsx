@@ -32,7 +32,9 @@ const isNodeHidden = (filter, rules, drug, currentDrug, currentScore) => {
 }
 
 const isEdgeHidden = (filter, status, score, currentScore) => {
-	return ! ((filter === 'known' && status === 'known') || (filter === 'unknown' && status === 'unknown') || filter === 'all') ||
+	return ! ((filter === 'known' && status === 'known') || 
+		(filter === 'unknown' && status === 'unknown') || 
+		filter === 'all') ||
 		(currentScore !== '' && score <= Number(currentScore))
 }
 

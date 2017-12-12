@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
 import CircularProgress from 'material-ui/CircularProgress'
 
-
 let network = null;
 
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
@@ -20,7 +19,6 @@ const setNetworkInstance = nw => {
 	network = nw;	
 }
 
-// low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
 const generateColor = score => {
 	if (score <= 0.0) {
 		return '#fecc5c'
@@ -36,21 +34,21 @@ const generateColor = score => {
 	}
 }
 
-const isHidden = (filter, status) => {
-	if (filter === 'all') {
-		return false
-	}
-
-	if (filter === 'known' && status === 'known') {
-		return false
-	} else if (filter === 'unknown' && status === 'unknown') {
-		return false
-	} else {
-		return true
-	}
+const isEdgeHidden = (filter, status, score, currentScore) => {
+	return (filter !== 'all' && filter != status) || score < currentScore
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter }) => {
+const isNodeHidden = (links, node, filter, currentScore) => {
+	const outLinks = links.filter(link => 
+		link.Drug1.name === node || 
+		link.Drug2.name === node
+	)
+	
+	return outLinks.every(link => (link.status !== filter && filter !== 'all') || 
+		((link.status === filter || filter === 'all') && currentScore !== '' && link.Score < Number(currentScore)))
+}
+
+const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter, score }) => {
 	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 
@@ -58,6 +56,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
+		hidden: isNodeHidden(uniqueLinks, node, filter, score)
 	}));
 
 	const edgesArray = uniqueLinks.map(link => ({
@@ -72,7 +71,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 			hover: generateColor(link.Score),
 			opacity: 1.0
 		},
-		hidden: isHidden(filter, link.status)
+		hidden: isEdgeHidden(filter, link.status, link.Score, score)
 	}));
 
 	const graph = {
