@@ -25,8 +25,6 @@ let store = createStore(
 
 store.dispatch(setFilter('all'));
 store.dispatch(fetchRules('all'));
-store.dispatch(fetchRules('known'));
-store.dispatch(fetchRules('unknown'));
 
 render(
 	<MuiThemeProvider>

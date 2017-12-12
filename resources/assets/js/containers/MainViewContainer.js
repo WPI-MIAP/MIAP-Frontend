@@ -3,14 +3,7 @@ import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug } from '.
 import MainView from '../components/layouts/MainView'
 
 const getIsFetching = (rules, filter) => {
-	switch (filter) {
-		case 'all':
-			return rules.all.isFetching
-		case 'known':
-			return rules.known.isFetching
-		case 'unknown':
-			return rules.unknown.isFetching
-	}
+		return rules.all.isFetching
 }
 
 const filterTreeView = (currentDrugs, sortByTerm) => {
@@ -37,7 +30,8 @@ const mapStateToProps = state => {
 		nodes: state.rulesByStatus.all.drugs,
 		currentDrugs: filterTreeView(state.currentDrugs, state.treeViewSorting),
 		selectedDrug: state.selectDrug,
-		filter: state.visibilityFilter
+		filter: state.visibilityFilter,
+		score: state.selectScore,
 	}
 }
 

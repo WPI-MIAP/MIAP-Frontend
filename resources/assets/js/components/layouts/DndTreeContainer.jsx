@@ -6,7 +6,7 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
 
-const DndTreeContainer = ({ currentDrugs, width, height, filter }) => {
+const DndTreeContainer = ({ currentDrugs, width, height, filter, score }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -43,7 +43,7 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter }) => {
 				>
 					{ drug[1].isFetching ? 
 						(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-						<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter}/>
+						<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} score={score} />
 					}
 				</GridTile>
 			</div>

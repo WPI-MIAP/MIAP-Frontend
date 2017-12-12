@@ -13,20 +13,27 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const isNodeHidden = (filter, rules, drug, currentDrug) => {
-	if (filter === 'all' || drug === currentDrug) {
+const isNodeHidden = (filter, rules, drug, currentDrug, currentScore) => {
+	const currentRule = rules.find(el => (el.Drug1.name == drug || el.Drug2.name == drug))
+
+	if (drug === currentDrug) {
 		return false
 	}
 
-	return ! (rules.find(el => (el.Drug1.name == drug || el.Drug2.name == drug)).status === filter && drug !== currentDrug)
+	if ((currentRule.status === filter || filter === 'all') && currentScore === '') {
+		return false
+	}
+
+	if ((currentRule.status === filter || filter === 'all') && currentScore !== '' && currentRule.Score >= Number(currentScore)) {
+		return false
+	}
+
+	return true
 }
 
-const isEdgeHidden = (filter, status) => {
-	if (filter === 'all') {
-		return false
-	}
-
-	return ! ((filter === 'known' && status === 'known') || (filter === 'unknown' && status === 'unknown'))
+const isEdgeHidden = (filter, status, score, currentScore) => {
+	return ! ((filter === 'known' && status === 'known') || (filter === 'unknown' && status === 'unknown') || filter === 'all') ||
+		(currentScore !== '' && score <= Number(currentScore))
 }
 
 const generateColor = score => {
@@ -44,7 +51,7 @@ const generateColor = score => {
 	}
 }
 
-const DndTree = ({ currentDrug, data, filter }) => {
+const DndTree = ({ currentDrug, data, filter, score }) => {
 	const sortedLinks = _.orderBy(data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
 	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 	const edgesArray = uniqueLinks.map(link => ({
@@ -58,7 +65,7 @@ const DndTree = ({ currentDrug, data, filter }) => {
 			opacity: 1.0
 		},
 		width: 3,
-		hidden: isEdgeHidden(filter, link.status)
+		hidden: isEdgeHidden(filter, link.status, link.Score, score)
 	}))
 
 	const nodesArray = data.drugs.map(node => ({
@@ -68,7 +75,7 @@ const DndTree = ({ currentDrug, data, filter }) => {
 		size: (data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).status == 'known' && node != currentDrug) ? 5 : 10,
-		hidden: isNodeHidden(filter, data.rules, node, currentDrug),
+		hidden: isNodeHidden(filter, data.rules, node, currentDrug, score),
 		color: node != currentDrug ? generateColor(data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).Score) : '#349AED'

@@ -14,6 +14,13 @@ export const selectDrug = drug => {
 	}
 }
 
+export const selectScore = score => {
+	return {
+		type: 'SELECT_SCORE',
+		score
+	}
+}
+
 export const clearSearchTerm = () => {
 	return {
 		type: 'CLEAR_SEARCH_TERM'

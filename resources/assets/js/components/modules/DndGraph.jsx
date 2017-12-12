@@ -51,14 +51,15 @@ const isHidden = (filter, status) => {
 }
 
 const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter }) => {
+	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
+	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+
 	const nodesArray = nodes.map(node => ({
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
 	}));
 
-	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
-	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 	const edgesArray = uniqueLinks.map(link => ({
 		from: link.Drug1.name, 
 		to: link.Drug2.name, 

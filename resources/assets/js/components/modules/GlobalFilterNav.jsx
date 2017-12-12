@@ -5,6 +5,8 @@ import MenuItem from 'material-ui/MenuItem';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
+import {debounce} from 'throttle-debounce';
+
 
 
 const styles = {
@@ -26,8 +28,13 @@ export default class GlobalFilterNav extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { value: 'all' }
+    this.state = { 
+      value: 'all',
+      score: ''
+    }
     this.handleChange = this.handleChange.bind(this)
+    this.updateScore = this.updateScore.bind(this)
+    this.callEvent = debounce(1000, this.callEvent.bind(this));
   }
 
   handleChange(event, index, value) {
@@ -35,6 +42,18 @@ export default class GlobalFilterNav extends React.Component {
     this.setState({ value })
 
     this.props.onClick(value)
+  }
+
+  callEvent(value) {
+    this.props.updateScore(value)
+  }
+
+  updateScore(event) {
+    this.setState({
+      score: event.target.value,
+    });
+
+    this.callEvent(event.target.value)
   }
 
   render() {
@@ -55,6 +74,8 @@ export default class GlobalFilterNav extends React.Component {
           <TextField
             style={styles.textField}
             hintText="Score"
+            value={this.state.score}
+            onChange={this.updateScore}
           />
         </ToolbarGroup>
         <ToolbarGroup firstChild={true}>
