@@ -31,7 +31,8 @@ const mapStateToProps = state => {
 		currentDrugs: filterTreeView(state.currentDrugs, state.treeViewSorting),
 		selectedDrug: state.selectDrug,
 		filter: state.visibilityFilter,
-		score: state.selectScore,
+		minScore: state.selectMinScore,
+		maxScore: state.selectMaxScore
 	}
 }
 

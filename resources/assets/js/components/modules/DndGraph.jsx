@@ -34,21 +34,21 @@ const generateColor = score => {
 	}
 }
 
-const isEdgeHidden = (filter, status, score, currentScore) => {
-	return (filter !== 'all' && filter != status) || score < currentScore
+const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
+	return (filter !== 'all' && filter != status) || (score > maxScore || score < minScore)
 }
 
-const isNodeHidden = (links, node, filter, currentScore) => {
+const isNodeHidden = (links, node, filter, minScore, maxScore) => {
 	const outLinks = links.filter(link => 
 		link.Drug1.name === node || 
 		link.Drug2.name === node
 	)
 	
 	return outLinks.every(link => (link.status !== filter && filter !== 'all') || 
-		((link.status === filter || filter === 'all') && currentScore !== '' && link.Score < Number(currentScore)))
+		((link.status === filter || filter === 'all') && (link.Score > maxScore || link.Score < minScore)))
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter, score }) => {
+const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter, minScore, maxScore }) => {
 	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 
@@ -56,7 +56,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 		id: node, 
 		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
 		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
-		hidden: isNodeHidden(uniqueLinks, node, filter, score)
+		hidden: isNodeHidden(uniqueLinks, node, filter, minScore, maxScore)
 	}));
 
 	const edgesArray = uniqueLinks.map(link => ({
@@ -71,7 +71,7 @@ const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, select
 			hover: generateColor(link.Score),
 			opacity: 1.0
 		},
-		hidden: isEdgeHidden(filter, link.status, link.Score, score)
+		hidden: isEdgeHidden(filter, link.status, link.Score, minScore, maxScore)
 	}));
 
 	const graph = {

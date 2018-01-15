@@ -14,9 +14,16 @@ export const selectDrug = drug => {
 	}
 }
 
-export const selectScore = score => {
+export const selectMinScore = score => {
 	return {
-		type: 'SELECT_SCORE',
+		type: 'SELECT_MIN_SCORE',
+		score
+	}
+}
+
+export const selectMaxScore = score => {
+	return {
+		type: 'SELECT_MAX_SCORE',
 		score
 	}
 }

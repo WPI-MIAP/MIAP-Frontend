@@ -3,7 +3,8 @@ import { combineReducers } from 'redux'
 import { currentDrugs } from './fetchCurrentDrug'
 import { rulesByStatus } from './fetchRules'
 import { selectDrug } from './selectDrug'
-import { selectScore } from './selectScore'
+import { selectMinScore } from './selectMinScore'
+import { selectMaxScore } from './selectMaxScore'
 import { treeViewSorting } from './treeViewSorting'
 
 const drugInteractionApp = combineReducers({
@@ -12,7 +13,8 @@ const drugInteractionApp = combineReducers({
 	currentDrugs,
 	selectDrug,
 	treeViewSorting,
-	selectScore
+	selectMinScore,
+	selectMaxScore
 })
 
 export default drugInteractionApp

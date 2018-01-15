@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setFilter, clearSearchTerm, selectScore } from '../actions'
+import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore } from '../actions'
 import GlobalFilterNav from '../components/modules/GlobalFilterNav'
 
 
@@ -14,8 +14,12 @@ const mapDispatchToProps = dispatch => {
 			dispatch(setFilter(filter))
 		},
 
-		updateScore: score => {
-			dispatch(selectScore(score))
+		updateMinScore: score => {
+			dispatch(selectMinScore(score))
+		},
+
+		updateMaxScore: score => {
+			dispatch(selectMaxScore(score))
 		}
 	}
 }

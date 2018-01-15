@@ -9,7 +9,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div>
-				<Navigation />
+				{/* <Navigation /> */}
 				<GlobalFilterNavContainer />
 				<MainViewContainer />
 			</div>

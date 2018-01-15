@@ -13,29 +13,29 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const isNodeHidden = (filter, rules, drug, currentDrug, currentScore) => {
+const isNodeHidden = (filter, rules, drug, currentDrug, minScore, maxScore) => {
 	const currentRule = rules.find(el => (el.Drug1.name == drug || el.Drug2.name == drug))
 
 	if (drug === currentDrug) {
 		return false
 	}
 
-	if ((currentRule.status === filter || filter === 'all') && currentScore === '') {
+	if ((currentRule.status === filter || filter === 'all')) {
 		return false
 	}
 
-	if ((currentRule.status === filter || filter === 'all') && currentScore !== '' && currentRule.Score >= Number(currentScore)) {
+	if ((currentRule.status === filter || filter === 'all') && (currentRule.Score < minScore || currentRule.Score > maxScore)) {
 		return false
 	}
 
 	return true
 }
 
-const isEdgeHidden = (filter, status, score, currentScore) => {
+const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
 	return ! ((filter === 'known' && status === 'known') || 
 		(filter === 'unknown' && status === 'unknown') || 
 		filter === 'all') ||
-		(currentScore !== '' && score <= Number(currentScore))
+		(score > maxScore || score < minScore)
 }
 
 const generateColor = score => {
@@ -67,7 +67,7 @@ const DndTree = ({ currentDrug, data, filter, score }) => {
 			opacity: 1.0
 		},
 		width: 3,
-		hidden: isEdgeHidden(filter, link.status, link.Score, score)
+		hidden: isEdgeHidden(filter, link.status, link.Score, minScore, maxScore)
 	}))
 
 	const nodesArray = data.drugs.map(node => ({
@@ -77,7 +77,7 @@ const DndTree = ({ currentDrug, data, filter, score }) => {
 		size: (data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).status == 'known' && node != currentDrug) ? 5 : 10,
-		hidden: isNodeHidden(filter, data.rules, node, currentDrug, score),
+		hidden: isNodeHidden(filter, data.rules, node, currentDrug, minScore, maxScore),
 		color: node != currentDrug ? generateColor(data.rules.find(el => 
 			(el.Drug1.name == node || el.Drug2.name == node)
 		).Score) : '#349AED'

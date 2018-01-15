@@ -11404,7 +11404,7 @@ button.close {
 }
 
 body {
-  background: #F5F5F5;
+  background: #FAFAFA;
 }
 
 .MainView {
@@ -11425,7 +11425,6 @@ body {
 
 .MainView .card {
   background: white;
-  border: 1px solid lightgrey;
   padding-left: 20px;
   text-align: center;
 }
@@ -11433,6 +11432,8 @@ body {
 .DndGraph,
 .DndTree {
   background: white;
+  height: 600px;
+  width: 600px;
 }
 
 .react-resizable {

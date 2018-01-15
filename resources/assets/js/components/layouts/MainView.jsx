@@ -17,7 +17,7 @@ const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
 const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
 
-const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, deleteNode, currentDrugs, isFetching, selectedDrug, filter, score }) => {
+const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, deleteNode, currentDrugs, isFetching, selectedDrug, filter, minScore, maxScore }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -34,7 +34,7 @@ const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, de
 		<div className="MainView">
 		    <GridList
 				style={styles.gridList}
-				cols={5}
+				cols={3}
 				cellHeight={500}
 				padding={20}
 			>
@@ -43,10 +43,10 @@ const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, de
 					titlePosition="top"
 					titleBackground="#D62261"
 					style={{
-						// border: '1px solid grey', 
+						border: '1px solid #F0F0F0', 
 						boxSizing: 'border-box'
 					}}
-					cols={2}
+					cols={1}
 				>
 					<DndGraph 
 						nodes={nodes}
@@ -57,7 +57,8 @@ const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, de
 						onClickNode={onClickNode}
 						isFetching={isFetching}
 						filter={filter}
-						score={score}
+						minScore={minScore}
+						maxScore={maxScore}
 					/>
 				</GridTile>
 
@@ -67,16 +68,17 @@ const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, de
 					actionIcon={ <TreeViewFilterContainer /> }
 					titleBackground="#1BACC0"
 					style={{
-						// border: '1px solid grey', 
+						border: '1px solid #F0F0F0', 
 						boxSizing: 'border-box',
 						background: 'white'
 					}}
-					cols={1.5}
+					cols={1}
 				>
 					<DndTreeContainer 
 						currentDrugs={currentDrugs}
 						filter={filter}
-						score={score}
+						minScore={minScore}
+						maxScore={maxScore}
 						width={width}
 						height={height} 
 						onClickNode={showDetailNode}
@@ -89,11 +91,11 @@ const MainView = ({ nodes, links, width, height, onClickNode, showDetailNode, de
 					titlePosition="top"
           titleBackground="#8C2DA8"
           style={{
-            // border: '1px solid grey', 
+            border: '1px solid #F0F0F0', 
 						boxSizing: 'border-box',
 						background: 'white'
           }}
-          cols={1.5}
+          cols={1}
         >
 					<InteractionProfile 
 						mainDrug={selectedDrug} 

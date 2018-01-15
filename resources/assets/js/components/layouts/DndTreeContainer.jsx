@@ -11,7 +11,7 @@ import Launch from 'material-ui/svg-icons/action/launch'
 
 
 
-const DndTreeContainer = ({ currentDrugs, width, height, filter, score, onClickNode, onDeleteNode }) => {
+const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxScore, onClickNode, onDeleteNode }) => {
 	const styles = {
 		root: {
 			display: 'flex',
@@ -67,7 +67,7 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, score, onClickN
 				>
 					{ drug[1].isFetching ? 
 						(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-						<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} score={score} />
+						<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
 					}
 				</GridTile>
 			</div>

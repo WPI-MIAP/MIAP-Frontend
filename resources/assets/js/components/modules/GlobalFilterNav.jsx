@@ -1,27 +1,36 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import SearchBarContainer from '../../containers/SearchBarContainer';
-import MenuItem from 'material-ui/MenuItem';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import {debounce} from 'throttle-debounce';
-
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Menu from 'material-ui/svg-icons/navigation/menu';
+import ViewModule from 'material-ui/svg-icons/action/view-module';
+import {white} from 'material-ui/styles/colors';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import Slider from 'material-ui/Slider';
 
 
 const styles = {
-  root: {
-    paddingTop: 20,
-    background: '#F5F5F5',
+  customWidth: {
+    width: 200,
   },
-  selectField: {
-    marginLeft: 26
+  elementRight: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   textField: {
-    marginTop: 23,
-    marginLeft: 10
+    position: 'relative',
+    top: -19,
+    transition: 'none',
+    width: 90,
+    marginRight: 20,
   }
-
 }
 
 export default class GlobalFilterNav extends React.Component {
@@ -30,11 +39,22 @@ export default class GlobalFilterNav extends React.Component {
 
     this.state = { 
       value: 'all',
-      score: ''
+      minScore: '',
+      maxScore: '',
+      sliderValue: 0
     }
     this.handleChange = this.handleChange.bind(this)
-    this.updateScore = this.updateScore.bind(this)
-    this.callEvent = debounce(1000, this.callEvent.bind(this));
+    this.handleSliderChange = this.handleSliderChange.bind(this)
+    this.updateMinScore = this.updateMinScore.bind(this)
+    this.updateMaxScore = this.updateMaxScore.bind(this)
+    this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
+    this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
+  }
+
+  handleSliderChange(value) {
+    this.setState({
+      sliderValue: value
+    })
   }
 
   handleChange(event, index, value) {
@@ -44,22 +64,74 @@ export default class GlobalFilterNav extends React.Component {
     this.props.onClick(value)
   }
 
-  callEvent(value) {
-    this.props.updateScore(value)
+  callUpdateMinScore(value) {
+    this.props.updateMinScore(value)
   }
 
-  updateScore(event) {
+  callUpdateMaxScore(value) {
+    this.props.updateMaxScore(value)
+  }
+
+  updateMinScore(event) {
     this.setState({
-      score: event.target.value,
+      minScore: event.target.value,
     });
 
-    this.callEvent(event.target.value)
+    this.callUpdateMinScore(event.target.value)
+  }
+
+  updateMaxScore(event) {
+    this.setState({
+      maxScore: event.target.value,
+    });
+
+    this.callUpdateMaxScore(event.target.value)
   }
 
   render() {
     return (
-      <Toolbar style={styles.root}>
-        <ToolbarGroup firstChild={true}>
+      <AppBar style={styles.root}
+        title={
+          <div>
+            <DropDownMenu 
+              value={this.state.value}
+              onChange={this.handleChange} 
+              style={styles.customWidth}
+              autoWidth={false} 
+              labelStyle={{ color: 'white' }}
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+
+            >
+              <MenuItem value='all' primaryText="All DIARs" />
+              <MenuItem value='known' primaryText="Known DIARs" />
+              <MenuItem value='unknown' primaryText="Unknown DIARs" />
+            </DropDownMenu> 
+            <TextField
+              style={styles.textField}
+              hintText="Min Score"
+              hintStyle={{ color: 'white' }}
+              inputStyle={{ color: 'white' }}	
+              value={this.state.minScore}
+              onChange={this.updateMinScore}
+            />
+            <TextField
+              style={styles.textField}
+              hintText="Max Score"
+              hintStyle={{ color: 'white' }}
+              inputStyle={{ color: 'white' }}	
+              value={this.state.maxScore}
+              onChange={this.updateMaxScore}
+            />
+        </div>
+        }
+        iconElementRight={ 
+          <div style={styles.elementRight}>
+            <SearchBarContainer />
+          </div>
+        }
+      />
+        /* <ToolbarGroup firstChild={true}>
           <SelectField
             value={this.state.value}
             onChange={this.handleChange}
@@ -80,8 +152,7 @@ export default class GlobalFilterNav extends React.Component {
         </ToolbarGroup>
         <ToolbarGroup firstChild={true}>
           <SearchBarContainer />
-        </ToolbarGroup>
-      </Toolbar>
+        </ToolbarGroup> */
     )
   }
 }

@@ -73,6 +73,7 @@
     "react-dom": "16.0.0",
     "react-graph-vis": "1.0.2",
     "react-instantsearch": "4.2.0",
+    "react-rangeslider": "2.2.0",
     "react-redux": "5.0.6",
     "react-resizable": "1.7.5",
     "react-search-box": "0.0.6",
