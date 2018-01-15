@@ -20,11 +20,7 @@ const isNodeHidden = (filter, rules, drug, currentDrug, minScore, maxScore) => {
 		return false
 	}
 
-	if ((currentRule.status === filter || filter === 'all')) {
-		return false
-	}
-
-	if ((currentRule.status === filter || filter === 'all') && (currentRule.Score < minScore || currentRule.Score > maxScore)) {
+	if ((currentRule.status === filter || filter === 'all') && currentRule.Score > minScore && currentRule.Score < maxScore) {
 		return false
 	}
 
@@ -53,7 +49,7 @@ const generateColor = score => {
 	}
 }
 
-const DndTree = ({ currentDrug, data, filter, score }) => {
+const DndTree = ({ currentDrug, data, filter, minScore, maxScore }) => {
 	const sortedLinks = _.orderBy(data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
 	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 	const edgesArray = uniqueLinks.map(link => ({
