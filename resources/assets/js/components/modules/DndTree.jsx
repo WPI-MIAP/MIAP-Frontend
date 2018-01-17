@@ -49,82 +49,103 @@ const generateColor = score => {
 	}
 }
 
-const DndTree = ({ currentDrug, data, filter, minScore, maxScore }) => {
-	const sortedLinks = _.orderBy(data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
-	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
-	const edgesArray = uniqueLinks.map(link => ({
-		from: link.Drug1.name, 
-		to: link.Drug2.name, 
-		title: generateTitle(link),
-		color: {
-			color: 'gray',
-			highlight: 'gray',
-			hover: 'gray',
-			opacity: 1.0
-		},
-		width: 3,
-		hidden: isEdgeHidden(filter, link.status, link.Score, minScore, maxScore)
-	}))
+export default class DndTree extends Component {
+	constructor(props) {
+		super(props);
 
-	const nodesArray = data.drugs.map(node => ({
-		id: node, 
-		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
-		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
-		size: (data.rules.find(el => 
-			(el.Drug1.name == node || el.Drug2.name == node)
-		).status == 'known' && node != currentDrug) ? 5 : 10,
-		hidden: isNodeHidden(filter, data.rules, node, currentDrug, minScore, maxScore),
-		color: node != currentDrug ? generateColor(data.rules.find(el => 
-			(el.Drug1.name == node || el.Drug2.name == node)
-		).Score) : '#349AED'
-	}))
+		this.state = {
+			network: null
+		}
 
-
-	const graph = {
-		nodes: nodesArray,
-		edges: edgesArray
+		this.setNetworkInstance = this.setNetworkInstance.bind(this);
 	}
 
-	const options = {
-		height: 250 + 'px',
-		// width: 180 + 'px',
-		edges: {
-			color: "#000000",
-			arrows: {
-				to:     {enabled: false, scaleFactor:1, type:'arrow'},
-				middle: {enabled: false, scaleFactor:1, type:'arrow'},
-				from:   {enabled: false, scaleFactor:1, type:'arrow'}
-			}
-		},
-		nodes: {
-			shape: 'dot',
-			font: {
-				color: '#343434',
-			    size: 11, // px
-			    face: 'arial',
+	componentDidUpdate() {
+		if (this.state.network != null) {
+			this.state.network.redraw();
+		}
+	}
+
+	setNetworkInstance(nw) {
+		this.setState({ network: nw });
+	}
+
+
+	render() {
+		const sortedLinks = _.orderBy(this.props.data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
+		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+		const edgesArray = uniqueLinks.map(link => ({
+			from: link.Drug1.name, 
+			to: link.Drug2.name, 
+			title: generateTitle(link),
+			color: {
+				color: 'gray',
+				highlight: 'gray',
+				hover: 'gray',
+				opacity: 1.0
 			},
-		},
-		interaction:{
-			hover: true,
-		}
-	}
+			width: 3,
+			hidden: isEdgeHidden(this.props.filter, link.status, link.Score, this.props.minScore, this.props.maxScore)
+		}))
 
-	const events = {
-		select(event) {
-			const { nodes, edges } = event;
-			console.log('hi')
-		},
-	}
+		const nodesArray = this.props.data.drugs.map(node => ({
+			id: node, 
+			label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
+			title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
+			size: (this.props.data.rules.find(el => 
+				(el.Drug1.name == node || el.Drug2.name == node)
+			).status == 'known' && node != this.props.currentDrug) ? 5 : 10,
+			hidden: isNodeHidden(this.props.filter, this.props.data.rules, node, this.props.currentDrug, this.props.minScore, this.props.maxScore),
+			color: node != this.props.currentDrug ? generateColor(this.props.data.rules.find(el => 
+				(el.Drug1.name == node || el.Drug2.name == node)
+			).Score) : '#349AED'
+		}))
 
-	return (
-		<div>
-		{
-			! data.isFetching ? 
-			<Graph graph={graph} options={options} events={events} /> :
-			(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+
+		const graph = {
+			nodes: nodesArray,
+			edges: edgesArray
 		}
-		</div>
-	)
+
+		const options = {
+			height: 248 + 'px',
+			// width: 180 + 'px',
+			edges: {
+				color: "#000000",
+				arrows: {
+					to:     {enabled: false, scaleFactor:1, type:'arrow'},
+					middle: {enabled: false, scaleFactor:1, type:'arrow'},
+					from:   {enabled: false, scaleFactor:1, type:'arrow'}
+				}
+			},
+			nodes: {
+				shape: 'dot',
+				font: {
+					color: '#343434',
+						size: 11, // px
+						face: 'arial',
+				},
+			},
+			interaction:{
+				hover: true,
+			}
+		}
+
+		const events = {
+			select(event) {
+				const { nodes, edges } = event;
+				console.log('hi')
+			},
+		}
+
+		return (
+			<div>
+			{
+				! this.props.data.isFetching ? 
+				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/> :
+				(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+			}
+			</div>
+		)
+	}
 }
-	
-export default DndTree

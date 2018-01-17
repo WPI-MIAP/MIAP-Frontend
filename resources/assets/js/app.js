@@ -9,7 +9,6 @@ import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-
 /**
  * Entry point of the React App
  */

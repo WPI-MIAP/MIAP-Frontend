@@ -11423,17 +11423,9 @@ body {
   margin-top: 70px;
 }
 
-.MainView .card {
-  background: white;
-  padding-left: 20px;
-  text-align: center;
-}
-
 .DndGraph,
 .DndTree {
   background: white;
-  height: 600px;
-  width: 600px;
 }
 
 .react-resizable {

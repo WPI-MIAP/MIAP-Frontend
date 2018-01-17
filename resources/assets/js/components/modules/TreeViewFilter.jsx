@@ -2,7 +2,8 @@ import React from 'react'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import DropDownMenu from 'material-ui/DropDownMenu'
+import SortIcon from 'material-ui/svg-icons/content/sort'
 
 const TreeViewFilter = ({ onClickRadio }) => {
 	const styles = {
@@ -13,8 +14,10 @@ const TreeViewFilter = ({ onClickRadio }) => {
 
 	return (
 		<IconMenu
+			tooltip="Expand"
+			tooltipPosition='bottom-left'
 			iconStyle={styles.root}
-			iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+			iconButtonElement={<IconButton><SortIcon /></IconButton>}
 			anchorOrigin={{horizontal: 'left', vertical: 'top'}}
 			targetOrigin={{horizontal: 'left', vertical: 'top'}}
 		>

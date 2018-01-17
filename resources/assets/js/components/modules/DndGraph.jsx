@@ -15,10 +15,6 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const setNetworkInstance = nw => {
-	network = nw;	
-}
-
 const generateColor = score => {
 	if (score <= 0.0) {
 		return '#fecc5c'
@@ -48,98 +44,117 @@ const isNodeHidden = (links, node, filter, minScore, maxScore) => {
 		((link.status === filter || filter === 'all') && (link.Score > maxScore || link.Score < minScore)))
 }
 
-const DndGraph = ({ nodes, links, width, height, onClickNode, isFetching, selectedDrug, filter, minScore, maxScore }) => {
-	const sortedLinks = _.orderBy(links, ['r_Drugname', 'Score'], ['asc', 'desc'])
-	const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+export default class DndGraph extends Component {
+	constructor(props) {
+		super(props);
 
-	const nodesArray = nodes.map(node => ({
-		id: node, 
-		label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
-		title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
-		hidden: isNodeHidden(uniqueLinks, node, filter, minScore, maxScore)
-	}));
-
-	const edgesArray = uniqueLinks.map(link => ({
-		from: link.Drug1.name, 
-		to: link.Drug2.name, 
-		title: generateTitle(link),
-		dashes: link.status === 'known',
-		width: link.status === 'known' ? 2 : 4,
-		color: {
-			color: generateColor(link.Score),
-			highlight: generateColor(link.Score),
-			hover: generateColor(link.Score),
-			opacity: 1.0
-		},
-		hidden: isEdgeHidden(filter, link.status, link.Score, minScore, maxScore)
-	}));
-
-	const graph = {
-		nodes: nodesArray,
-		edges: edgesArray
-	};
-
-	const options = {
-		height: height + 'px',
-		width: width + 'px',
-		edges: {
-			arrows: {
-				to:     {enabled: false, scaleFactor:1, type:'arrow'},
-				middle: {enabled: false, scaleFactor:1, type:'arrow'},
-				from:   {enabled: false, scaleFactor:1, type:'arrow'}
-			},
-		},
-		nodes: {
-			shape: 'dot',
-			color: '#2C98F0',
-			size: 10,
-			font: {
-				color: '#343434',
-			    size: 11, // px
-			    face: 'arial',
-			},
-		},
-		interaction:{
-			hover: true,
+		this.state = {
+			network: null
 		}
-	};
 
-	const events = {
-		select(event) {
-			console.log(event)
-			const { nodes, edges } = event;
-			onClickNode(nodes[0]);
-			const options = {
-				position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
-				scale: 1,
-				offset: { x: 0, y: 0},
-				animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
-			};
-			network.moveTo(options);
-		},
+		this.setNetworkInstance = this.setNetworkInstance.bind(this);
 	}
 
-	// if (selectedDrug !== '') {
-	// 	const nodeId = network.getPositions([selectedDrug]);
-	// 	const options = {
-	// 		position: { x: nodeId[selectedDrug].x, y: nodeId[selectedDrug].y},
-	// 		scale: 1,
-	// 		offset: { x: 0, y: 0},
-	// 		animation: true
-	// 	}
-	// 	network.moveTo(options)
-	// }
-
-	return (
-		<div className='DndGraph'
-		style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
-		>
-		{ ! isFetching ?
-			<Graph graph={graph} options={options} events={events} getNetwork={setNetworkInstance}/> :
-			(<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+	componentDidUpdate() {
+		if (this.state.network != null) {
+			this.state.network.redraw();
 		}
-		</div>
-		)
-}
+	}
 
-export default DndGraph
+	setNetworkInstance(nw) {
+		this.setState({ network: nw });
+	}
+
+	render() {
+		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
+		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+
+		const nodesArray = this.props.nodes.map(node => ({
+			id: node, 
+			label: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1), 
+			title: node.charAt(0).toUpperCase() + node.toLowerCase().substring(1),
+			hidden: isNodeHidden(uniqueLinks, node, this.props.filter, this.props.minScore, this.props.maxScore)
+		}));
+
+		const edgesArray = uniqueLinks.map(link => ({
+			from: link.Drug1.name, 
+			to: link.Drug2.name, 
+			title: generateTitle(link),
+			dashes: link.status === 'known',
+			width: link.status === 'known' ? 2 : 4,
+			color: {
+				color: generateColor(link.Score),
+				highlight: generateColor(link.Score),
+				hover: generateColor(link.Score),
+				opacity: 1.0
+			},
+			hidden: isEdgeHidden(this.props.filter, link.status, link.Score, this.props.minScore, this.props.maxScore)
+		}));
+
+		const graph = {
+			nodes: nodesArray,
+			edges: edgesArray
+		};
+
+		const options = {
+			// height: this.props.height + 'px',
+			// width: this.props.width + 'px',
+			edges: {
+				arrows: {
+					to:     {enabled: false, scaleFactor:1, type:'arrow'},
+					middle: {enabled: false, scaleFactor:1, type:'arrow'},
+					from:   {enabled: false, scaleFactor:1, type:'arrow'}
+				},
+			},
+			nodes: {
+				shape: 'dot',
+				color: '#2C98F0',
+				size: 10,
+				font: {
+					color: '#343434',
+						size: 11, // px
+						face: 'arial',
+				},
+			},
+			interaction:{
+				hover: true,
+			}
+		};
+
+		const events = {
+			select: (event) => {
+				const { nodes, edges } = event;
+				this.props.onClickNode(nodes[0]);
+				const options = {
+					position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
+					scale: 1,
+					offset: { x: 0, y: 0},
+					animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+				};
+				this.state.network.moveTo(options);
+			},
+		}
+
+		// if (selectedDrug !== '') {
+		// 	const nodeId = network.getPositions([selectedDrug]);
+		// 	const options = {
+		// 		position: { x: nodeId[selectedDrug].x, y: nodeId[selectedDrug].y},
+		// 		scale: 1,
+		// 		offset: { x: 0, y: 0},
+		// 		animation: true
+		// 	}
+		// 	network.moveTo(options)
+		// }
+
+		return (
+			<div className='DndGraph'
+			// style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
+			>
+			{ ! this.props.isFetching ?
+				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/> :
+				(<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+			}
+			</div>
+		)
+	}
+}
