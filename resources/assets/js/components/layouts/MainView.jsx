@@ -150,6 +150,7 @@ export default class MainView extends Component {
 								onClickNode={this.props.showDetailNode}
 								onDeleteNode={this.props.deleteNode}
 								cols={this.state.colGalaxy}
+								selectedDrug={this.props.selectedDrug}
 							/>
 						</GridTile>
           </Col>

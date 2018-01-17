@@ -2,15 +2,10 @@ import React, { Component } from 'react'
 import Graph from 'react-graph-vis'
 import DndTree from '../modules/DndTree'
 import {GridList, GridTile} from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
-import Delete from 'material-ui/svg-icons/action/delete'
-import Launch from 'material-ui/svg-icons/action/launch'
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxScore, onClickNode, onDeleteNode, cols }) => {
+const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxScore, onClickNode, onDeleteNode, cols, selectedDrug }) => {
 	const colsWidth = cols == 4 ? 12 : 3;
 
 	const styles = {
@@ -18,10 +13,6 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxSc
 			overflow: 'auto',
 			height: 500,
 			paddingTop: 75
-		},
-		card: {
-			border: '1px solid grey',
-			height: 300
 		},
 		title: {
 			// textAlign: 'center'
@@ -47,7 +38,11 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxSc
 					{
 						currentDrugs.map(drug => (
 							<Col lg={colsWidth} md={colsWidth} style={styles.cols}>
-								<div className="card" key={drug[0]} style={styles.card}>
+								<div className="card" key={drug[0]} style={{
+										height: 300,
+										border: selectedDrug == drug[0] ? '3px solid #29ACBF' : '1px solid grey'
+									}}
+								>
 									<h5 className="card-title" style={styles.title}>
 										<span style={styles.titleText}>{drug[0]}</span>
 										<span className="pull-right">
@@ -63,33 +58,6 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxSc
 										<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
 									</div>
 								</div>
-								{/* <div>
-									<Subheader style={styles.subHeader}>
-									{drug[0]}
-									</Subheader>
-									<GridTile
-										key={drug[0]}
-										actionIcon={
-											<div>
-											<IconButton onClick={() => onDeleteNode(drug[0])}>
-											<Delete color='#757575' />
-											</IconButton>
-
-											<IconButton onClick={() => onClickNode(drug[0])}>
-											<Launch color='#757575' />
-											</IconButton>
-											</div>
-											}
-											title=" "
-											style={styles.gridTitle}
-											titleBackground='rgba(0, 0, 0, 0)'
-										>
-											{ drug[1].isFetching ? 
-											(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-											<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
-											}
-									</GridTile>
-								</div>	 */}
 							</Col>
 						))
 					}
@@ -98,39 +66,6 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxSc
 		</div>
 	)
 
-	// return (
-	// 	<div className="row">
-	// 	{currentDrugs.map(drug => (
-	// 		<div className="col-md-3" style={styles.gridTile}>
-	// 			<Subheader style={styles.subHeader}>
-	// 				{drug[0]}
-	// 			</Subheader>
-	// 			<GridTile
-	// 				key={drug[0]}
-	// 				actionIcon={
-	// 					<div>
-	// 						<IconButton onClick={() => onDeleteNode(drug[0])}>
-	// 							<Delete color='#757575' />
-	// 						</IconButton>
-
-	// 						<IconButton onClick={() => onClickNode(drug[0])}>
-	// 							<Launch color='#757575' />
-	// 						</IconButton>
-	// 					</div>
-	// 				}
-  //         title=" "
-	// 				style={styles.gridTitle}
-	// 				titleBackground='rgba(0, 0, 0, 0)'
-	// 			>
-	// 				{ drug[1].isFetching ? 
-	// 					(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-	// 					<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
-	// 				}
-	// 			</GridTile>
-	// 		</div>
-	// 	))}
-	// 	</div>
-	// 	)
 }
 
 export default DndTreeContainer
