@@ -60,11 +60,7 @@ const DndTreeContainer = ({ currentDrugs, width, height, filter, minScore, maxSc
 										</span>
 									</h5>	
 									<div className="card-body">
-										{
-											 drug[1].isFetching ? 
-											(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>) :
-											<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
-										}	
+										<DndTree currentDrug={drug[0]} data={drug[1]} filter={filter} minScore={minScore} maxScore={maxScore} />
 									</div>
 								</div>
 								{/* <div>

@@ -143,7 +143,9 @@ export default class DndTree extends Component {
 			{
 				! this.props.data.isFetching ? 
 				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/> :
-				(<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+				<span style={{ position: 'absolute', top: '45%', left: '35%' }}>
+					<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>
+				</span>
 			}
 			</div>
 		)

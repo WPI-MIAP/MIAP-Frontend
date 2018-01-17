@@ -73,7 +73,7 @@ export default class MainView extends Component {
 				<Grid fluid style={{ marginTop: 25, height: 500 }}>
         <Row>
           <Col xs={6} md={this.state.colOverview} style={{ 
-						display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none'
+						display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
 					}}>
 						<GridTile
 							title='Overview'
@@ -82,6 +82,7 @@ export default class MainView extends Component {
 							style={{
 								border: '1px solid #F0F0F0', 
 								boxSizing: 'border-box',
+								background: 'white'
 							}}
 							actionIcon={
 								<IconButton 
