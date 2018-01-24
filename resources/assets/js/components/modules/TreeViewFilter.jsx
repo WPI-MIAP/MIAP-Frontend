@@ -21,7 +21,7 @@ const TreeViewFilter = ({ onClickRadio }) => {
 			anchorOrigin={{horizontal: 'left', vertical: 'top'}}
 			targetOrigin={{horizontal: 'left', vertical: 'top'}}
 		>
-			<MenuItem primaryText="Latest" onClick={() => onClickRadio('latest')} />
+			<MenuItem primaryText="Sort by latest" onClick={() => onClickRadio('latest')} />
 			<MenuItem primaryText="Sort by names" onClick={() => onClickRadio('name')} />
 			<MenuItem primaryText="Sort by count" onClick={() => onClickRadio('count')} />
 			<MenuItem primaryText="Sort by severity" onClick={() => onClickRadio('severity')} />

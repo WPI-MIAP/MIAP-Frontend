@@ -119,15 +119,15 @@ export default class MainView extends Component {
 							titlePosition="top"
 							actionIcon={ 
 								<div>
+									<TreeViewFilterContainer /> 
 									<IconButton 
 										tooltip="Expand"
 										iconStyle={{ color: 'white' }}
 										tooltipPosition='bottom-left'
 										onClick={this.toggleFullscreenGalaxy}
 									>
-									<IconFullscreen />	
-								</IconButton>
-									<TreeViewFilterContainer /> 
+										<IconFullscreen />	
+									</IconButton>
 								</div>
 							}
 							titleBackground="#1BACC0"
@@ -157,7 +157,7 @@ export default class MainView extends Component {
 
           <Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
 						<GridTile
-							title={'Interaction profile for: ' + this.props.selectedDrug}
+							title={'Interaction Profile for: ' + this.props.selectedDrug}
 							titlePosition="top"
 							titleBackground="#8C2DA8"
 							style={{

@@ -101,14 +101,13 @@ export default class DndTree extends Component {
 			).Score) : '#349AED'
 		}))
 
-
 		const graph = {
 			nodes: nodesArray,
 			edges: edgesArray
 		}
 
 		const options = {
-			height: 248 + 'px',
+			height: 240 + 'px',
 			// width: 180 + 'px',
 			edges: {
 				color: "#000000",
@@ -142,9 +141,9 @@ export default class DndTree extends Component {
 			<div>
 			{
 				! this.props.data.isFetching ? 
-				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/> :
-				<span style={{ position: 'absolute', top: '45%', left: '35%' }}>
-					<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>
+				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance} /> :
+				<span >
+					<i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw" style={{ marginTop: 100, marginLeft: 15 }}></i>
 				</span>
 			}
 			</div>
