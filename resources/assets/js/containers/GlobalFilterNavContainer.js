@@ -5,6 +5,7 @@ import GlobalFilterNav from '../components/modules/GlobalFilterNav'
 
 const mapStateToProps = state => {
   return {
+	rules: state.rulesByStatus.all.rules
   }
 }
 

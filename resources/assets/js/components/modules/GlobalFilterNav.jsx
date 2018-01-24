@@ -13,8 +13,17 @@ import Menu from 'material-ui/svg-icons/navigation/menu';
 import ViewModule from 'material-ui/svg-icons/action/view-module';
 import {white} from 'material-ui/styles/colors';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import Slider from 'material-ui/Slider';
+import 'rc-slider/assets/index.css';
+import ActionHelpOutline from 'material-ui/svg-icons/action/help-outline';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import LineChart from 'react-linechart';
+import 'react-linechart/dist/styles.css';
+import { isNullOrUndefined } from 'util';
 
+const Slider = require('rc-slider');
+const createSliderWithTooltip = Slider.createSliderWithTooltip;
+const Range = createSliderWithTooltip(Slider.Range);
 
 const styles = {
   customWidth: {
@@ -30,6 +39,18 @@ const styles = {
     transition: 'none',
     width: 90,
     marginRight: 20,
+  },
+  slider: {
+    position: 'relative',
+    top: -10,
+    width: 200,
+    zIndex: 1200,
+    marginLeft: 55
+  },
+  sliderTip: {
+    position: 'relative',
+    zIndex: 1200,
+    placement: 'bottom'
   }
 }
 
@@ -39,22 +60,27 @@ export default class GlobalFilterNav extends React.Component {
 
     this.state = { 
       value: 'all',
-      minScore: '',
-      maxScore: '',
-      sliderValue: 0
+      filteredMin: '',
+      filteredMax: '',
+      sliderValue: 0,
+      minScore: -0.5,
+      maxScore: 1.0,
+      freqDist: [],
+      help: false
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSliderChange = this.handleSliderChange.bind(this)
-    this.updateMinScore = this.updateMinScore.bind(this)
-    this.updateMaxScore = this.updateMaxScore.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.updateMinScore = this.updateMinScore.bind(this);
+    this.updateMaxScore = this.updateMaxScore.bind(this);
+    this.updateMinAndMax = this.updateMinAndMax.bind(this);
+    this.openHelp = this.openHelp.bind(this);
+    this.closeHelp = this.closeHelp.bind(this);
+    this.findFrequencyDistribution = this.findFrequencyDistribution.bind(this);
     this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
     this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
   }
 
-  handleSliderChange(value) {
-    this.setState({
-      sliderValue: value
-    })
+  componentDidUpdate(prevProps, prevState) {
+    this.findFrequencyDistribution();
   }
 
   handleChange(event, index, value) {
@@ -74,7 +100,7 @@ export default class GlobalFilterNav extends React.Component {
 
   updateMinScore(event) {
     this.setState({
-      minScore: event.target.value,
+      filteredMin: event.target.value,
     });
 
     this.callUpdateMinScore(event.target.value)
@@ -82,13 +108,116 @@ export default class GlobalFilterNav extends React.Component {
 
   updateMaxScore(event) {
     this.setState({
-      maxScore: event.target.value,
+      filteredMax: event.target.value,
     });
 
     this.callUpdateMaxScore(event.target.value)
   }
 
+  updateMinAndMax(value) {
+    // alert(value);
+    this.setState({
+      filteredMax: value[1],
+      filteredMin: value[0],
+    });
+    this.callUpdateMaxScore(value[1]);
+    this.callUpdateMinScore(value[0]);
+  }
+
+  openHelp(){
+    this.setState({help: true});
+  };
+
+  closeHelp(){
+    this.setState({help: false});
+  };
+
+  findFrequencyDistribution(){
+    if(this.props.rules.length > 1 && this.state.freqDist.length == 0) {
+      // find frequency distribution of rules by score, find max score and min score
+      var freqDist = [];
+      var maxScore = this.props.rules[0]['Score'];
+      var minScore = this.props.rules[0]['Score'];
+      var ruleCount = this.props.rules.length;
+      this.props.rules.forEach(rule => {
+        rule['Score'] = parseFloat(rule['Score']);
+        //check freqDist to see if score has already been seen before
+        var found = false;
+        for(var i=0; i < freqDist.length; i++) {
+          if(Math.abs(freqDist[i]['Score'] - rule['Score']) < 0.03) {
+            freqDist[i]['Freq'] = freqDist[i]['Freq'] + 1;
+            found = true;
+            break;
+          }
+        }
+        if(!found) {
+          //add entry for current score
+          freqDist.push({'Score': rule['Score'], 'Freq': 1});
+        }
+        
+        //check min and max scores
+        if(rule['Score'] < minScore) {
+          minScore = rule['Score'];
+        }
+        if(rule['Score'] > maxScore) {
+          maxScore = rule['Score'];
+        }
+      });
+
+      freqDist.forEach(entry => {
+        entry['Freq'] = (entry['Freq'] * 100) / ruleCount;
+      });
+
+      freqDist = _.sortBy(freqDist, 'Score');
+
+      this.setState({
+        minScore: minScore,
+        maxScore: maxScore,
+        freqDist: freqDist
+      });
+    }
+  };
+
   render() {
+
+    const actions = [
+      <FlatButton
+        label="Done"
+        primary={true}
+        onClick={this.closeHelp}
+      />
+    ];
+    const marks = {
+      [this.state.minScore]: {
+          style: {
+            position: 'absolute',
+            zIndex: 1100,
+            color: 'white',
+            top: -27,
+          }, label: <strong>Min Score: {this.state.minScore}</strong>,
+        },
+      [this.state.maxScore]: {
+        style: {
+          position: 'absolute',
+          zIndex: 1100,
+          color: 'white',
+          top: -27,
+        }, label: <strong>Max Score: {this.state.maxScore}</strong>,
+      }
+    };
+
+    var points = [];
+    this.state.freqDist.forEach(entry => {
+      points.push({x: entry['Score'], y: entry['Freq']});
+    });
+    // points = _.sortBy(points, 'x');
+
+    const data = [
+        {									
+            color: "steelblue", 
+            points: points
+        }
+    ];
     return (
       <AppBar style={styles.root}
         title={
@@ -107,7 +236,7 @@ export default class GlobalFilterNav extends React.Component {
               <MenuItem value='known' primaryText="Known DIARs" />
               <MenuItem value='unknown' primaryText="Unknown DIARs" />
             </DropDownMenu> 
-            <TextField
+            {/* <TextField
               style={styles.textField}
               hintText="Min Score"
               hintStyle={{ color: 'white' }}
@@ -122,11 +251,47 @@ export default class GlobalFilterNav extends React.Component {
               inputStyle={{ color: 'white' }}	
               value={this.state.maxScore}
               onChange={this.updateMaxScore}
-            />
+            /> */}
+            <div 
+              style={{position: 'relative', top: -65, marginLeft: 200}}>
+              <LineChart 
+                width={274}
+                height={60}
+                data={data}
+                xMin={this.state.minScore}
+                xMax={this.state.maxScore}
+                yMax={0}
+                yMin={180}
+                hidePoints={true}
+                hideXLabel={true}
+                hideYLabel={true}
+                hideXAxis={true}
+                hideYAxis={true}
+                margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
+              <Range defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
+                style={styles.slider} tipProps={styles.sliderTip} marks={marks} />
+            </div>
         </div>
         }
         iconElementRight={ 
           <div style={styles.elementRight}>
+            <IconButton 
+              tooltip="Help"
+              iconStyle={{ color: 'white' }}
+              tooltipPosition='bottom-left'
+              onClick={this.openHelp}
+            >
+              <ActionHelpOutline />	
+            </IconButton>
+            <Dialog
+              title="Help"
+              actions={actions}
+              modal={false}
+              open={this.state.help}
+              onRequestClose={this.closeHelp}>
+              Help information will be shown here.
+            </Dialog>
+
             <SearchBarContainer />
           </div>
         }
