@@ -21,9 +21,9 @@ import * as _ from 'lodash';
 
  	/**
  	 * Get rules in json
- 	 * @param {Request}      req  
- 	 * @param {Response}     res  
- 	 * @param {NextFunction} next 
+ 	 * @param {Request}      req
+ 	 * @param {Response}     res
+ 	 * @param {NextFunction} next
  	 */
  	public async getRules(req: Request, res: Response, next: NextFunction) {
  		try {
@@ -32,7 +32,7 @@ import * as _ from 'lodash';
 	 			rules = rules.filter(rule => rule.status == 'known');
 	 		} else if (req.query.status == 'unknown') {
 	 			rules = rules.filter(rule => rule.status == 'unknown');
-	 		} 
+	 		}
 
 	 		if (req.query.drug) {
 	 			rules = rules.filter(
@@ -49,12 +49,26 @@ import * as _ from 'lodash';
  		} catch (err) {
  			console.log(err);
  		}
- 	}
+	 }
+
+	 public async getReports(req: Request, res: Response, next: NextFunction) {
+		try {
+			let reports = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/reports.csv', 'utf8'));
+
+			if (req.query.drug) {
+				reports = reports.filter(report => report.drugname.includes(req.query.drug.toUpperCase()));
+			}
+
+			res.json(reports);
+		} catch (err) {
+			console.log(err);
+		}
+	}
 }
 
 function getDrugsFromRules(rules) {
  		const drugsList = rules.map((rule) => {
- 			return [rule.Drug1.name, rule.Drug2.name]
+ 			return [rule.Drug1.name, rule.Drug2.name];
  		});
 
  		return _.uniq(_.flattenDeep(drugsList));

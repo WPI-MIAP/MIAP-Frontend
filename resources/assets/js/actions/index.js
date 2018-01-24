@@ -14,9 +14,37 @@ export const selectDrug = drug => {
 	}
 }
 
+export const selectMinScore = score => {
+	return {
+		type: 'SELECT_MIN_SCORE',
+		score
+	}
+}
+
+export const selectMaxScore = score => {
+	return {
+		type: 'SELECT_MAX_SCORE',
+		score
+	}
+}
+
 export const clearSearchTerm = () => {
 	return {
 		type: 'CLEAR_SEARCH_TERM'
+	}
+}
+
+export const deleteDrug = drug => {
+	return {
+		type: 'DELETE_DRUG',
+		drug
+	}
+}
+
+export const sortBy = sortBy => {
+	return {
+		type: 'SORT_BY',
+		sortBy
 	}
 }
 

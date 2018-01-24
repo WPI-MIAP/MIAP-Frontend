@@ -11404,29 +11404,23 @@ button.close {
 }
 
 body {
-  background: white;
+  background: #F1F1F1;
 }
 
 .MainView {
   padding: 25px;
+  padding-top: 30px;
 }
 
 .MainView__Loading {
   position: relative;
-  top: 45%;
-  left: 45%;
+  top: 35%;
+  left: 40%;
 }
 
 .MainView__Cards {
   margin-bottom: 20px;
   margin-top: 70px;
-}
-
-.MainView .card {
-  background: white;
-  border: 1px solid lightgrey;
-  padding-left: 20px;
-  text-align: center;
 }
 
 .DndGraph,
