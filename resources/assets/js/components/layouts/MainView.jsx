@@ -86,7 +86,7 @@ export default class MainView extends Component {
 										<GridTile
 											title='Overview'
 											titlePosition="top"
-											titleBackground="#D62261"
+											titleBackground="#F05F2D"
 											style={{
 												border: '1px solid #F0F0F0', 
 												boxSizing: 'border-box',
@@ -137,7 +137,7 @@ export default class MainView extends Component {
 										<TreeViewFilterContainer /> 
 									</div>
 								}
-								titleBackground="#1BACC0"
+								titleBackground="#951F9D"
 								style={{
 									border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',
@@ -163,9 +163,9 @@ export default class MainView extends Component {
 						</Col>
 						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
 							<GridTile
-								title={'Interaction profile for: ' + this.props.selectedDrug}
+								title={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)}
 								titlePosition="top"
-								titleBackground="#8C2DA8"
+								titleBackground="#20A766"
 								style={{
 									border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',

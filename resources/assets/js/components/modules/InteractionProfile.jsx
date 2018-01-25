@@ -52,8 +52,8 @@ const styles = {
 const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [] } ] }) => {
   let myTreeData = [
     {
-      name: mainDrug,
-      children: rules[1].drugs.filter(el => el != mainDrug).map(el => ({ name: el}))
+      name: _.capitalize(mainDrug),
+      children: rules[1].drugs.filter(el => el != mainDrug).map(el => ({ name: _.capitalize(el)}))
     }
   ]
 
@@ -64,7 +64,7 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
     .filter(rule => rule.Drug1.name == child.name || rule.Drug2.name == child.name)
     .map(rule => rule.ADR)
 
-    child.children = interactions.map(el => ({ name: el }))
+    child.children = interactions.map(el => ({ name: _.capitalize(el) }))
   }
 
   return (

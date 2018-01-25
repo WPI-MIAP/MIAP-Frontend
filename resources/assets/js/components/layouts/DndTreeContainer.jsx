@@ -11,6 +11,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
+import * as _ from 'lodash';
 import {
   Table,
   TableBody,
@@ -106,7 +107,7 @@ export default class DndTreeContainer extends Component {
 										}}
 									>
 										<h5 className="card-title" style={styles.title}>
-											<span style={styles.titleText}>{drug[0]}</span>
+											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
 												<IconButton tooltip="Show Profile"

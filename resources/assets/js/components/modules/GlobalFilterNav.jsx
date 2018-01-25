@@ -26,6 +26,9 @@ const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 
 const styles = {
+  root: {
+    background: '#D42862'
+  },
   customWidth: {
     width: 200,
   },
@@ -194,7 +197,7 @@ export default class GlobalFilterNav extends React.Component {
             zIndex: 1100,
             color: 'white',
             top: -27,
-          }, label: <strong>Min Score: {this.state.minScore}</strong>,
+          }, label: <strong>Min Score: {this.state.minScore.toFixed(5)}</strong>,
         },
       [this.state.maxScore]: {
         style: {
@@ -202,7 +205,7 @@ export default class GlobalFilterNav extends React.Component {
           zIndex: 1100,
           color: 'white',
           top: -27,
-        }, label: <strong>Max Score: {this.state.maxScore}</strong>,
+        }, label: <strong>Max Score: {this.state.maxScore.toFixed(5)}</strong>,
       }
     };
 
@@ -253,7 +256,7 @@ export default class GlobalFilterNav extends React.Component {
               onChange={this.updateMaxScore}
             /> */}
             <div 
-              style={{position: 'relative', top: -65, marginLeft: 200}}>
+              style={{position: 'relative', top: -75, marginLeft: 200}}>
               <LineChart 
                 width={274}
                 height={60}
