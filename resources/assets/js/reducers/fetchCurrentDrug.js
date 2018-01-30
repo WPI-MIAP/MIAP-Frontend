@@ -18,7 +18,7 @@ export const drugs = (
 				isFetching: false,
 				rules: action.rules,
 				drugs: action.drugs,
-		        lastUpdated: action.receivedAt
+				lastUpdated: action.receivedAt
 			})
 		default:
 			return state;

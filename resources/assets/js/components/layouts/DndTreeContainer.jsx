@@ -100,8 +100,8 @@ export default class DndTreeContainer extends Component {
 					<Row style={styles.row}>
 						{
 							this.props.currentDrugs.map(drug => (
-								<Col lg={colsWidth} md={colsWidth} style={styles.cols}>
-									<div className="card" key={drug[0]} style={{
+								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
+									<div className="card" style={{
 											height: 300,
 											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey'
 										}}

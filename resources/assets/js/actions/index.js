@@ -14,6 +14,13 @@ export const selectDrug = drug => {
 	}
 }
 
+export const addRules = rule => {
+	return {
+		type: 'ADD_RULES',
+		rule: rule.split(' ')
+	}
+}
+
 export const selectMinScore = score => {
 	return {
 		type: 'SELECT_MIN_SCORE',

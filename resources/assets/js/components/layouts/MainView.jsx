@@ -110,6 +110,7 @@ export default class MainView extends Component {
 												height={this.props.height} 
 												selectedDrug={this.props.selectedDrug}
 												onClickNode={this.props.onClickNode}
+												onClickEdge={this.props.onClickEdge}
 												isFetching={this.props.isFetching}
 												filter={this.props.filter}
 												minScore={this.props.minScore}
