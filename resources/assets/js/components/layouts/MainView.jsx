@@ -172,6 +172,7 @@ export default class MainView extends Component {
 												height={this.props.height} 
 												selectedDrug={this.props.selectedDrug}
 												onClickNode={this.props.onClickNode}
+												onClickEdge={this.props.onClickEdge}
 												isFetching={this.props.isFetching}
 												filter={this.props.filter}
 												minScore={this.props.minScore}
@@ -225,7 +226,7 @@ export default class MainView extends Component {
 						</Col>
 						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
 							<GridTile
-								title={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)}
+								title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
 								titlePosition="top"
 								titleBackground="#2B81AC"
 								style={{
@@ -255,11 +256,9 @@ export default class MainView extends Component {
 						{this.state.reportChips.map(this.renderChip, this)}
 					</Row>
 			</Grid>
-			{/* <Grid style={{position: 'fixed',
-							bottom: 0,
 							}}>
 				<Row>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colOverview == 12 ? 'none' : 'block'}}>
+					<Col xs={6} md={3} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colOverview == 12 ? 'none' : 'block'}}>
 						<GridTile
 							title='Overview'
 							titlePosition="top"
@@ -283,7 +282,7 @@ export default class MainView extends Component {
 						>
 						</GridTile>
 					</Col>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colGalaxy == 12 ? 'none' : 'block'}}>
+					<Col xs={6} md={3} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colGalaxy == 12 ? 'none' : 'block'}}>
 						<GridTile
 							title='Galaxy View'
 							titlePosition="top"
@@ -313,9 +312,9 @@ export default class MainView extends Component {
 						>
 						</GridTile>
 					</Col>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colProfile == 12 ? 'none' : 'block'}}>
+					<Col xs={6} md={3} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colProfile == 12 ? 'none' : 'block'}}>
 						<GridTile
-							title={'Interaction Profile for: ' + this.props.selectedDrug}
+							title={'Interaction Profile'}
 							titlePosition="top"
 							titleBackground="#2B81AC"
 							style={{

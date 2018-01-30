@@ -77,6 +77,7 @@ export default class DndGraph extends Component {
 		}));
 
 		const edgesArray = uniqueLinks.map(link => ({
+			id: link.Drug1.name + ' ' + link.Drug2.name,
 			from: link.Drug1.name, 
 			to: link.Drug2.name, 
 			title: generateTitle(link),
@@ -124,7 +125,15 @@ export default class DndGraph extends Component {
 		const events = {
 			select: (event) => {
 				const { nodes, edges } = event;
-				this.props.onClickNode(nodes[0]);
+				console.log(nodes);
+				if (typeof nodes[0] !== undefined) {
+					this.props.onClickNode(nodes[0]);
+				} 
+
+				if (typeof edges[0] !== undefined && nodes.length === 0) {
+					this.props.onClickEdge(edges[0]);
+				}
+
 				const options = {
 					position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
 					scale: 1,
