@@ -84,6 +84,7 @@ export const receiveDrugs = (drug, json) => {
 		type: 'RECEIVE_DRUGS',
 		drug,
 		rules: json.rules,
+		drugDMEs: json.drugDMEs,
 		drugs: json.drugs,
 	    receivedAt: Date.now()
 	}

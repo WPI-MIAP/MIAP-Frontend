@@ -19,7 +19,7 @@ const filterTreeView = (currentDrugs, sortByTerm) => {
 		case 'count':
 			return _.sortBy(currentDrugsArray, [function(o) { return o[1].rules.length; }]).reverse();
 		case 'severity':
-			return currentDrugsArray
+			return _.sortBy(currentDrugsArray, [function(o) { return o[1].drugDMEs == undefined ? 0 : o[1].drugDMEs.length; }]).reverse();
 	}
 }
 

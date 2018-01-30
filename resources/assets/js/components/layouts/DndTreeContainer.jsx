@@ -53,13 +53,40 @@ export default class DndTreeContainer extends Component {
     this.setState({open: false});
   }
 
+  getStyleByDMECount(numDMEs) {
+	// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
+	var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
+	var style = {
+		padding: '20px 0',
+		margin: 0,
+		color: 'white'
+	};
+	
+	if(numDMEs === 0) {
+		style['background'] = colors[0];
+	}else if(numDMEs <= 1) {
+		style['background'] = colors[1];
+	}
+	else if(numDMEs <= 2) {
+		style['background'] = colors[2];
+	}
+	else if(numDMEs <= 3) {
+		style['background'] = colors[3];
+	}
+	else {
+		style['background'] = colors[4];
+	}
+
+	return style;
+  }
+
 	render() {
 		const colsWidth = this.props.cols == 4 ? 12 : 3;
 
 		const styles = {
 			root: {
 				overflow: 'auto',
-				height: 500,
+				height: '79vh',
 				paddingTop: 75
 			},
 			title: {
@@ -100,13 +127,13 @@ export default class DndTreeContainer extends Component {
 					<Row style={styles.row}>
 						{
 							this.props.currentDrugs.map(drug => (
-								<Col lg={colsWidth} md={colsWidth} style={styles.cols}>
+								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
 									<div className="card" key={drug[0]} style={{
 											height: 300,
 											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey'
 										}}
 									>
-										<h5 className="card-title" style={styles.title}>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : this.getStyleByDMECount(drug[1].drugDMEs.length)}>
 											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 

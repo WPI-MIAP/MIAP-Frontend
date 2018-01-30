@@ -16,6 +16,7 @@ import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import Chip from 'material-ui/Chip';
 
 const styles = {
 	root: {
@@ -27,6 +28,9 @@ const styles = {
 		width: window.clientWidth,
 		// border: '1px solid grey'
 	},
+	chip: {
+		margin: 4,
+	},
 };
 
 export default class MainView extends Component {
@@ -37,11 +41,42 @@ export default class MainView extends Component {
 			colOverview: 4,
 			colGalaxy: 4,
 			colProfile: 4,
+			reportChips: [],
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
 		this.toggleFullscreenGalaxy = this.toggleFullscreenGalaxy.bind(this);
 		this.toggleFullscreenProfile = this.toggleFullscreenProfile.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.renderChip = this.renderChip.bind(this);
+		this.handleRequestDelete = this.handleRequestDelete.bind(this);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
+			nextProps.selectedDrug !== '' && this.state.reportChips.indexOf(nextProps.selectedDrug) == -1) {
+			var chips = this.state.reportChips;
+			chips.unshift(nextProps.selectedDrug);
+			this.setState({reportChips: chips});
+		}
+	}
+
+	renderChip(report) {
+		return (
+			<Chip
+				key={report}
+				onRequestDelete={() => this.handleRequestDelete(report)}
+				style={styles.chip}>
+				{_.capitalize(report)}
+			</Chip>
+		);
+	}
+
+	handleRequestDelete(key) {	
+		this.reportChips = this.state.reportChips;
+		const chipToDelete = this.reportChips.indexOf(key);
+		this.reportChips.splice(chipToDelete, 1);
+		this.setState({reportChips: this.reportChips});
 	}
 
 	toggleFullscreenOverview() {
@@ -74,11 +109,38 @@ export default class MainView extends Component {
 		})
 	}
 
+	getTabsIndex() {
+		if(this.state.colOverview == 12) {
+			return 0;
+		}else if(this.state.colGalaxy == 12) {
+			return 1;
+		}else if(this.state.colProfile == 12) {
+			return 2;
+		}else {
+			return 0;
+		}
+	}
+
+	handleChange(value) {
+		this.setState({
+		  value: value,
+		});
+	}
+
 	render() {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 25, height: 500 }}>
+				<Tabs style={{marginTop: '8px',
+					display: (this.state.colGalaxy == 4 && this.state.colProfile == 4 && this.state.colOverview == 4) ? 'none' : 'block'}}
+					inkBarStyle={{background: 'white', height: '4px', marginTop: '-4px'}}
+					value={this.getTabsIndex()}
+					onChange={this.handleChange}>
+					<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
+					<Tab label={'Galaxy View'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+					<Tab label={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
+				</Tabs>
+				<Grid fluid style={{ marginTop: 25, height: '79vh' }}>
 					<Row>
 						<Col xs={6} md={this.state.colOverview} style={{ 
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
@@ -86,7 +148,7 @@ export default class MainView extends Component {
 										<GridTile
 											title='Overview'
 											titlePosition="top"
-											titleBackground="#F05F2D"
+											titleBackground="#24915C"
 											style={{
 												border: '1px solid #F0F0F0', 
 												boxSizing: 'border-box',
@@ -137,7 +199,7 @@ export default class MainView extends Component {
 										<TreeViewFilterContainer /> 
 									</div>
 								}
-								titleBackground="#951F9D"
+								titleBackground="#2D3E46"
 								style={{
 									border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',
@@ -165,7 +227,7 @@ export default class MainView extends Component {
 							<GridTile
 								title={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)}
 								titlePosition="top"
-								titleBackground="#20A766"
+								titleBackground="#2B81AC"
 								style={{
 									border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',
@@ -189,8 +251,11 @@ export default class MainView extends Component {
 							</GridTile>
 						</Col>
 					</Row>
+					<Row> 
+						{this.state.reportChips.map(this.renderChip, this)}
+					</Row>
 			</Grid>
-			<Grid style={{position: 'fixed',
+			{/* <Grid style={{position: 'fixed',
 							bottom: 0,
 							}}>
 				<Row>
@@ -198,7 +263,7 @@ export default class MainView extends Component {
 						<GridTile
 							title='Overview'
 							titlePosition="top"
-							titleBackground="#D62261"
+							titleBackground="#24915C"
 							style={{
 								border: '1px solid #F0F0F0', 
 								boxSizing: 'border-box',
@@ -235,7 +300,7 @@ export default class MainView extends Component {
 									</IconButton>
 								</div>
 							}
-							titleBackground="#1BACC0"
+							titleBackground="#2D3E46"
 							style={{
 								border: '1px solid #F0F0F0', 
 								boxSizing: 'border-box',
@@ -252,7 +317,7 @@ export default class MainView extends Component {
 						<GridTile
 							title={'Interaction Profile for: ' + this.props.selectedDrug}
 							titlePosition="top"
-							titleBackground="#8C2DA8"
+							titleBackground="#2B81AC"
 							style={{
 								border: '1px solid #F0F0F0', 
 								boxSizing: 'border-box',
@@ -273,7 +338,7 @@ export default class MainView extends Component {
 						</GridTile>
 					</Col>
 				</Row>
-			</Grid>
+			</Grid> */}
 	 	</div>
 		)
 	}

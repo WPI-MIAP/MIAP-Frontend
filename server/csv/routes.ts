@@ -15,6 +15,7 @@ export default function (app: express.Application) {
 
 	router.get('/rules', csvController.getRules);
 	router.get('/reports', csvController.getReports);
+	router.get('/DMEs', csvController.getDMEs);
 	router.post('/', upload.single('csv'), csvController.store);
 
 	app.use('/csv', router);

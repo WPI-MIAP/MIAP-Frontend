@@ -27,7 +27,8 @@ const Range = createSliderWithTooltip(Slider.Range);
 
 const styles = {
   root: {
-    background: '#D42862'
+    // background: '#D42862'
+    background: '#AC2B37'
   },
   customWidth: {
     width: 200,
@@ -53,7 +54,8 @@ const styles = {
   sliderTip: {
     position: 'relative',
     zIndex: 1200,
-    placement: 'bottom'
+    placement: 'bottom',
+    background: 'black'
   }
 }
 
@@ -197,7 +199,7 @@ export default class GlobalFilterNav extends React.Component {
             zIndex: 1100,
             color: 'white',
             top: -27,
-          }, label: <strong>Min Score: {this.state.minScore.toFixed(5)}</strong>,
+          }, label: 'Min Score: ' + this.state.minScore.toFixed(2),
         },
       [this.state.maxScore]: {
         style: {
@@ -205,7 +207,7 @@ export default class GlobalFilterNav extends React.Component {
           zIndex: 1100,
           color: 'white',
           top: -27,
-        }, label: <strong>Max Score: {this.state.maxScore.toFixed(5)}</strong>,
+        }, label: 'Max Score: ' + this.state.maxScore.toFixed(2),
       }
     };
 
@@ -217,7 +219,7 @@ export default class GlobalFilterNav extends React.Component {
 
     const data = [
         {									
-            color: "steelblue", 
+            color: "#A9B0B7", 
             points: points
         }
     ];
@@ -272,7 +274,7 @@ export default class GlobalFilterNav extends React.Component {
                 hideYAxis={true}
                 margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
               <Range defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-                style={styles.slider} tipProps={styles.sliderTip} marks={marks} />
+                style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'solid 2px #000000'}, {border: 'solid 2px #000000'}]} trackStyle={[{background: 'black'}]} railStyle={{background: '#A9B0B7'}}/>
             </div>
         </div>
         }

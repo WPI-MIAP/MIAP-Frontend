@@ -38,8 +38,32 @@ import * as _ from 'lodash';
 	 			rules = rules.filter(
 	 				rule => rule.Drug1.name === req.query.drug || 
 	 				rule.Drug2.name === req.query.drug
-	 			);
-	 		}
+				);
+
+				let DMEFile = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
+				let lines = DMEFile.split("\n");
+				let DMEs = [];
+				for(let i = 1; i < lines.length; i++) {
+					DMEs.push({'name': lines[i].trim(), 'formattedName': lines[i].toLowerCase().replace(/\W/g, '')});
+				} 
+	
+				let drugDMEs = [];
+				rules.forEach(rule => {
+					let formattedADRName = rule['ADR'].toLowerCase().replace(/\W/g, '');
+					DMEs.forEach(dme => {
+						if(formattedADRName === dme['formattedName'] && drugDMEs.indexOf(dme['name']) == -1) {
+							drugDMEs.push(dme['name']);
+						}
+					});
+				});
+				 
+				const drugs = getDrugsFromRules(rules);
+				res.json({
+					drugs,
+					drugDMEs,
+					rules
+				});
+			}
 
 	 		const drugs = getDrugsFromRules(rules);
 	 		res.json({
@@ -64,6 +88,42 @@ import * as _ from 'lodash';
 			console.log(err);
 		}
 	}
+
+	public async getDMEs(req: Request, res: Response, next: NextFunction) {
+		try {
+			let DMEs = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
+
+			res.json(csvToJson(DMEs));
+		} catch (err) {
+			console.log(err);
+		}
+	}
+}
+
+function csvToJson(csv) {
+	let lines = csv.split("\n");
+	let result = [];
+	let headers = lines[0].split(",");
+
+	for(let x=0 ; x < headers.length; x++) {
+		headers[x] = headers[x].trim();
+	}
+
+	for(let i=1 ; i < lines.length; i++) {
+		let obj = {};
+
+		if(lines[i].length > 0) {
+			let currentline=lines[i].split(",");
+			
+			for(let j=0;j<headers.length;j++){
+				obj[headers[j]] = currentline[j].trim();
+			}
+	
+			result.push(obj);
+		}
+	}
+
+	return result;
 }
 
 function getDrugsFromRules(rules) {
