@@ -17,7 +17,7 @@ export const selectDrug = drug => {
 export const addRules = rule => {
 	return {
 		type: 'ADD_RULES',
-		rule: rule.split(' ')
+		rule
 	}
 }
 

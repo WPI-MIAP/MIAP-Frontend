@@ -7,21 +7,11 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import ActionOpenInNew from 'material-ui/svg-icons/action/open-in-new';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import * as _ from 'lodash';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
-
-
+import Report from '../modules/Report'
 
 export default class DndTreeContainer extends Component {
 	constructor(props) {
@@ -170,87 +160,13 @@ export default class DndTreeContainer extends Component {
 						}
 					</Row>
 				</Grid>
-				<Dialog
-					title={this.state.tableTitle}
-					actions={actions}
-					modal={false}
+				<Report 
+					tableTitle={this.state.tableTitle}
 					open={this.state.open}
-					onRequestClose={this.handleClose}
-					autoScrollBodyContent={true}
-					contentStyle={{width: "90%", maxWidth: "none", overflow: 'auto' }}
-				>
-					<Table
-						autoDetectWindowHeight={false} 
-						autoScrollBodyContent={true}
-						fixedFooter={false}
-						fixedHeader={false} 
-						style={{ width: "auto",  overflow: 'auto' }}
-						bodyStyle={{overflow:'visible'}}
-						striped={true}
-						displayBorder={true}
-					>
-					<TableHeader>
-						<TableRow>
-							<TableHeaderColumn>PRIMARYID</TableHeaderColumn>
-							<TableHeaderColumn>EVENT_DT</TableHeaderColumn>
-							<TableHeaderColumn>REPT_DT</TableHeaderColumn>
-							<TableHeaderColumn>REPT_COD</TableHeaderColumn>
-							<TableHeaderColumn>OCCR_COUNTRY</TableHeaderColumn>
-							<TableHeaderColumn>AGE</TableHeaderColumn>
-							<TableHeaderColumn>AGE_COD</TableHeaderColumn>
-							<TableHeaderColumn>AGE_GRP</TableHeaderColumn>
-							<TableHeaderColumn>SEX</TableHeaderColumn>
-							<TableHeaderColumn>WT</TableHeaderColumn>
-							<TableHeaderColumn>WT_COD</TableHeaderColumn>
-							<TableHeaderColumn>LIST OF DRUG NAMES</TableHeaderColumn> 
-							<TableHeaderColumn>ADVERSARY EFFECTS</TableHeaderColumn>
-							<TableHeaderColumn>OCCP_COD</TableHeaderColumn>
-							<TableHeaderColumn>REPORTER COUNTRY</TableHeaderColumn>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{
-							this.state.tableData.map(data => {
-								return (
-									<TableRow selectable={false} displayBorder={true}
-									>
-										<TableRowColumn>{data.primaryId}</TableRowColumn>
-										<TableRowColumn>{data.event_dt}</TableRowColumn>
-										<TableRowColumn>{data.rept_dt}</TableRowColumn>
-										<TableRowColumn>{data.rept_cod}</TableRowColumn>
-										<TableRowColumn>{data.occr_country}</TableRowColumn>
-										<TableRowColumn>{data.age}</TableRowColumn>
-										<TableRowColumn>{data.age_cod}</TableRowColumn>
-										<TableRowColumn>{data.age_grp}</TableRowColumn>
-										<TableRowColumn>{data.sex}</TableRowColumn>
-										<TableRowColumn>{data.wt}</TableRowColumn>
-										<TableRowColumn>{data.wt_cod}</TableRowColumn>
-										<TableRowColumn style={{
-											whiteSpace: 'normal',
-											wordWrap: 'break-word',
-											padding: 10,
-											}}
-										>
-											{data.drugname}
-										</TableRowColumn>
-
-										<TableRowColumn style={{
-											whiteSpace: 'normal',
-											padding: 10,
-											wordWrap: 'break-word'
-											}}
-										>
-											{data.SideEffect}
-										</TableRowColumn>
-										<TableRowColumn>{data.occp_cod}</TableRowColumn>
-										<TableRowColumn>{data.reporter_country}</TableRowColumn>
-									</TableRow>
-								)
-							})
-						}
-					</TableBody>
-					</Table>
-				</Dialog>
+					handleClose={this.state.handleClose}
+					actions={actions}
+					tableData={this.state.tableData}
+				/>
 			</div>
 		)
 
