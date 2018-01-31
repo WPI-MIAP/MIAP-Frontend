@@ -17,6 +17,8 @@ import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Chip from 'material-ui/Chip';
+import 'intro.js/introjs.css';
+import Steps from 'intro.js-react';
 
 const styles = {
 	root: {
@@ -140,7 +142,7 @@ export default class MainView extends Component {
 					<Tab label={'Galaxy View'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
 					<Tab label={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
 				</Tabs>
-				<Grid fluid style={{ marginTop: 25, height: '79vh' }}>
+				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
 					<Row>
 						<Col xs={6} md={this.state.colOverview} style={{ 
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
@@ -150,7 +152,7 @@ export default class MainView extends Component {
 											titlePosition="top"
 											titleBackground="#24915C"
 											style={{
-												border: '1px solid #F0F0F0', 
+												// border: '1px solid #F0F0F0', 
 												boxSizing: 'border-box',
 												background: 'white'
 											}}
@@ -201,7 +203,7 @@ export default class MainView extends Component {
 								}
 								titleBackground="#2D3E46"
 								style={{
-									border: '1px solid #F0F0F0', 
+									// border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',
 									background: 'white',
 									// overflow: 'auto',
@@ -229,7 +231,7 @@ export default class MainView extends Component {
 								titlePosition="top"
 								titleBackground="#2B81AC"
 								style={{
-									border: '1px solid #F0F0F0', 
+									// border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',
 									background: 'white'
 								}}
@@ -254,91 +256,12 @@ export default class MainView extends Component {
 					<Row> 
 						{this.state.reportChips.map(this.renderChip, this)}
 					</Row>
+					<Row style={{marginTop: '10px', marginBottom: '10px'}}>
+						<p style={{textAlign: 'center', margin: '0 auto'}}>
+							Developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. To contact the developers, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
+						</p>
+					</Row>
 			</Grid>
-			{/* <Grid style={{position: 'fixed',
-							bottom: 0,
-							}}>
-				<Row>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colOverview == 12 ? 'none' : 'block'}}>
-						<GridTile
-							title='Overview'
-							titlePosition="top"
-							titleBackground="#24915C"
-							style={{
-								border: '1px solid #F0F0F0', 
-								boxSizing: 'border-box',
-								background: 'white',
-								height: 50,
-							}}
-							actionIcon={
-								<IconButton 
-									tooltip="Expand"
-									iconStyle={{ color: 'white' }}
-									tooltipPosition='bottom-left'
-									onClick={this.toggleFullscreenOverview}
-								>
-									<IconFullscreen />	
-								</IconButton>
-							}
-						>
-						</GridTile>
-					</Col>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colGalaxy == 12 ? 'none' : 'block'}}>
-						<GridTile
-							title='Galaxy View'
-							titlePosition="top"
-							actionIcon={ 
-								<div>
-									<TreeViewFilterContainer /> 
-									<IconButton 
-										tooltip="Expand"
-										iconStyle={{ color: 'white' }}
-										tooltipPosition='bottom-left'
-										onClick={this.toggleFullscreenGalaxy}
-									>
-										<IconFullscreen />	
-									</IconButton>
-								</div>
-							}
-							titleBackground="#2D3E46"
-							style={{
-								border: '1px solid #F0F0F0', 
-								boxSizing: 'border-box',
-								background: 'white',
-								height: 50,
-								// overflow: 'auto',
-								// marginTop: 75
-							}}
-							cols={this.state.colGalaxy}
-						>
-						</GridTile>
-					</Col>
-					<Col xs={6} md={4} style={{ display: (this.state.colGalaxy == 4 && this.state.colOverview == 4 && this.state.colProfile == 4) || this.state.colProfile == 12 ? 'none' : 'block'}}>
-						<GridTile
-							title={'Interaction Profile for: ' + this.props.selectedDrug}
-							titlePosition="top"
-							titleBackground="#2B81AC"
-							style={{
-								border: '1px solid #F0F0F0', 
-								boxSizing: 'border-box',
-								background: 'white',
-								height: 50,
-							}}
-							actionIcon={
-								<IconButton 
-									tooltip="Expand"
-									iconStyle={{ color: 'white' }}
-									tooltipPosition='bottom-left'
-									onClick={this.toggleFullscreenProfile}
-								>
-									<IconFullscreen />	
-								</IconButton>
-							}
-						>
-						</GridTile>
-					</Col>
-				</Row>
-			</Grid> */}
 	 	</div>
 		)
 	}

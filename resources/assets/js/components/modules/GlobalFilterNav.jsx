@@ -17,13 +17,24 @@ import 'rc-slider/assets/index.css';
 import ActionHelpOutline from 'material-ui/svg-icons/action/help-outline';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import LineChart from 'react-linechart';
 import 'react-linechart/dist/styles.css';
 import { isNullOrUndefined } from 'util';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import 'intro.js/introjs.css';
+import Steps from 'intro.js-react';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
+
+const wpiLogo = <img style={{
+    height: '75px',
+    marginTop: '-8px'
+  }} 
+  src={require('../../../../images/WPI_Inst_Prim_BLK.png')} />;
 
 const styles = {
   root: {
@@ -83,6 +94,10 @@ export default class GlobalFilterNav extends React.Component {
     this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
     this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
   }
+
+  componentWillMount() {
+		
+	}
 
   componentDidUpdate(prevProps, prevState) {
     this.findFrequencyDistribution();
@@ -187,6 +202,11 @@ export default class GlobalFilterNav extends React.Component {
 
     const actions = [
       <FlatButton
+        label="Take a tour"
+        primary={true}
+        onClick={this.tour}
+      />, 
+      <FlatButton
         label="Done"
         primary={true}
         onClick={this.closeHelp}
@@ -278,6 +298,7 @@ export default class GlobalFilterNav extends React.Component {
             </div>
         </div>
         }
+        iconElementLeft={wpiLogo}
         iconElementRight={ 
           <div style={styles.elementRight}>
             <IconButton 
@@ -293,8 +314,81 @@ export default class GlobalFilterNav extends React.Component {
               actions={actions}
               modal={false}
               open={this.state.help}
-              onRequestClose={this.closeHelp}>
-              Help information will be shown here.
+              onRequestClose={this.closeHelp}
+              autoScrollBodyContent={true}>
+              <Grid>
+                <Row>
+                  <Card initiallyExpanded={true}>
+                    <CardHeader
+                      title="Views"
+                      actAsExpander={true}
+                      showExpandableButton={true}
+                    />
+                    <CardText expandable={true}>
+                      The Overview tab features a node-link diagram to visually display relationships between drugs and ADRs. 
+                      In this view, nodes represent drugs and edges represent an interaction between two drugs. If the edge is dashed,
+                      the interaction is known; if the edge is solid the interaction is unknown. The width of each edge represents the 
+                      strength of the interaction.
+                      <br/>
+                      <br/>
+                      The Galaxy View tab shows overviews of specific drugs in separate windows. At the center of each window is the 
+                      drug of interest, with the nodes surrounding it representing
+                      the drugs that interact with that drug. The color of this view's header indicates the count of severe ADRs 
+                      associated with this drug. Users can view multiple different drugs at a time, sorted by name, interaction count,
+                      or severity as necessary. The size of each individual node indicates whether any of the MDARs between the two 
+                      drugs are unknown; if there exists at least one unknown MDAR, the node will have a larger size than those with 
+                      no unknown MDARs. Users can find additional information about each interaction by hovering over them.
+                      <br/>
+                      <br/>
+                      The Interaction Profile tab provides a more detailed look at an individual drug in the form of a modified tree layout,
+                      consisting of three levels. The root node represents the selected drug, the second level displays all of the drugs 
+                      that interact with the selected drug, and finally, the third level represents the ADRs that exist between the 
+                      drugs. Normal ADRs are represented with a tan color, while severe reactions are purple.
+                    </CardText>
+                  </Card>
+                  <Card initiallyExpanded={false}>
+                    <CardHeader
+                      title="Filters"
+                      actAsExpander={true}
+                      showExpandableButton={true}
+                    />
+                    <CardText expandable={true}>
+                      The top bar contains controls that enable filtering the nodes in all tabs based on whether an interaction is known or
+                      unknown and by the score of the interaction. Additionally, a search bar is provided to allow users to search for a specific
+                      drug, which will then appear in the Galaxy View and Interaction Profile tabs.
+                    </CardText>
+                  </Card>
+                  <Card initiallyExpanded={false}>
+                    <CardHeader
+                      title="Reports"
+                      actAsExpander={true}
+                      showExpandableButton={true}
+                    />
+                    <CardText expandable={true}>
+                      The Reports View allows direct access to the FAERS data. This view shows a list of all reports related to a 
+                      chosen drug or drug interaction, enabling the user to see the underlying information related to a drug or ADR. 
+                      In addition, users can select a report and the drugs and reactions mentioned will be highlighted in the Overview, 
+                      Galaxy view, and Profile view. This view also allows users to view the narrative section for each report, which 
+                      may contain important information regarding the patient's medical history; users can search for certain key words 
+                      contained in the narrative sections of the reports.
+                    </CardText>
+                  </Card>
+                  <Card initiallyExpanded={false}>
+                    <CardHeader
+                      title="About Us"
+                      actAsExpander={true}
+                      showExpandableButton={true}
+                    />
+                    <CardText expandable={true}>
+                      This software was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
+                      was composed of undergraduate students Brian McCarthy, Andrew Schade, Huy Tran, and Brian Zylich. The team was advised
+                      by Professor Elke Rundensteiner and graduate students Xiao Qin and Tabassum Kakar. To contact the team, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
+                    </CardText>
+                  </Card>
+                </Row>
+                <Row>
+                </Row>
+              </Grid>
             </Dialog>
 
             <SearchBarContainer />
