@@ -198,29 +198,19 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Tabs style={{marginTop: '8px',
-					display: (this.state.colGalaxy == 4 && this.state.colProfile == 4 && this.state.colOverview == 4) ? 'none' : 'block'}}
-					inkBarStyle={{background: 'white', height: '4px', marginTop: '-4px'}}
-					value={this.getTabsIndex()}
-					onChange={this.handleChange}>
-					<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
-					<Tab label={'Galaxy View'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
-					<Tab label={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
-				</Tabs>
 				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
-				<FloatingActionButton
-					onClick={() => {this.setState({ colGalaxy: 4, colOverview: 4, colProfile: 4 })}}
-					style={{
-						position: 'absolute',
-						right: 30,
-						bottom: 30,
-						zIndex: 100,
-						display: this.state.colOverview != 4 || this.state.colGalaxy != 4 || this.state.colProfile != 4 ? 'block' : 'none'
-					}}
-				>
-					<NavigationFullscreenExit />
-				</FloatingActionButton>
-				<Grid fluid style={{ marginTop: 15, height: '79vh' }}>
+					<FloatingActionButton
+						onClick={() => {this.setState({ colGalaxy: 4, colOverview: 4, colProfile: 4 })}}
+						style={{
+							position: 'absolute',
+							right: 30,
+							bottom: 30,
+							zIndex: 100,
+							display: this.state.colOverview != 4 || this.state.colGalaxy != 4 || this.state.colProfile != 4 ? 'block' : 'none'
+						}}
+					>
+						<NavigationFullscreenExit />
+					</FloatingActionButton>
 					<Row>
 						<Col xs={6} md={12}> 
 							<Tabs style={{marginBottom: 15,

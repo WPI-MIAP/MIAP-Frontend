@@ -31,8 +31,8 @@ const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 
 const wpiLogo = <img style={{
-    height: '75px',
-    marginTop: '-8px'
+    height: 50,
+    marginLeft: 10
   }} 
   src={require('../../../../images/WPI_Inst_Prim_BLK.png')} />;
 
