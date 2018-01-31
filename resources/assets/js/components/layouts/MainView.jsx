@@ -148,6 +148,7 @@ export default class MainView extends Component {
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
 									}}>
 										<GridTile
+											className='overview'
 											title='Overview'
 											titlePosition="top"
 											titleBackground="#24915C"
@@ -186,6 +187,7 @@ export default class MainView extends Component {
 						}}
 						>
 							<GridTile
+								className='galaxy'
 								title='Galaxy View'
 								titlePosition="top"
 								actionIcon={ 
@@ -227,6 +229,7 @@ export default class MainView extends Component {
 						</Col>
 						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
 							<GridTile
+								className='profile'
 								title={'Interaction Profile for: ' + _.capitalize(this.props.selectedDrug)}
 								titlePosition="top"
 								titleBackground="#2B81AC"

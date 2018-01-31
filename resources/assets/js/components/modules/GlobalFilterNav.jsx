@@ -24,7 +24,7 @@ import { isNullOrUndefined } from 'util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import 'intro.js/introjs.css';
-import Steps from 'intro.js-react';
+import { Steps } from 'intro.js-react';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -67,6 +67,9 @@ const styles = {
     zIndex: 1200,
     placement: 'bottom',
     background: 'black'
+  },
+  highlightClass: {
+    background: 'green',
   }
 }
 
@@ -82,8 +85,53 @@ export default class GlobalFilterNav extends React.Component {
       minScore: -0.5,
       maxScore: 1.0,
       freqDist: [],
-      help: false
-    }
+      help: false,
+      stepsEnabled: false,
+      initialStep: 0,
+      steps: [
+        {
+          intro: 'Welcome to DIVA! This application is intended to assist in the discovery of harmful drug-drug interactions.',
+        },
+        {
+          element: '.knownUnknown',
+          intro: 'This dropdown menu can be used to filter drug-drug interactions based on whether they are previously known or unknown.',
+        },
+        {
+          element: '.scoreMinMax',
+          intro: 'Similarly, this tool can be used to specify a minimum and maximum score to filter out interactions in each view that do not meet this criteria.',
+        },
+        {
+          element: '.scoreMinMax',
+          intro: 'Use the distribution above the slider to get an idea of how the scores are distributed.',
+        },
+        {
+          element: '.overview',
+          intro: 'This tab shows the network of all drugs and their interactions. Each node represents a drug, and each link represents an interaction between two drugs.',
+        },
+        {
+          element: '.overview',
+          intro: 'Click on a node to view more in depth information about that drug. Try it now!',
+        },
+        {
+          element: '.galaxy',
+          intro: 'The Galaxy View tab offers a general overview about a specific drug. Each of the drug\'s interactions can be seen.',
+        },
+        {
+          element: '.galaxy',
+          intro: 'To view detailed information about the reports behind the visualization, click on the reports icon.',
+        },
+        {
+          intro: 'The reports view shows the FAERS reports that support any possible interactions with a specific drug.',
+        },
+        {
+          element: '.profile',
+          intro: 'The Interaction Profile tab shows detailed information about a drug, all drugs that interact with that drug, and the ADRs that may be caused by those interactions.',
+        },
+        {
+          intro: 'This concludes the tour! If you have any more questions, you can find our contact information in the About Us section of the Help menu.',
+        },
+      ],
+    };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
     this.updateMaxScore = this.updateMaxScore.bind(this);
@@ -93,11 +141,9 @@ export default class GlobalFilterNav extends React.Component {
     this.findFrequencyDistribution = this.findFrequencyDistribution.bind(this);
     this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
     this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
+    this.startTour = this.startTour.bind(this);
+    this.endTour = this.endTour.bind(this);
   }
-
-  componentWillMount() {
-		
-	}
 
   componentDidUpdate(prevProps, prevState) {
     this.findFrequencyDistribution();
@@ -198,13 +244,24 @@ export default class GlobalFilterNav extends React.Component {
     }
   };
 
+  endTour() {
+    this.setState({ stepsEnabled: false });
+  }
+
+  startTour() {
+    if(this.state.help) {
+      this.setState({ help: false });
+    }
+    this.setState({ stepsEnabled: true });
+  }
+
   render() {
 
     const actions = [
       <FlatButton
         label="Take a tour"
         primary={true}
-        onClick={this.tour}
+        onClick={this.startTour}
       />, 
       <FlatButton
         label="Done"
@@ -247,7 +304,22 @@ export default class GlobalFilterNav extends React.Component {
       <AppBar style={styles.root}
         title={
           <div>
+            <Steps
+              enabled={this.state.stepsEnabled}
+              steps={this.state.steps}
+              initialStep={this.state.initialStep}
+              onExit={this.endTour}
+              ref={intro => {
+                if(intro !== null) {
+                  intro.introJs.setOption('showStepNumbers', false);
+                  intro.introJs.setOption('showBullets', false);
+                  intro.introJs.setOption('overlayOpacity', 0.5);
+                  intro.introJs.setOption('highlightClass', 'green');
+                }
+              }}
+            />
             <DropDownMenu 
+              className="knownUnknown"
               value={this.state.value}
               onChange={this.handleChange} 
               style={styles.customWidth}
@@ -279,7 +351,7 @@ export default class GlobalFilterNav extends React.Component {
             /> */}
             <div 
               style={{position: 'relative', top: -75, marginLeft: 200}}>
-              <LineChart 
+              <LineChart
                 width={274}
                 height={60}
                 data={data}
@@ -293,7 +365,8 @@ export default class GlobalFilterNav extends React.Component {
                 hideXAxis={true}
                 hideYAxis={true}
                 margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
-              <Range defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
+              <Range className='scoreMinMax'
+                defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
                 style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'solid 2px #000000'}, {border: 'solid 2px #000000'}]} trackStyle={[{background: 'black'}]} railStyle={{background: '#A9B0B7'}}/>
             </div>
         </div>
