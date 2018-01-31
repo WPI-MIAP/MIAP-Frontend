@@ -39,7 +39,7 @@ const wpiLogo = <img style={{
 const styles = {
   root: {
     // background: '#D42862'
-    background: '#AC2B37'
+    background: '#AA2C3B'
   },
   customWidth: {
     width: 200,
