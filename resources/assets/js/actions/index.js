@@ -14,6 +14,13 @@ export const selectDrug = drug => {
 	}
 }
 
+export const addRules = rule => {
+	return {
+		type: 'ADD_RULES',
+		rule
+	}
+}
+
 export const selectMinScore = score => {
 	return {
 		type: 'SELECT_MIN_SCORE',
@@ -84,6 +91,7 @@ export const receiveDrugs = (drug, json) => {
 		type: 'RECEIVE_DRUGS',
 		drug,
 		rules: json.rules,
+		drugDMEs: json.drugDMEs,
 		drugs: json.drugs,
 	    receivedAt: Date.now()
 	}

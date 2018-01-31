@@ -7,20 +7,11 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import ActionOpenInNew from 'material-ui/svg-icons/action/open-in-new';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
-
-
+import * as _ from 'lodash';
+import Report from '../modules/Report'
 
 export default class DndTreeContainer extends Component {
 	constructor(props) {
@@ -52,13 +43,40 @@ export default class DndTreeContainer extends Component {
     this.setState({open: false});
   }
 
+  getStyleByDMECount(numDMEs) {
+	// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
+	var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
+	var style = {
+		padding: '20px 0',
+		margin: 0,
+		color: 'white'
+	};
+	
+	if(numDMEs === 0) {
+		style['background'] = colors[0];
+	}else if(numDMEs <= 1) {
+		style['background'] = colors[1];
+	}
+	else if(numDMEs <= 2) {
+		style['background'] = colors[2];
+	}
+	else if(numDMEs <= 3) {
+		style['background'] = colors[3];
+	}
+	else {
+		style['background'] = colors[4];
+	}
+
+	return style;
+  }
+
 	render() {
 		const colsWidth = this.props.cols == 4 ? 12 : 3;
 
 		const styles = {
 			root: {
 				overflow: 'auto',
-				height: 500,
+				height: '79vh',
 				paddingTop: 75
 			},
 			title: {
@@ -99,14 +117,14 @@ export default class DndTreeContainer extends Component {
 					<Row style={styles.row}>
 						{
 							this.props.currentDrugs.map(drug => (
-								<Col lg={colsWidth} md={colsWidth} style={styles.cols}>
+								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
 									<div className="card" key={drug[0]} style={{
 											height: 300,
 											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey'
 										}}
 									>
-										<h5 className="card-title" style={styles.title}>
-											<span style={styles.titleText}>{drug[0]}</span>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : this.getStyleByDMECount(drug[1].drugDMEs.length)}>
+											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
 												<IconButton tooltip="Show Profile"
@@ -142,87 +160,13 @@ export default class DndTreeContainer extends Component {
 						}
 					</Row>
 				</Grid>
-				<Dialog
-					title={this.state.tableTitle}
-					actions={actions}
-					modal={false}
+				<Report 
+					tableTitle={this.state.tableTitle}
 					open={this.state.open}
-					onRequestClose={this.handleClose}
-					autoScrollBodyContent={true}
-					contentStyle={{width: "90%", maxWidth: "none", overflow: 'auto' }}
-				>
-					<Table
-						autoDetectWindowHeight={false} 
-						autoScrollBodyContent={true}
-						fixedFooter={false}
-						fixedHeader={false} 
-						style={{ width: "auto",  overflow: 'auto' }}
-						bodyStyle={{overflow:'visible'}}
-						striped={true}
-						displayBorder={true}
-					>
-					<TableHeader>
-						<TableRow>
-							<TableHeaderColumn>PRIMARYID</TableHeaderColumn>
-							<TableHeaderColumn>EVENT_DT</TableHeaderColumn>
-							<TableHeaderColumn>REPT_DT</TableHeaderColumn>
-							<TableHeaderColumn>REPT_COD</TableHeaderColumn>
-							<TableHeaderColumn>OCCR_COUNTRY</TableHeaderColumn>
-							<TableHeaderColumn>AGE</TableHeaderColumn>
-							<TableHeaderColumn>AGE_COD</TableHeaderColumn>
-							<TableHeaderColumn>AGE_GRP</TableHeaderColumn>
-							<TableHeaderColumn>SEX</TableHeaderColumn>
-							<TableHeaderColumn>WT</TableHeaderColumn>
-							<TableHeaderColumn>WT_COD</TableHeaderColumn>
-							<TableHeaderColumn>LIST OF DRUG NAMES</TableHeaderColumn> 
-							<TableHeaderColumn>ADVERSARY EFFECTS</TableHeaderColumn>
-							<TableHeaderColumn>OCCP_COD</TableHeaderColumn>
-							<TableHeaderColumn>REPORTER COUNTRY</TableHeaderColumn>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{
-							this.state.tableData.map(data => {
-								return (
-									<TableRow selectable={false} displayBorder={true}
-									>
-										<TableRowColumn>{data.primaryId}</TableRowColumn>
-										<TableRowColumn>{data.event_dt}</TableRowColumn>
-										<TableRowColumn>{data.rept_dt}</TableRowColumn>
-										<TableRowColumn>{data.rept_cod}</TableRowColumn>
-										<TableRowColumn>{data.occr_country}</TableRowColumn>
-										<TableRowColumn>{data.age}</TableRowColumn>
-										<TableRowColumn>{data.age_cod}</TableRowColumn>
-										<TableRowColumn>{data.age_grp}</TableRowColumn>
-										<TableRowColumn>{data.sex}</TableRowColumn>
-										<TableRowColumn>{data.wt}</TableRowColumn>
-										<TableRowColumn>{data.wt_cod}</TableRowColumn>
-										<TableRowColumn style={{
-											whiteSpace: 'normal',
-											wordWrap: 'break-word',
-											padding: 10,
-											}}
-										>
-											{data.drugname}
-										</TableRowColumn>
-
-										<TableRowColumn style={{
-											whiteSpace: 'normal',
-											padding: 10,
-											wordWrap: 'break-word'
-											}}
-										>
-											{data.SideEffect}
-										</TableRowColumn>
-										<TableRowColumn>{data.occp_cod}</TableRowColumn>
-										<TableRowColumn>{data.reporter_country}</TableRowColumn>
-									</TableRow>
-								)
-							})
-						}
-					</TableBody>
-					</Table>
-				</Dialog>
+					handleClose={this.state.handleClose}
+					actions={actions}
+					tableData={this.state.tableData}
+				/>
 			</div>
 		)
 

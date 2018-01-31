@@ -17,8 +17,9 @@ export const drugs = (
 			return Object.assign({}, state, {
 				isFetching: false,
 				rules: action.rules,
+				drugDMEs: action.drugDMEs,
 				drugs: action.drugs,
-		        lastUpdated: action.receivedAt
+				lastUpdated: action.receivedAt
 			})
 		default:
 			return state;
