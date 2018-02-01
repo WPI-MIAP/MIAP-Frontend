@@ -12,6 +12,10 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
+import MapsLocalBar from 'material-ui/svg-icons/maps/local-bar';
+import ImageFlashOn from 'material-ui/svg-icons/image/flash-on';
+import {blue300, indigo900} from 'material-ui/styles/colors';
+
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -24,6 +28,8 @@ import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscree
 import Report from '../modules/Report'
 import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios'
+import Avatar from 'material-ui/Avatar';
+
 
 const styles = {
 	root: {
@@ -72,14 +78,14 @@ export default class MainView extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
-			nextProps.selectedDrug !== '' && this.state.reportChips.indexOf(nextProps.selectedDrug) == -1) {
+			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedDrug) == undefined) {
 			var chips = this.state.reportChips;
 			chips.unshift({type: 'drug', title: nextProps.selectedDrug});
 			this.setState({reportChips: chips});
 		}
 
 		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
-			nextProps.selectedRule !== '' && this.state.reportChips.indexOf(nextProps.selectedRule) == -1) {
+			nextProps.selectedRule !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedRule) == undefined) {
 			var chips = this.state.reportChips;
 			chips.unshift({type: 'adr', title: nextProps.selectedRule});
 			this.setState({reportChips: chips});
@@ -95,7 +101,13 @@ export default class MainView extends Component {
 				onRequestDelete={() => this.handleRequestDelete(report)}
 				style={styles.chip}
 				onClick={() => this.handleOpen(report)}
+				backgroundColor='#307DFB'
+				labelColor='white'
 				>
+				{ report.type == 'drug' ?
+				<Avatar backgroundColor="#F2105A" color="white" icon={<MapsLocalBar />} /> :
+				<Avatar backgroundColor="#F2105A" color="white" icon={<ImageFlashOn />} />
+				}
 				{title}
 			</Chip>
 		);
@@ -219,7 +231,7 @@ export default class MainView extends Component {
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
 								<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
-								<Tab label={'Galaxy View'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'}}>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
 								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>

@@ -79,7 +79,7 @@ import * as _ from 'lodash';
 
 			if (req.query.drug) {
 				reports = reports.filter(report => {
-					let drugnames = report.drugname.split(', ');
+					let drugnames = report.drugname_updated.split(', ');
 					drugnames = drugnames.map(name => _.lowerCase(name));
 					return _.includes(drugnames, _.lowerCase(req.query.drug));
 				});

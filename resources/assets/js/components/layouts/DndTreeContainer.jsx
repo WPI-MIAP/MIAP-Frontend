@@ -45,7 +45,8 @@ export default class DndTreeContainer extends Component {
 
   getStyleByDMECount(numDMEs) {
 	// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
-	var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
+	// var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
+	var colors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
 	var style = {
 		padding: '20px 0',
 		margin: 0,

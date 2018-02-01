@@ -20,6 +20,16 @@ const TreeViewFilter = ({ onClickRadio }) => {
 			iconButtonElement={<IconButton><SortIcon /></IconButton>}
 			anchorOrigin={{horizontal: 'left', vertical: 'top'}}
 			targetOrigin={{horizontal: 'left', vertical: 'top'}}
+			onClick={(event) => {
+				if(event)
+				{
+					if(event.stopPropagation){ event.stopPropagation() }
+					if(event.nativeEvent && event.nativeEvent.stopImmediatePropagation)
+					{
+						event.nativeEvent.stopImmediatePropagation()
+					}
+				}
+			}}
 		>
 			<MenuItem primaryText="Sort by latest" onClick={() => onClickRadio('latest')} />
 			<MenuItem primaryText="Sort by names" onClick={() => onClickRadio('name')} />
