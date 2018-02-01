@@ -90,7 +90,7 @@ export default class GlobalFilterNav extends React.Component {
       initialStep: 0,
       steps: [
         {
-          intro: 'Welcome to DIVA! This application is intended to assist in the discovery of harmful drug-drug interactions.',
+          intro: 'Welcome to DIVA! This application is intended to assist in the discovery of critical drug-drug interactions.',
         },
         {
           element: '.knownUnknown',

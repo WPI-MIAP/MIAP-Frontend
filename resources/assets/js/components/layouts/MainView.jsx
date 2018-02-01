@@ -229,7 +229,8 @@ export default class MainView extends Component {
 										<GridTile
 											title={this.state.colOverview != 12 ? "Overview" : ""}
 											titlePosition="top"
-											titleBackground="#24915C"
+											// titleBackground="#24915C"
+											titleBackground="#2D3E46"
 											style={{
 												// border: '1px solid #F0F0F0', 
 												boxSizing: 'border-box',
@@ -313,7 +314,8 @@ export default class MainView extends Component {
 								// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
 								title={this.state.colProfile != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
 								titlePosition="top"
-								titleBackground="#2B81AC"
+								// titleBackground="#2B81AC"
+								titleBackground="#2D3E46"
 								style={{
 									// border: '1px solid #F0F0F0', 
 									boxSizing: 'border-box',

@@ -16,7 +16,8 @@ const layout = [
 
 export default class App extends Component {
 	componentWillMount() {
-		document.body.style.backgroundColor = '#A9B0B7';
+		// document.body.style.backgroundColor = '#A9B0B7';
+		document.body.style.backgroundColor = '#CBD3DB';
 	}
 
 	render() {
