@@ -15,6 +15,7 @@ import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
 import MapsLocalBar from 'material-ui/svg-icons/maps/local-bar';
 import ImageFlashOn from 'material-ui/svg-icons/image/flash-on';
 import {blue300, indigo900} from 'material-ui/styles/colors';
+import * as d3 from 'd3';
 
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
@@ -64,6 +65,7 @@ export default class MainView extends Component {
 			tableData: [],
 			tableTitle: '',
 			open: false,
+			profileWidth: 0
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -102,8 +104,6 @@ export default class MainView extends Component {
 				onRequestDelete={() => this.handleRequestDelete(report)}
 				style={styles.chip}
 				onClick={() => this.handleOpen(report)}
-				backgroundColor='#307DFB'
-				labelColor='white'
 				>
 				{ report.type == 'drug' ?
 				<Avatar backgroundColor="#F2105A" color="white" icon={<MapsLocalBar />} /> :

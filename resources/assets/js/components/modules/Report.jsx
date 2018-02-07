@@ -68,6 +68,7 @@ export default class Report extends React.Component {
         >
           {
             this.props.tableData.map(data => {
+              if (data == null) return null;
               return (
                 <TableRow selectable={false} displayBorder={true}
                 >
