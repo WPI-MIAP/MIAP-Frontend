@@ -74,6 +74,7 @@ export default class MainView extends Component {
 		this.handleRequestDelete = this.handleRequestDelete.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
+		this.onClickNodeTour = this.onClickNodeTour.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -199,10 +200,17 @@ export default class MainView extends Component {
 		});
 	}
 
+	onClickNodeTour(drug) {
+		this.props.onClickNode(drug);
+		if(this.props.currentSelector === '.overview2'){
+			this.props.nextTourStep();
+		}
+	}
+
 	render() {
 		const actions = [
       <FlatButton
-        label="Cancel"
+        label="Close"
         primary={true}
         onClick={this.handleClose}
       />
@@ -231,128 +239,136 @@ export default class MainView extends Component {
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
 								<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
-								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%'}}>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
 								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
 						<Col xs={6} md={this.state.colOverview} style={{ 
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
 									}}>
-										<GridTile
-											title={this.state.colOverview != 12 ? "Overview" : ""}
-											titlePosition="top"
-											className="overview"
-											// titleBackground="#24915C"
-											titleBackground="#2D3E46"
-											style={{
-												// border: '1px solid #F0F0F0', 
-												boxSizing: 'border-box',
-												background: 'white',
-												top: this.state.colOverview == 12 ? -14 : 0
+										<Paper zDepth={1}>
+											<GridTile
+												title={this.state.colOverview != 12 ? "Overview" : ""}
+												titlePosition="top"
+												className="overview overview2"
+												// titleBackground="#24915C"
+												titleBackground="#2D3E46"
+												style={{
+													// border: '1px solid #F0F0F0', 
+													boxSizing: 'border-box',
+													background: 'white',
+													top: this.state.colOverview == 12 ? -14 : 0
 
-											}}
-											actionIcon={
-												<IconButton 
-													tooltip="Go Fullscreen"
-													iconStyle={{ color: 'white' }}
-													tooltipPosition='bottom-left'
-													onClick={this.toggleFullscreenOverview}
-												>
-													<IconFullscreen />	
-												</IconButton>
-											}
-										>
-											<DndGraph 
-												nodes={this.props.nodes}
-												links={this.props.links}
-												width={this.props.width}
-												height={this.props.height} 
-												selectedDrug={this.props.selectedDrug}
-												onClickNode={this.props.onClickNode}
-												onClickEdge={this.props.onClickEdge}
-												isFetching={this.props.isFetching}
-												filter={this.props.filter}
-												minScore={this.props.minScore}
-												maxScore={this.props.maxScore}
-											/>
-										</GridTile>
+												}}
+												actionIcon={
+													<IconButton 
+														tooltip="Go Fullscreen"
+														iconStyle={{ color: 'white' }}
+														tooltipPosition='bottom-left'
+														onClick={this.toggleFullscreenOverview}
+													>
+														<IconFullscreen />	
+													</IconButton>
+												}
+											>
+												<DndGraph 
+													nodes={this.props.nodes}
+													links={this.props.links}
+													width={this.props.width}
+													height={this.props.height} 
+													selectedDrug={this.props.selectedDrug}
+													onClickNode={this.onClickNodeTour}
+													onClickEdge={this.props.onClickEdge}
+													isFetching={this.props.isFetching}
+													filter={this.props.filter}
+													minScore={this.props.minScore}
+													maxScore={this.props.maxScore}
+												/>
+											</GridTile>
+										</Paper>
 						</Col>
 						<Col xs={6} md={this.state.colGalaxy} style={{
 							display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none'
 						}}
 						>
-							<GridTile
-								title={this.state.colGalaxy != 12 ? "Galaxy View" : ""}
-								titlePosition="top"
-								className="galaxy"
-								actionIcon={ 
-									<div>
+							<Paper zDepth={1}>
+								<GridTile
+									title={this.state.colGalaxy != 12 ? "Galaxy View" : ""}
+									titlePosition="top"
+									className="galaxy galaxy2"
+									actionIcon={ 
+										<div>
+											<IconButton 
+												tooltip="Go Fullscreen"
+												iconStyle={{ color: 'white' }}
+												tooltipPosition='bottom-left'
+												onClick={this.toggleFullscreenGalaxy}
+											>
+											<IconFullscreen />	
+										</IconButton>
+											<TreeViewFilterContainer /> 
+										</div>
+									}
+									titleBackground="#2D3E46"
+									style={{
+										// border: '1px solid #F0F0F0', 
+										boxSizing: 'border-box',
+										background: 'white',
+										top: this.state.colGalaxy == 12 ? -14 : 0
+										// overflow: 'auto',
+										// marginTop: 75
+									}}
+									cols={this.state.colGalaxy}
+								>
+									<DndTreeContainer 
+										currentDrugs={this.props.currentDrugs}
+										filter={this.props.filter}
+										minScore={this.props.minScore}
+										maxScore={this.props.maxScore}
+										width={this.props.width}
+										height={this.props.height} 
+										onClickNode={this.props.showDetailNode}
+										onDeleteNode={this.props.deleteNode}
+										cols={this.state.colGalaxy}
+										selectedDrug={this.props.selectedDrug}
+										nextTourStep={this.props.nextTourStep}
+										currentSelector={this.props.currentSelector}
+									/>
+								</GridTile>
+							</Paper>
+						</Col>
+						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
+							<Paper zDepth={1}>
+								<GridTile
+									// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
+									title={this.state.colProfile != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
+									titlePosition="top"
+									className="profile"
+									// titleBackground="#2B81AC"
+									titleBackground="#2D3E46"
+									style={{
+										// border: '1px solid #F0F0F0', 
+										boxSizing: 'border-box',
+										background: 'white',
+										top: this.state.colProfile == 12 ? -14 : 0
+									}}
+									actionIcon={
 										<IconButton 
 											tooltip="Go Fullscreen"
 											iconStyle={{ color: 'white' }}
 											tooltipPosition='bottom-left'
-											onClick={this.toggleFullscreenGalaxy}
+											onClick={this.toggleFullscreenProfile}
 										>
-										<IconFullscreen />	
-									</IconButton>
-										<TreeViewFilterContainer /> 
-									</div>
-								}
-								titleBackground="#2D3E46"
-								style={{
-									// border: '1px solid #F0F0F0', 
-									boxSizing: 'border-box',
-									background: 'white',
-									top: this.state.colGalaxy == 12 ? -14 : 0
-									// overflow: 'auto',
-									// marginTop: 75
-								}}
-								cols={this.state.colGalaxy}
-							>
-								<DndTreeContainer 
-									currentDrugs={this.props.currentDrugs}
-									filter={this.props.filter}
-									minScore={this.props.minScore}
-									maxScore={this.props.maxScore}
-									width={this.props.width}
-									height={this.props.height} 
-									onClickNode={this.props.showDetailNode}
-									onDeleteNode={this.props.deleteNode}
-									cols={this.state.colGalaxy}
-									selectedDrug={this.props.selectedDrug}
-								/>
-							</GridTile>
-						</Col>
-						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
-							<GridTile
-								// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
-								title={this.state.colProfile != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
-								titlePosition="top"
-								className="profile"
-								// titleBackground="#2B81AC"
-								titleBackground="#2D3E46"
-								style={{
-									// border: '1px solid #F0F0F0', 
-									boxSizing: 'border-box',
-									background: 'white',
-									top: this.state.colProfile == 12 ? -14 : 0
-								}}
-								actionIcon={
-									<IconButton 
-										tooltip="Go Fullscreen"
-										iconStyle={{ color: 'white' }}
-										tooltipPosition='bottom-left'
-										onClick={this.toggleFullscreenProfile}
-									>
-										<IconFullscreen />	
-									</IconButton>
-								}
-							>
-								<InteractionProfile 
-									mainDrug={this.props.selectedDrug} 
-									rules={this.props.currentDrugs.find(el => el[0] == this.props.selectedDrug)}
-								/>
-							</GridTile>
+											<IconFullscreen />	
+										</IconButton>
+									}
+								>
+									<InteractionProfile 
+										mainDrug={this.props.selectedDrug} 
+										rules={this.props.currentDrugs.find(el => el[0] == this.props.selectedDrug)}
+									/>
+								</GridTile>
+							</Paper>
 						</Col>
 					</Row>
 					<Row style={{ margin: '8px 0' }}> 

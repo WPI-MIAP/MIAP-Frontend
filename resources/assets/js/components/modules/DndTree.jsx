@@ -107,7 +107,7 @@ export default class DndTree extends Component {
 		}
 
 		const options = {
-			height: 240 + 'px',
+			height: this.props.testExample ? 140 + 'px' : 240 + 'px',
 			// width: 180 + 'px',
 			edges: {
 				color: "#000000",

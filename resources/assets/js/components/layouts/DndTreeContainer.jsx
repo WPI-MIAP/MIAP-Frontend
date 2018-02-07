@@ -30,7 +30,10 @@ export default class DndTreeContainer extends Component {
 	handleOpen(title) {
 		axios.get('/csv/reports?drug=' + title)
 			.then(response => {
-				this.setState({ tableData: response.data })	
+				this.setState({ tableData: response.data });
+				if(this.props.currentSelector === '.galaxy2') {
+					this.props.nextTourStep();
+				}
 			});
 
 		this.setState({
@@ -40,7 +43,10 @@ export default class DndTreeContainer extends Component {
   }
 
   handleClose() {
-    this.setState({open: false});
+	this.setState({open: false});
+	if(this.props.currentSelector === '.report') {
+		this.props.nextTourStep();
+	}
   }
 
   getStyleByDMECount(numDMEs) {
@@ -106,13 +112,56 @@ export default class DndTreeContainer extends Component {
 
 		const actions = [
       <FlatButton
-        label="Cancel"
+        label="Close"
         primary={true}
         onClick={this.handleClose}
       />
     ];
 
-		return (
+		return this.props.testExample ? (
+			<div>
+				{this.props.currentDrugs.map(drug => (
+								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
+									<div className="card" key={drug[0]} style={{
+											height: 200,
+											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey',
+											marginTop: 5,
+											marginBottom: 5
+										}}
+									>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : this.getStyleByDMECount(drug[1].drugDMEs.length)}>
+											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
+											<span className="pull-right" style={styles.cardButtons}>
+
+												<IconButton tooltip="Show Profile"
+													iconStyle={{ color: 'white' }}
+													onClick={() => this.props.onClickNode(drug[0])}	
+												>
+													<ActionOpenInNew />
+												</IconButton>
+
+												<IconButton tooltip="Show Reports"
+													iconStyle={{ color: 'white' }}
+												>
+													<EditorInsertChart />
+												</IconButton>
+
+												<IconButton tooltip="Close Window"
+													iconStyle={{ color: 'white' }}
+													onClick={() => this.props.onDeleteNode(drug[0])}	
+												>
+													<NavigationClose />
+												</IconButton>
+											</span>
+										</h5>	
+										<div className="card-body" style={{ position: 'relative', top: -13 }}>
+											<DndTree testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
+										</div>
+									</div>
+								</Col>
+							))}
+			</div>
+			) : (
 			<div>
 				<Grid fluid style={styles.root}>
 					<Row style={styles.row}>

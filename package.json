@@ -80,6 +80,7 @@
     "react-graph-vis": "1.0.2",
     "react-grid-layout": "0.16.2",
     "react-instantsearch": "4.2.0",
+    "react-joyride": "^1.11.2",
     "react-linechart": "1.1.12",
     "react-rangeslider": "2.2.0",
     "react-redux": "5.0.6",

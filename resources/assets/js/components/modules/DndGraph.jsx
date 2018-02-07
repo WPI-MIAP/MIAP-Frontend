@@ -126,7 +126,7 @@ export default class DndGraph extends Component {
 			select: (event) => {
 				const { nodes, edges } = event;
 				console.log(nodes);
-				if (typeof nodes[0] !== undefined) {
+				if (typeof nodes[0] !== undefined && nodes.length !== 0) {
 					this.props.onClickNode(nodes[0]);
 				} 
 

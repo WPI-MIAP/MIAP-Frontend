@@ -4,6 +4,7 @@ $fa-font-path: '~font-awesome/fonts';
 @import './layouts/main.sass';
 @import './modules/navigation';
 @import './modules/navbar.sass';
+@import '~react-joyride/lib/react-joyride';
 
 .vis-tooltip {
 	position: absolute !important;

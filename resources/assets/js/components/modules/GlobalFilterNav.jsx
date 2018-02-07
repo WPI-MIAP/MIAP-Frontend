@@ -23,22 +23,24 @@ import 'react-linechart/dist/styles.css';
 import { isNullOrUndefined } from 'util';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import 'intro.js/introjs.css';
-import { Steps } from 'intro.js-react';
+import { GridTile } from 'material-ui/GridList';
+import DndGraph from './DndGraph';
+import DndTreeContainer from '../layouts/DndTreeContainer';
+import InteractionProfile from './InteractionProfile';
+import Paper from 'material-ui/Paper';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 
 const wpiLogo = <img style={{
-    height: 50,
+    height: 45,
     marginLeft: 10
   }} 
-  src={require('../../../../images/WPI_Inst_Prim_BLK.png')} />;
+  src={require('../../../../images/WPI_Inst_Prim_White_Rev.png')} />;
 
 const styles = {
   root: {
-    // background: '#D42862'
     background: '#AA2C3B'
   },
   customWidth: {
@@ -67,11 +69,116 @@ const styles = {
     zIndex: 1200,
     placement: 'bottom',
     background: 'black'
-  },
-  highlightClass: {
-    background: 'green',
   }
-}
+};
+
+const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
+const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
+
+const dummyData = {
+  nodes: [
+    'Drug 1',
+    'Drug 2',
+    'Drug 3'
+  ],
+  edges: [
+    {
+      Rank: "408",
+      Score: 0.089384071,
+      ADR: "ADR 1",
+      r_Drugname: "[Drug 1] [Drug 2]",
+      Support: 15,
+      Confidence: 30,
+      Drug1: {
+        id: 0,
+        name: "Drug 1"
+      },
+      Support1: 12,
+      Confidence1: 21.8182,
+      Drug2: {
+        id: 1,
+        name: "Drug 2"
+      },
+      Support2: 34,
+      Confidence2: 9.65909,
+      status: "unknown",
+      id: "1, 2, 4, 6"
+    },
+    {
+      Rank: "702",
+      Score: 0.314159265,
+      ADR: "ADR 2",
+      r_Drugname: "[Drug 2] [Drug 3]",
+      Support: 45,
+      Confidence: 60,
+      Drug1: {
+        id: 1,
+        name: "Drug 2"
+      },
+      Support1: 19,
+      Confidence1: 21.8182,
+      Drug2: {
+        id: 2,
+        name: "Drug 3"
+      },
+      Support2: 56,
+      Confidence2: 11.1241,
+      status: "known",
+      id: "3, 5, 7, 9, 11, 37"
+    }
+  ],
+  currentDrugs: [
+    ['Drug 2', {drugs: ['Drug 1', 'Drug 2', 'Drug 3'], 
+      rules: [
+        {
+          Rank: "408",
+          Score: 0.089384071,
+          ADR: "ADR 1",
+          r_Drugname: "[Drug 1] [Drug 2]",
+          Support: 15,
+          Confidence: 30,
+          Drug1: {
+            id: 0,
+            name: "Drug 1"
+          },
+          Support1: 12,
+          Confidence1: 21.8182,
+          Drug2: {
+            id: 1,
+            name: "Drug 2"
+          },
+          Support2: 34,
+          Confidence2: 9.65909,
+          status: "unknown",
+          id: "1, 2, 4, 6"
+        },
+        {
+          Rank: "702",
+          Score: 0.314159265,
+          ADR: "ADR 2",
+          r_Drugname: "[Drug 2] [Drug 3]",
+          Support: 45,
+          Confidence: 60,
+          Drug1: {
+            id: 1,
+            name: "Drug 2"
+          },
+          Support1: 19,
+          Confidence1: 21.8182,
+          Drug2: {
+            id: 2,
+            name: "Drug 3"
+          },
+          Support2: 56,
+          Confidence2: 11.1241,
+          status: "known",
+          id: "3, 5, 7, 9, 11, 37"
+        }
+      ],
+    drugDMEs: ["ADR 2"]}]
+  ],
+  selectedDrug: 'Drug 2',
+};
 
 export default class GlobalFilterNav extends React.Component {
   constructor(props) {
@@ -86,51 +193,6 @@ export default class GlobalFilterNav extends React.Component {
       maxScore: 1.0,
       freqDist: [],
       help: false,
-      stepsEnabled: false,
-      initialStep: 0,
-      steps: [
-        {
-          intro: 'Welcome to DIVA! This application is intended to assist in the discovery of critical drug-drug interactions.',
-        },
-        {
-          element: '.knownUnknown',
-          intro: 'This dropdown menu can be used to filter drug-drug interactions based on whether they are previously known or unknown.',
-        },
-        {
-          element: '.scoreMinMax',
-          intro: 'Similarly, this tool can be used to specify a minimum and maximum score to filter out interactions in each view that do not meet this criteria.',
-        },
-        {
-          element: '.scoreMinMax',
-          intro: 'Use the distribution above the slider to get an idea of how the scores are distributed.',
-        },
-        {
-          element: '.overview',
-          intro: 'This tab shows the network of all drugs and their interactions. Each node represents a drug, and each link represents an interaction between two drugs.',
-        },
-        {
-          element: '.overview',
-          intro: 'Click on a node to view more in depth information about that drug. Try it now!',
-        },
-        {
-          element: '.galaxy',
-          intro: 'The Galaxy View tab offers a general overview about a specific drug. Each of the drug\'s interactions can be seen.',
-        },
-        {
-          element: '.galaxy',
-          intro: 'To view detailed information about the reports behind the visualization, click on the reports icon.',
-        },
-        {
-          intro: 'The reports view shows the FAERS reports that support any possible interactions with a specific drug.',
-        },
-        {
-          element: '.profile',
-          intro: 'The Interaction Profile tab shows detailed information about a drug, all drugs that interact with that drug, and the ADRs that may be caused by those interactions.',
-        },
-        {
-          intro: 'This concludes the tour! If you have any more questions, you can find our contact information in the About Us section of the Help menu.',
-        },
-      ],
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -142,7 +204,7 @@ export default class GlobalFilterNav extends React.Component {
     this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
     this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
     this.startTour = this.startTour.bind(this);
-    this.endTour = this.endTour.bind(this);
+    // this.endTour = this.endTour.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -244,15 +306,11 @@ export default class GlobalFilterNav extends React.Component {
     }
   };
 
-  endTour() {
-    this.setState({ stepsEnabled: false });
-  }
-
   startTour() {
     if(this.state.help) {
       this.setState({ help: false });
     }
-    this.setState({ stepsEnabled: true });
+    this.props.startTour();
   }
 
   render() {
@@ -288,11 +346,29 @@ export default class GlobalFilterNav extends React.Component {
       }
     };
 
+    const dummyMarks = {
+      [this.state.minScore]: {
+          style: {
+            position: 'absolute',
+            zIndex: 1100,
+            color: 'white',
+            top: 0,
+          }, label: 'Min Score: ' + this.state.minScore.toFixed(2),
+        },
+      [this.state.maxScore]: {
+        style: {
+          position: 'absolute',
+          zIndex: 1100,
+          color: 'white',
+          top: 0,
+        }, label: 'Max Score: ' + this.state.maxScore.toFixed(2),
+      }
+    };
+
     var points = [];
     this.state.freqDist.forEach(entry => {
       points.push({x: entry['Score'], y: entry['Freq']});
     });
-    // points = _.sortBy(points, 'x');
 
     const data = [
         {									
@@ -302,22 +378,9 @@ export default class GlobalFilterNav extends React.Component {
     ];
     return (
       <AppBar style={styles.root}
+        zDepth={2}
         title={
           <div>
-            <Steps
-              enabled={this.state.stepsEnabled}
-              steps={this.state.steps}
-              initialStep={this.state.initialStep}
-              onExit={this.endTour}
-              ref={intro => {
-                if(intro !== null) {
-                  intro.introJs.setOption('showStepNumbers', false);
-                  intro.introJs.setOption('showBullets', false);
-                  intro.introJs.setOption('overlayOpacity', 0.5);
-                  intro.introJs.setOption('highlightClass', 'green');
-                }
-              }}
-            />
             <DropDownMenu 
               className="knownUnknown"
               value={this.state.value}
@@ -333,22 +396,6 @@ export default class GlobalFilterNav extends React.Component {
               <MenuItem value='known' primaryText="Known DIARs" />
               <MenuItem value='unknown' primaryText="Unknown DIARs" />
             </DropDownMenu> 
-            {/* <TextField
-              style={styles.textField}
-              hintText="Min Score"
-              hintStyle={{ color: 'white' }}
-              inputStyle={{ color: 'white' }}	
-              value={this.state.minScore}
-              onChange={this.updateMinScore}
-            />
-            <TextField
-              style={styles.textField}
-              hintText="Max Score"
-              hintStyle={{ color: 'white' }}
-              inputStyle={{ color: 'white' }}	
-              value={this.state.maxScore}
-              onChange={this.updateMaxScore}
-            /> */}
             <div 
               style={{position: 'relative', top: -75, marginLeft: 200}}>
               <LineChart
@@ -365,9 +412,10 @@ export default class GlobalFilterNav extends React.Component {
                 hideXAxis={true}
                 hideYAxis={true}
                 margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
-              <Range className='scoreMinMax'
+              <Range className='scoreMinMax scoreMinMax2'
                 defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-                style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'solid 2px #000000'}, {border: 'solid 2px #000000'}]} trackStyle={[{background: 'black'}]} railStyle={{background: '#A9B0B7'}}/>
+                style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                dotStyle={{display: 'none'}}/>
             </div>
         </div>
         }
@@ -384,6 +432,7 @@ export default class GlobalFilterNav extends React.Component {
             </IconButton>
             <Dialog
               title="Help"
+              contentStyle={{width: "80%", maxWidth: "none"}}
               actions={actions}
               modal={false}
               open={this.state.help}
@@ -391,62 +440,220 @@ export default class GlobalFilterNav extends React.Component {
               autoScrollBodyContent={true}>
               <Grid>
                 <Row>
-                  <Card initiallyExpanded={true}>
+                  <Card initiallyExpanded={true} style={{width: '100%'}}>
                     <CardHeader
                       title="Views"
                       actAsExpander={true}
                       showExpandableButton={true}
                     />
                     <CardText expandable={true}>
-                      The Overview tab features a node-link diagram to visually display relationships between drugs and ADRs. 
-                      In this view, nodes represent drugs and edges represent an interaction between two drugs. If the edge is dashed,
-                      the interaction is known; if the edge is solid the interaction is unknown. The width of each edge represents the 
-                      strength of the interaction.
-                      <br/>
-                      <br/>
-                      The Galaxy View tab shows overviews of specific drugs in separate windows. At the center of each window is the 
-                      drug of interest, with the nodes surrounding it representing
-                      the drugs that interact with that drug. The color of this view's header indicates the count of severe ADRs 
-                      associated with this drug. Users can view multiple different drugs at a time, sorted by name, interaction count,
-                      or severity as necessary. The size of each individual node indicates whether any of the MDARs between the two 
-                      drugs are unknown; if there exists at least one unknown MDAR, the node will have a larger size than those with 
-                      no unknown MDARs. Users can find additional information about each interaction by hovering over them.
-                      <br/>
-                      <br/>
-                      The Interaction Profile tab provides a more detailed look at an individual drug in the form of a modified tree layout,
-                      consisting of three levels. The root node represents the selected drug, the second level displays all of the drugs 
-                      that interact with the selected drug, and finally, the third level represents the ADRs that exist between the 
-                      drugs. Normal ADRs are represented with a tan color, while severe reactions are purple.
+                      <Row>
+                        <Col sm={12} md={7}>
+                          <h5>Overview</h5>
+                          <ul>
+                            <li>Each <b>node</b> is a <b>drug</b></li>
+                            <li>Each <b>edge</b> is a possible <b>interaction</b> between two drugs</li>
+                            <li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
+                            <li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
+                            <li>The <b>edge color</b> represents the <b>interaction score</b></li>
+                          </ul>
+                        </Col>
+                        <Col sm={12} md={5}>
+                          <Row>
+                            <Paper zDepth={1} style={{height: 170, width: 230}}>
+                              <DndGraph 
+                                nodes={dummyData.nodes}
+                                links={dummyData.edges}
+                                width={100}
+                                height={100} 
+                                selectedDrug=''
+                                onClickNode={() => {}}
+                                onClickEdge={() => {}}
+                                isFetching={false}
+                                filter='all'
+                                minScore={-50}
+                                maxScore={50}
+                              />
+                            </Paper>
+                            <Col style={{marginLeft: 20}}>
+                              <Row style={{height: 34}}>
+                                {'Contrast Score'}
+                              </Row>
+                              <Row>
+                                <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
+                                <div><p>{'(-inf, 0.0]'}</p></div>
+                              </Row>
+                              <Row>
+                                <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
+                                <div><p>{'(0.0, 0.01]'}</p></div>
+                              </Row>
+                              <Row>
+                                <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
+                                <div><p>{'(0.01, 0.2]'}</p></div>
+                              </Row>
+                              <Row>
+                                <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
+                                <div><p>{'(0.2, inf)'}</p></div>
+                              </Row>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                      <Row style={{marginTop: 20}}>
+                        <Col sm={12} md={7}>
+                          <h5>Galaxy View</h5>
+                          <ul>
+                            <li>The <b>central drug</b> in a window is the <b>drug of interest</b></li>
+                            <li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
+                            <li>The <b>color</b> of a window's header indicates the <b>severe ADR count</b> associated with the drug of interest</li>
+                            <li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
+                            <li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
+                            <li>Surrounding nodes are <b>smaller</b> if there is a <b>known interaction</b> with that drug</li>
+                          </ul>
+                        </Col>
+                        <Col sm={12} md={5}>
+                          <Row>
+                            <Paper zDepth={1} style={{height: 210, width: 230}}>
+                              <DndTreeContainer 
+                                currentDrugs={dummyData.currentDrugs}
+                                filter='all'
+                                minScore={-50}
+                                maxScore={50}
+                                onClickNode={() => {}}
+                                onDeleteNode={() => {}}
+                                cols={4}
+                                selectedDrug={dummyData.selectedDrug}
+                                testExample={true}
+                              />
+                            </Paper>
+                            <Col style={{marginLeft: 20}}>
+                              <Row style={{height: 35}}>
+                                {'Severe ADR Count'}
+                              </Row>
+                              <Row style={{height: 35}}>
+                                <div style={{width: 34, background: dmeColors[0], marginRight: 10}}/>
+                                <div><p>{'0'}</p></div>
+                              </Row>
+                              <Row style={{height: 35}}>
+                                <div style={{width: 34, background: dmeColors[1], marginRight: 10}}/>
+                                <div><p>{'1'}</p></div>
+                              </Row>
+                              <Row style={{height: 35}}>
+                                <div style={{width: 34, background: dmeColors[2], marginRight: 10}}/>
+                                <div><p>{'2'}</p></div>
+                              </Row>
+                              <Row style={{height: 35}}>
+                                <div style={{width: 34, background: dmeColors[3], marginRight: 10}}/>
+                                <div><p>{'3'}</p></div>
+                              </Row>
+                              <Row style={{height: 35}}>
+                                <div style={{width: 34, background: dmeColors[4], marginRight: 10}}/>
+                                <div><p>{'4+'}</p></div>
+                              </Row>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                      <Row style={{marginTop: 20}}>
+                        <Col sm={12} md={7}>
+                          <h5>Interaction Profile</h5>
+                          <ul>
+                            <li>Provides a detailed look at an <b>individual drug</b> using a <b>tree layout</b> with three levels</li>
+                            <li>The <b>root node</b> is the <b>selected drug</b></li>
+                            <li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
+                            <li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
+                            <li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>tan</b></li>
+                          </ul>
+                        </Col>
+                        <Col sm={12} md={5}>
+                          <Row>
+                            <Paper zDepth={1} style={{height: 210, width: 230}}>
+                              <InteractionProfile 
+                                mainDrug={dummyData.selectedDrug} 
+                                rules={dummyData.currentDrugs.find(el => el[0] == dummyData.selectedDrug)}
+                              />
+                            </Paper>
+                          </Row>
+                        </Col>
+                      </Row>
                     </CardText>
                   </Card>
-                  <Card initiallyExpanded={false}>
+                  <Card initiallyExpanded={true} style={{width: '100%'}}>
                     <CardHeader
                       title="Filters"
                       actAsExpander={true}
                       showExpandableButton={true}
                     />
                     <CardText expandable={true}>
-                      The top bar contains controls that enable filtering the nodes in all tabs based on whether an interaction is known or
-                      unknown and by the score of the interaction. Additionally, a search bar is provided to allow users to search for a specific
-                      drug, which will then appear in the Galaxy View and Interaction Profile tabs.
+                      <Row>
+                        <Col sm={12} md={6}>
+                          <ul>
+                            <li><b>Filters</b> are located in the <b>top bar</b></li>
+                            <li>A <b>dropdown menu</b> enables filtering interactions by <b>known or unknown</b></li>
+                            <li>A <b>slider</b> enables selection of a <b>minimum and maximum score</b> for interactions</li>
+                            <li>A <b>search bar</b> allows users to search for and <b>select a specific drug</b></li>
+                          </ul>
+                        </Col>
+                        <Col sm={12} md={6}>
+                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 520, height: 64}}>
+                            <DropDownMenu 
+                              className="knownUnknown"
+                              value={this.state.value}
+                              onChange={() => {}} 
+                              style={styles.customWidth}
+                              autoWidth={false} 
+                              labelStyle={{ color: 'white' }}
+                              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+
+                            >
+                              <MenuItem value='all' primaryText="All DIARs" />
+                              <MenuItem value='known' primaryText="Known DIARs" />
+                              <MenuItem value='unknown' primaryText="Unknown DIARs" />
+                            </DropDownMenu> 
+                            <div 
+                              style={{position: 'relative', top: -75, marginLeft: 200}}>
+                              <LineChart
+                                width={274}
+                                height={60}
+                                data={data}
+                                xMin={this.state.minScore}
+                                xMax={this.state.maxScore}
+                                yMax={0}
+                                yMin={180}
+                                hidePoints={true}
+                                hideXLabel={true}
+                                hideYLabel={true}
+                                hideXAxis={true}
+                                hideYAxis={true}
+                                margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
+                              <Range className='scoreMinMax scoreMinMax2'
+                                defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={() => {}} 
+                                style={styles.slider} tipProps={styles.sliderTip} marks={dummyMarks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                                dotStyle={{display: 'none'}}/>
+                            </div>
+                          </Paper>
+                        </Col>
+                      </Row>
                     </CardText>
                   </Card>
-                  <Card initiallyExpanded={false}>
+                  <Card initiallyExpanded={true} style={{width: '100%'}}>
                     <CardHeader
                       title="Reports"
                       actAsExpander={true}
                       showExpandableButton={true}
                     />
                     <CardText expandable={true}>
-                      The Reports View allows direct access to the FAERS data. This view shows a list of all reports related to a 
-                      chosen drug or drug interaction, enabling the user to see the underlying information related to a drug or ADR. 
-                      In addition, users can select a report and the drugs and reactions mentioned will be highlighted in the Overview, 
-                      Galaxy view, and Profile view. This view also allows users to view the narrative section for each report, which 
-                      may contain important information regarding the patient's medical history; users can search for certain key words 
-                      contained in the narrative sections of the reports.
+                      <ul>
+                        <li>This view allows <b>direct access</b> to <b>FAERS data</b></li>
+                        <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
+                        <li><b>Selecting a report</b> will <b>highlight</b> the <b>corresponding drugs and reactions</b> in all views</li>
+                        <li>The <b>narrative section</b> of a report may contain details of a <b>patient's medical history</b></li>
+                        <li>Users can <b>search for key words</b> in the <b>narrative sections</b> of the reports</li>
+                      </ul>
                     </CardText>
                   </Card>
-                  <Card initiallyExpanded={false}>
+                  <Card initiallyExpanded={false} style={{width: '100%'}}>
                     <CardHeader
                       title="About Us"
                       actAsExpander={true}

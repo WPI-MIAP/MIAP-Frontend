@@ -22,6 +22,7 @@ export default class Report extends React.Component {
     render() {
       return (
         <Dialog
+        className="report"
         title={_.upperFirst(this.props.tableTitle)}
         actions={this.props.actions}
         modal={false}
