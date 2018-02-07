@@ -113,8 +113,12 @@ export default class MainView extends Component {
 		const lower = _.toLower(report.title);
 		const titleCase = _.startCase(lower);
 		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
-
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(0.2); //TODO: change color based on interaction's score
+		const drugs = lower.split(" ");
+		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
+			var match = ((_.toLower(link.Drug1.name) === drugs[0] && _.toLower(link.Drug2.name) === drugs[1]) || 
+			(_.toLower(link.Drug1.name) === drugs[1] && _.toLower(link.Drug2.name) === drugs[0]));
+			return match;
+		})[0].Score); //TODO: change color based on interaction's score
 		return (
 			<Chip
 				key={report}
