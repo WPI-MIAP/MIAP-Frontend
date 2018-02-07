@@ -198,7 +198,6 @@ const renderTree = (treeData, svgDomNode, width) => {
     // Update the node attributes and style
     nodeUpdate.select('circle.node')
       .attr('r', d => {
-        console.log(d.data);
         if (d.data.maxScoreStatus === 'unknown' || d.data.name === source.data.name) {
           return 9;
         }
@@ -209,7 +208,7 @@ const renderTree = (treeData, svgDomNode, width) => {
       })
 
       .style("fill", d => {
-        if (d.data.name == source.data.name) {
+        if (d.data.name === source.data.name) {
           return '#5eafee';
         }
 
@@ -265,7 +264,47 @@ const renderTree = (treeData, svgDomNode, width) => {
       .attr('d', d => {
         const o = { x: source.x0, y: source.y0 }
         return diagonal(o, o)
-      });
+      })
+      .style("stroke", d => {
+        if (d.data.maxScore) {
+          const score = d.data.maxScore;
+          if (score < 0 || score <= 0) {
+            return low_color;
+          }
+          else if (score > 0 && score <= 0.01) {
+            return low_med_color;
+          }
+          else if (score > 0.01 && score <= 0.2) {
+            return med_color;
+          }
+          else if (score > 0.2) {
+            return high_color;
+          }
+        }
+
+        if (d.data.Score) {
+          const score = d.data.Score;
+          if (score < 0 || score <= 0) {
+            return low_color;
+          }
+          else if (score > 0 && score <= 0.01) {
+            return low_med_color;
+          }
+          else if (score > 0.01 && score <= 0.2) {
+            return med_color;
+          }
+          else if (score > 0.2) {
+            return high_color;
+          } 
+        }
+      })
+      .style("stroke-width",
+        d => d.data.maxScoreStatus === 'known' || d.data.status === 'known' ? "1px" : "3px"
+      )
+      .style("stroke-dasharray", 
+        d => d.data.maxScoreStatus === 'known' || d.data.status === 'known' ? '5, 5' : 'none'
+      )
+      .style("fill", "none");
 
     // UPDATE
     let linkUpdate = linkEnter.merge(link);
