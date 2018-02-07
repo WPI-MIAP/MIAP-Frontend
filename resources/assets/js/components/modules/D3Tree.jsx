@@ -12,7 +12,7 @@ export default class D3Tree extends Component {
     // Render the tree usng d3 after first component mount
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(this.props.treeData, ReactDOM.findDOMNode(this), 2000);
+        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this), 2000);
       }
     }
   }
@@ -22,7 +22,7 @@ export default class D3Tree extends Component {
     // Delegate rendering the tree to a d3 function on prop change
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(nextProps.treeData, ReactDOM.findDOMNode(this), 2000);
+        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), 2000);
       }
     }
 
@@ -87,7 +87,7 @@ const renderTree = (treeData, svgDomNode, width) => {
   let svgGroup = svg.append("g");
 
   // svg.call(zoomListener);
-  root = d3.hierarchy(treeData[0], d => d.children);
+  root = d3.hierarchy(treeData, d => d.children);
 
   childCount(0, root);
 
@@ -198,7 +198,7 @@ const renderTree = (treeData, svgDomNode, width) => {
     // Update the node attributes and style
     nodeUpdate.select('circle.node')
       .attr('r', d => {
-        if (d.data.maxScoreStatus === 'unknown' || d.data.name === source.data.name) {
+        if (d.data.maxScoreStatus === 'unknown' || d.data.name === root.data.name) {
           return 9;
         }
         return 4.5;
@@ -208,7 +208,7 @@ const renderTree = (treeData, svgDomNode, width) => {
       })
 
       .style("fill", d => {
-        if (d.data.name === source.data.name) {
+        if (d.data.name === root.data.name) {
           return '#5eafee';
         }
 
@@ -331,7 +331,7 @@ const renderTree = (treeData, svgDomNode, width) => {
   }
 
   svgGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-  zoomer.call(zoomListener.transform, d3.zoomIdentity.translate(100, 0)); //This is to pad my svg by a 150px on the left hand side
+  zoomer.call(zoomListener.transform, d3.zoomIdentity.translate(150, 0)); //This is to pad my svg by a 150px on the left hand side
 
   update(root);
   centerNode(root);
