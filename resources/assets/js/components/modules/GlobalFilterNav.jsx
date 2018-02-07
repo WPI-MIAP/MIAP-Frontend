@@ -390,7 +390,7 @@ export default class GlobalFilterNav extends React.Component {
               labelStyle={{ color: 'white' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-
+              selectedMenuItemStyle={{ color: '#AA2C3B' }}
             >
               <MenuItem value='all' primaryText="All DIARs" />
               <MenuItem value='known' primaryText="Known DIARs" />
@@ -567,7 +567,7 @@ export default class GlobalFilterNav extends React.Component {
                         </Col>
                         <Col sm={12} md={5}>
                           <Row>
-                            <Paper zDepth={1} style={{height: 210, width: 230}}>
+                            <Paper zDepth={1} style={{height: 210, width: '100%', overflow: 'hidden',}}>
                               <InteractionProfile 
                                 mainDrug={dummyData.selectedDrug} 
                                 rules={dummyData.currentDrugs.find(el => el[0] == dummyData.selectedDrug)}
@@ -605,7 +605,7 @@ export default class GlobalFilterNav extends React.Component {
                               labelStyle={{ color: 'white' }}
                               targetOrigin={{horizontal: 'right', vertical: 'top'}}
                               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-
+                              selectedMenuItemStyle={{ color: '#AA2C3B' }}
                             >
                               <MenuItem value='all' primaryText="All DIARs" />
                               <MenuItem value='known' primaryText="Known DIARs" />

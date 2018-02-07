@@ -12,8 +12,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
-import MapsLocalBar from 'material-ui/svg-icons/maps/local-bar';
-import ImageFlashOn from 'material-ui/svg-icons/image/flash-on';
+import Share from 'material-ui/svg-icons/social/share';
 import {blue300, indigo900} from 'material-ui/styles/colors';
 import * as d3 from 'd3';
 
@@ -52,6 +51,21 @@ const styles = {
 		zIndex: 100
 	}
 };
+
+const generateColor = score => {
+	if (score <= 0.0) {
+		return '#fecc5c'
+	} 
+	else if (score > 0.0 && score <= 0.01) {
+		return '#fd8d3c'
+	}
+	else if (score > 0.01 && score <= 0.2) {
+		return '#f03b20'
+	}
+	else if (score > 0.2) {
+		return 'hsl(0, 100%, 25%)'
+	}
+}
 
 export default class MainView extends Component {
 	constructor(props) {
@@ -96,8 +110,11 @@ export default class MainView extends Component {
 	}
 
 	renderChip(report) {
-		const titleCase = _.startCase(_.toLower(report.title));
+		const lower = _.toLower(report.title);
+		const titleCase = _.startCase(lower);
 		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
+
+		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(0.2); //TODO: change color based on interaction's score
 		return (
 			<Chip
 				key={report}
@@ -106,8 +123,8 @@ export default class MainView extends Component {
 				onClick={() => this.handleOpen(report)}
 				>
 				{ report.type == 'drug' ?
-				<Avatar backgroundColor="#F2105A" color="white" icon={<MapsLocalBar />} /> :
-				<Avatar backgroundColor="#F2105A" color="white" icon={<ImageFlashOn />} />
+				<Avatar backgroundColor={avatarColor} color="white" /> :
+				<Avatar backgroundColor={avatarColor} color="white" icon={<Share />} />
 				}
 				{title}
 			</Chip>

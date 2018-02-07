@@ -12,7 +12,7 @@ export default class D3Tree extends Component {
     // Render the tree usng d3 after first component mount
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this), 2000);
+        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this));
       }
     }
   }
@@ -22,7 +22,7 @@ export default class D3Tree extends Component {
     // Delegate rendering the tree to a d3 function on prop change
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), 2000);
+        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this));
       }
     }
 
@@ -43,9 +43,10 @@ const removeTree = (svgDomNode) => {
   d3.select(svgDomNode).selectAll("*").remove();
 }
 
-const renderTree = (treeData, svgDomNode, width) => {
+const renderTree = (treeData, svgDomNode) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
   const height = svgDomNode.parentNode.parentNode.clientHeight;
+  const width = '100%';
   const duration = 750;
   const low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
 
