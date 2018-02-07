@@ -238,6 +238,7 @@ export default class MainView extends Component {
 				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ colGalaxy: 4, colOverview: 4, colProfile: 4 })}}
+						backgroundColor={'#2D3E46'}
 						style={{
 							position: 'absolute',
 							right: 30,
@@ -249,18 +250,18 @@ export default class MainView extends Component {
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
 					<Row>
-						<Col xs={6} md={12}> 
+						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
 								display: (this.state.colGalaxy == 4 && this.state.colProfile == 4 && this.state.colOverview == 4) ? 'none' : 'block'}}
-								inkBarStyle={{background: 'white', height: '4px', marginTop: '-4px'}}
+								inkBarStyle={{background: '#29ACBF', height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
-								<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
+								<Tab label={'Overview'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenOverview} value={0}/>
 								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
-								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
+								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
-						<Col xs={6} md={this.state.colOverview} style={{ 
+						<Col xs={12} md={this.state.colOverview} style={{ 
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
 									}}>
 										<Paper zDepth={1}>
@@ -304,7 +305,7 @@ export default class MainView extends Component {
 											</GridTile>
 										</Paper>
 						</Col>
-						<Col xs={6} md={this.state.colGalaxy} style={{
+						<Col xs={12} md={this.state.colGalaxy} style={{
 							display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none'
 						}}
 						>
@@ -354,7 +355,7 @@ export default class MainView extends Component {
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
+						<Col xs={12} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
 							<Paper zDepth={1}>
 								<GridTile
 									// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}

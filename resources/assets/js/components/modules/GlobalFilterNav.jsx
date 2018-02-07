@@ -481,19 +481,19 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
-                                <div><p>{'(-inf, 0.0]'}</p></div>
+                                <div><p>{'Under 0.0'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
-                                <div><p>{'(0.0, 0.01]'}</p></div>
+                                <div><p>{'0.0 - 0.01'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
-                                <div><p>{'(0.01, 0.2]'}</p></div>
+                                <div><p>{'0.01 - 0.2'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
-                                <div><p>{'(0.2, inf)'}</p></div>
+                                <div><p>{'Above 0.2'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -548,7 +548,7 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[4], marginRight: 10}}/>
-                                <div><p>{'4+'}</p></div>
+                                <div><p>{'Above 4'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -595,7 +595,7 @@ export default class GlobalFilterNav extends React.Component {
                           </ul>
                         </Col>
                         <Col sm={12} md={6}>
-                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 520, height: 64}}>
+                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 200, height: 64}}>
                             <DropDownMenu 
                               className="knownUnknown"
                               value={this.state.value}
@@ -611,8 +611,10 @@ export default class GlobalFilterNav extends React.Component {
                               <MenuItem value='known' primaryText="Known DIARs" />
                               <MenuItem value='unknown' primaryText="Unknown DIARs" />
                             </DropDownMenu> 
+                          </Paper>
+                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 310, height: 64, marginTop: 10}}>
                             <div 
-                              style={{position: 'relative', top: -75, marginLeft: 200}}>
+                              style={{position: 'relative', top: -25, marginLeft: 0}}>
                               <LineChart
                                 width={274}
                                 height={60}
