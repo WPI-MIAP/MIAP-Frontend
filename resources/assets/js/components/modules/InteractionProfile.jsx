@@ -1,55 +1,10 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom';
 import Tree from 'react-d3-tree';
+import D3Tree from './D3Tree';
 import _ from 'lodash'
 
-const svgNode = {
-  shape: 'circle',
-  shapeProps: {
-    r: 10,
-    x: -10,
-    y: -10,
-    fill: '#2c98f0',
-    stroke: 'white'
-  }
-}
-
-const styles = {
-  links: {},
-  nodes: {
-    node: {
-      circle: {
-        r: 10,
-        x: -10,
-        y: -10,
-        fill: '#2c98f0',
-        stroke: 'white'
-      },
-      name: {
-        fontFamily: "Helvetica",
-        fontWeight: 200,
-        fontSize: 10
-      },
-      attributes: {},
-    },
-    leafNode: {
-      circle: {
-        r: 10,
-        x: -10,
-        y: -10,
-        fill: 'red',
-        stroke: 'white' 
-      },
-      name: {
-        fontFamily: "Helvetica",
-        fontWeight: 200,
-        fontSize: 10
-      },
-      attributes: {},
-    },
-  },
-}
-
-const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [] } ] }) => {
+const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [], drugDMEs: [] } ]}) => {
   let myTreeData = [
     {
       name: _.capitalize(mainDrug),
@@ -62,24 +17,16 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
 
     const interactions = rules[1].rules
     .filter(rule => _.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name)
-    .map(rule => rule.ADR)
+    .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(rules[1].drugDMEs, rule.ADR), status: rule.status }))
 
-    child.children = interactions.map(el => ({ name: _.capitalize(el) }))
+    child.children = interactions;
+    child.maxScore = _.maxBy(interactions, o => o.Score).Score;
+    child.maxScoreStatus = _.maxBy(interactions, o => o.Score).status;
   }
 
   return (
-    <div id="treeWrapper">
-
-      {
-      mainDrug != '' &&
-      <Tree data={myTreeData} 
-        translate={{x: 50, y: 250}}
-        styles={styles}
-        depthFactor={200}
-        seperation={{ siblings: 1, nonSiblings: 2}}
-      />
-      }
-
+    <div id="treeWrapper" width="100%">
+      <D3Tree treeData={myTreeData} mainDrug={mainDrug} />
     </div>
   )
 }
