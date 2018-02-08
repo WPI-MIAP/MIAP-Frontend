@@ -72,9 +72,10 @@ export default class MainView extends Component {
 		super(props);
 
 		this.state = {
-			colOverview: 4,
-			colGalaxy: 4,
-			colProfile: 4,
+			col: 4,
+			isGalaxyFullscreen: false,
+			isOverviewFullscreen: false,
+			isProfileFullscreen: false,
 			reportChips: [],
 			tableData: [],
 			tableTitle: '',
@@ -171,9 +172,10 @@ export default class MainView extends Component {
 	toggleFullscreenOverview() {
 		this.setState((prevState, props) => {
 			return {
-				colOverview: prevState.colOverview == 4 ? 12 : 4,
-				colGalaxy: 4,
-				colProfile: 4,
+				col: 12,
+				isOverviewFullscreen: true,
+				isProfileFullscreen: false,
+				isGalaxyFullscreen: false
 			}
 		})
 	}
@@ -181,9 +183,11 @@ export default class MainView extends Component {
 	toggleFullscreenGalaxy() {
 		this.setState((prevState, props) => {
 			return {
-				colGalaxy: prevState.colGalaxy == 4 ? 12 : 4,
-				colOverview: 4,
-				colProfile: 4,
+				// col: prevState.col == 4 ? 12 : 4,
+				col: 12,
+				isOverviewFullscreen: false,
+				isGalaxyFullscreen: true,
+				isProfileFullscreen: false
 			}
 		})
 	}
@@ -191,19 +195,21 @@ export default class MainView extends Component {
 	toggleFullscreenProfile() {
 		this.setState((prevState, props) => {
 			return {
-				colProfile: prevState.colProfile == 4 ? 12 : 4,
-				colOverview: 4,
-				colGalaxy: 4,
+				col: 12,
+				// col: prevState.col == 4 ? 12 : 4,
+				isOverviewFullscreen: false,
+				isGalaxyFullscreen: false,
+				isProfileFullscreen: true
 			}
 		})
 	}
 
 	getTabsIndex() {
-		if(this.state.colOverview == 12) {
+		if(this.state.isOverviewFullscreen) {
 			return 0;
-		}else if(this.state.colGalaxy == 12) {
+		}else if(this.state.isGalaxyFullscreen) {
 			return 1;
-		}else if(this.state.colProfile == 12) {
+		}else if(this.state.isProfileFullscreen) {
 			return 2;
 		}else {
 			return 0;
@@ -230,19 +236,29 @@ export default class MainView extends Component {
         primary={true}
         onClick={this.handleClose}
       />
-    ];
+		];
+		
+		let topPosition;
+
+		if (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) {
+			topPosition = -1000;
+		} else if (this.state.col === 12) {
+			topPosition = -14;
+		} else {
+			topPosition = 0;
+		}
 
 		return (
 			<div>
 				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
 					<FloatingActionButton
-						onClick={() => {this.setState({ colGalaxy: 4, colOverview: 4, colProfile: 4 })}}
+						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						style={{
 							position: 'absolute',
 							right: 30,
 							bottom: 30,
 							zIndex: 100,
-							display: this.state.colOverview != 4 || this.state.colGalaxy != 4 || this.state.colProfile != 4 ? 'block' : 'none'
+							display: this.state.col === 12 ? 'block' : 'none'
 						}}
 					>
 						<NavigationFullscreenExit />
@@ -250,7 +266,7 @@ export default class MainView extends Component {
 					<Row>
 						<Col xs={6} md={12}> 
 							<Tabs style={{marginBottom: 15,
-								display: (this.state.colGalaxy == 4 && this.state.colProfile == 4 && this.state.colOverview == 4) ? 'none' : 'block'}}
+								display: this.state.col === 4 ? 'none' : 'block'}}
 								inkBarStyle={{background: 'white', height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
@@ -259,14 +275,14 @@ export default class MainView extends Component {
 								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
-						<Col xs={6} md={this.state.colOverview} style={{ 
-										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
-										top: this.state.colOverview == 12 ? -14 : 0
-									}}
+						<Col xs={6} md={this.state.col} style={{ 
+								position: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) ? 'absolute' : 'relative',
+								top: topPosition
+							}}
 						>
 							<Paper zDepth={1}>
 								<GridTile
-									title={this.state.colOverview != 12 ? "Overview" : ""}
+									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
 									className="overview overview2"
 									// titleBackground="#24915C"
@@ -300,19 +316,23 @@ export default class MainView extends Component {
 										filter={this.props.filter}
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
+										// colGalaxy={this.state.colGalaxy}
+										// colProfile={this.state.colProfile}
+										// colOverview={this.state.colOverview}
 									/>
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.colGalaxy} style={{
-							display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none',
-							top: this.state.colGalaxy == 12 ? -14 : 0
+						<Col xs={6} md={this.state.col} style={{
+							// display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none',
+							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
+							top: this.state.col == 12 ? -14 : 0
 						}}
 						>
 							<Paper zDepth={1}
 							>
 								<GridTile
-									title={this.state.colGalaxy != 12 ? "Galaxy View" : ""}
+									title={this.state.col != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
 									className="galaxy galaxy2"
 									actionIcon={ 
@@ -348,7 +368,7 @@ export default class MainView extends Component {
 										height={this.props.height} 
 										onClickNode={this.props.showDetailNode}
 										onDeleteNode={this.props.deleteNode}
-										cols={this.state.colGalaxy}
+										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
 										nextTourStep={this.props.nextTourStep}
 										currentSelector={this.props.currentSelector}
@@ -356,14 +376,15 @@ export default class MainView extends Component {
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.colProfile} style={{ 
-							display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none',
-							top: this.state.colProfile == 12 ? -14 : 0
+						<Col xs={6} md={this.state.col} style={{ 
+							// display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none',
+							display: (this.state.col === 12 && (this.state.isGalaxyFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
+							top: this.state.col == 12 ? -14 : 0
 						}}>
 							<Paper zDepth={1}>
 								<GridTile
 									// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
-									title={this.state.colProfile != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
+									title={this.state.col != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
 									titlePosition="top"
 									className="profile"
 									// titleBackground="#2B81AC"
