@@ -55,9 +55,25 @@ export default class DndGraph extends Component {
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.selectedDrug !== this.props.selectedDrug) {
+			const nodeId = this.state.network.getPositions([nextProps.selectedDrug]);
+			if (nodeId[nextProps.selectedDrug]) {
+				const options = {
+					position: { x: nodeId[nextProps.selectedDrug].x, y: nodeId[nextProps.selectedDrug].y},
+					scale: 1,
+					offset: { x: 0, y: 0},
+					animation: true
+				}
+				this.state.network.moveTo(options)
+			}
+		}
+	}
+
 	componentDidUpdate() {
 		if (this.state.network != null) {
 			this.state.network.redraw();
+			// this.state.network.fit();
 		}
 	}
 
@@ -132,15 +148,15 @@ export default class DndGraph extends Component {
 
 				if (typeof edges[0] !== undefined && nodes.length === 0) {
 					this.props.onClickEdge(edges[0]);
-				}
 
-				const options = {
-					position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
-					scale: 1,
-					offset: { x: 0, y: 0},
-					animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
-				};
-				this.state.network.moveTo(options);
+					const options = {
+						position: { x: event.pointer.canvas.x, y: event.pointer.canvas.y},
+						scale: 1,
+						offset: { x: 0, y: 0},
+						animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+					};
+					this.state.network.moveTo(options);
+				}
 			},
 		}
 

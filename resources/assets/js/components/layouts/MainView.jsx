@@ -79,7 +79,6 @@ export default class MainView extends Component {
 			tableData: [],
 			tableTitle: '',
 			open: false,
-			profileWidth: 0
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -262,53 +261,56 @@ export default class MainView extends Component {
 						</Col>
 						<Col xs={6} md={this.state.colOverview} style={{ 
 										display: (this.state.colGalaxy == 4 && this.state.colProfile == 4) ? 'block' : 'none',
-									}}>
-										<Paper zDepth={1}>
-											<GridTile
-												title={this.state.colOverview != 12 ? "Overview" : ""}
-												titlePosition="top"
-												className="overview overview2"
-												// titleBackground="#24915C"
-												titleBackground="#2D3E46"
-												style={{
-													// border: '1px solid #F0F0F0', 
-													boxSizing: 'border-box',
-													background: 'white',
-													top: this.state.colOverview == 12 ? -14 : 0
-
-												}}
-												actionIcon={
-													<IconButton 
-														tooltip="Go Fullscreen"
-														iconStyle={{ color: 'white' }}
-														tooltipPosition='bottom-left'
-														onClick={this.toggleFullscreenOverview}
-													>
-														<IconFullscreen />	
-													</IconButton>
-												}
-											>
-												<DndGraph 
-													nodes={this.props.nodes}
-													links={this.props.links}
-													width={this.props.width}
-													height={this.props.height} 
-													selectedDrug={this.props.selectedDrug}
-													onClickNode={this.onClickNodeTour}
-													onClickEdge={this.props.onClickEdge}
-													isFetching={this.props.isFetching}
-													filter={this.props.filter}
-													minScore={this.props.minScore}
-													maxScore={this.props.maxScore}
-												/>
-											</GridTile>
-										</Paper>
-						</Col>
-						<Col xs={6} md={this.state.colGalaxy} style={{
-							display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none'
-						}}
+										top: this.state.colOverview == 12 ? -14 : 0
+									}}
 						>
 							<Paper zDepth={1}>
+								<GridTile
+									title={this.state.colOverview != 12 ? "Overview" : ""}
+									titlePosition="top"
+									className="overview overview2"
+									// titleBackground="#24915C"
+									titleBackground="#2D3E46"
+									style={{
+										// border: '1px solid #F0F0F0', 
+										boxSizing: 'border-box',
+										background: 'white',
+
+									}}
+									actionIcon={
+										<IconButton 
+											tooltip="Go Fullscreen"
+											iconStyle={{ color: 'white' }}
+											tooltipPosition='bottom-left'
+											onClick={this.toggleFullscreenOverview}
+										>
+											<IconFullscreen />	
+										</IconButton>
+									}
+								>
+									<DndGraph 
+										nodes={this.props.nodes}
+										links={this.props.links}
+										width={this.props.width}
+										height={this.props.height} 
+										selectedDrug={this.props.selectedDrug}
+										onClickNode={this.onClickNodeTour}
+										onClickEdge={this.props.onClickEdge}
+										isFetching={this.props.isFetching}
+										filter={this.props.filter}
+										minScore={this.props.minScore}
+										maxScore={this.props.maxScore}
+									/>
+								</GridTile>
+							</Paper>
+						</Col>
+						<Col xs={6} md={this.state.colGalaxy} style={{
+							display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none',
+							top: this.state.colGalaxy == 12 ? -14 : 0
+						}}
+						>
+							<Paper zDepth={1}
+							>
 								<GridTile
 									title={this.state.colGalaxy != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
@@ -331,7 +333,7 @@ export default class MainView extends Component {
 										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
-										top: this.state.colGalaxy == 12 ? -14 : 0
+										// top: this.state.colGalaxy == 12 ? -14 : 0
 										// overflow: 'auto',
 										// marginTop: 75
 									}}
@@ -354,7 +356,10 @@ export default class MainView extends Component {
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.colProfile} style={{ display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none'}}>
+						<Col xs={6} md={this.state.colProfile} style={{ 
+							display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none',
+							top: this.state.colProfile == 12 ? -14 : 0
+						}}>
 							<Paper zDepth={1}>
 								<GridTile
 									// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
@@ -367,7 +372,6 @@ export default class MainView extends Component {
 										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
-										top: this.state.colProfile == 12 ? -14 : 0
 									}}
 									actionIcon={
 										<IconButton 

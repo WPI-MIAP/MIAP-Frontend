@@ -4,7 +4,7 @@ import Tree from 'react-d3-tree';
 import D3Tree from './D3Tree';
 import _ from 'lodash'
 
-const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [], drugDMEs: [] } ]}) => {
+const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: [], drugDMEs: [] } ], fullscreen}) => {
   let myTreeData = [
     {
       name: _.capitalize(mainDrug),
@@ -26,7 +26,7 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
 
   return (
     <div id="treeWrapper" width="100%">
-      <D3Tree treeData={myTreeData} mainDrug={mainDrug} />
+      <D3Tree treeData={myTreeData} mainDrug={mainDrug} fullscreen={fullscreen}/>
     </div>
   )
 }

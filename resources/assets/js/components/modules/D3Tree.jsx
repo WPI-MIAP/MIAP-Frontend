@@ -5,6 +5,10 @@ import ReactDOM from 'react-dom';
 export default class D3Tree extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      previousDrug: ''
+    }
   }
   componentDidMount() {
     // const width = ReactDOM.findDOMNode(this).parentNode.clientWidth
@@ -17,17 +21,16 @@ export default class D3Tree extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    removeTree(ReactDOM.findDOMNode(this));
-    // Delegate rendering the tree to a d3 function on prop change
-    if (this.props.treeData) {
-      if (this.props.treeData[0].name !== "") {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.treeData[0].children.length > 0) {
+      if (this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase()
+      ) {
+        console.log("state changed");
+        this.setState({ previousDrug: nextProps.treeData[0].name });
+        removeTree(ReactDOM.findDOMNode(this));
         renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this));
       }
     }
-
-    // Do not allow react to render the component on prop change
-    return false;
   }
 
   render() {
@@ -45,7 +48,8 @@ const removeTree = (svgDomNode) => {
 
 const renderTree = (treeData, svgDomNode) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
-  const height = svgDomNode.parentNode.parentNode.clientHeight;
+  const height = svgDomNode.parentNode.parentNode.parentNode.parentNode.parentNode.clientHeight
+  console.log(svgDomNode.parentNode.parentNode.parentNode);
   const width = '100%';
   const duration = 750;
   const low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
@@ -53,7 +57,6 @@ const renderTree = (treeData, svgDomNode) => {
   let svg = d3.select(svgDomNode)
     .attr("width", width)
     .attr("height", height)
-
   
   let i = 0;
   let root;

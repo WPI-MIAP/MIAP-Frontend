@@ -63,6 +63,7 @@ export default class DndTree extends Component {
 	componentDidUpdate() {
 		if (this.state.network != null) {
 			this.state.network.redraw();
+			this.state.network.fit();
 		}
 	}
 
