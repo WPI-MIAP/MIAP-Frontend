@@ -134,7 +134,6 @@ export default class DndTree extends Component {
 		const events = {
 			select(event) {
 				const { nodes, edges } = event;
-				console.log('hi')
 			},
 		}
 

@@ -113,8 +113,12 @@ export default class MainView extends Component {
 		const lower = _.toLower(report.title);
 		const titleCase = _.startCase(lower);
 		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
-
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(0.2); //TODO: change color based on interaction's score
+		const drugs = lower.split(" ");
+		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
+			var match = ((_.toLower(link.Drug1.name) === drugs[0] && _.toLower(link.Drug2.name) === drugs[1]) || 
+			(_.toLower(link.Drug1.name) === drugs[1] && _.toLower(link.Drug2.name) === drugs[0]));
+			return match;
+		})[0].Score); //TODO: change color based on interaction's score
 		return (
 			<Chip
 				key={report}
@@ -253,6 +257,7 @@ export default class MainView extends Component {
 				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
+						backgroundColor={'#2D3E46'}
 						style={{
 							position: 'absolute',
 							right: 30,
@@ -264,18 +269,18 @@ export default class MainView extends Component {
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
 					<Row>
-						<Col xs={6} md={12}> 
+						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
 								display: this.state.col === 4 ? 'none' : 'block'}}
-								inkBarStyle={{background: 'white', height: '4px', marginTop: '-4px'}}
+								inkBarStyle={{background: '#29ACBF', height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
-								<Tab label={'Overview'} style={{background: "#24915C"}} onActive={this.toggleFullscreenOverview} value={0}/>
+								<Tab label={'Overview'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenOverview} value={0}/>
 								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
-								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2B81AC"}} onActive={this.toggleFullscreenProfile} value={2}/>
+								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
-						<Col xs={6} md={this.state.col} style={{ 
+						<Col xs={12} md={this.state.col} style={{ 
 								position: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) ? 'absolute' : 'relative',
 								top: topPosition
 							}}
@@ -323,7 +328,7 @@ export default class MainView extends Component {
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.col} style={{
+						<Col xs={12} md={this.state.col} style={{
 							// display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none',
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
 							top: this.state.col == 12 ? -14 : 0
@@ -376,7 +381,7 @@ export default class MainView extends Component {
 								</GridTile>
 							</Paper>
 						</Col>
-						<Col xs={6} md={this.state.col} style={{ 
+						<Col xs={12} md={this.state.col} style={{ 
 							// display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none',
 							display: (this.state.col === 12 && (this.state.isGalaxyFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
 							top: this.state.col == 12 ? -14 : 0

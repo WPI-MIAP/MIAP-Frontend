@@ -26,8 +26,9 @@
     "@types/mocha": "^2.2.41",
     "@types/mongoose": "^4.7.13",
     "@types/nconf": "0.0.34",
-    "@types/sinon": "^2.2.2",
     "@types/node": "8.0.31",
+    "@types/sinon": "^2.2.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-react": "6.24.1",
     "chai": "^3.5.0",
     "cross-env": "5.0.5",
@@ -47,6 +48,7 @@
   },
   "dependencies": {
     "axios": "0.17.0",
+    "babel-preset-stage-2": "^6.24.1",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "3.3.7",
     "chai-http": "^3.0.0",
