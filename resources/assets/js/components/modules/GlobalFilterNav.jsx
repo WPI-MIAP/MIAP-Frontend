@@ -452,7 +452,7 @@ export default class GlobalFilterNav extends React.Component {
                           <h5>Overview</h5>
                           <ul>
                             <li>Each <b>node</b> is a <b>drug</b></li>
-                            <li>Each <b>edge</b> is a possible <b>interaction</b> between two drugs</li>
+                            <li>Each <b>edge</b> is a possible <b>adverse drug reaction (ADR)</b></li>
                             <li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
                             <li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
                             <li>The <b>edge color</b> represents the <b>interaction score</b></li>
@@ -586,7 +586,7 @@ export default class GlobalFilterNav extends React.Component {
                     />
                     <CardText expandable={true}>
                       <Row>
-                        <Col sm={12} md={6}>
+                        <Col sm={12} md={7}>
                           <ul>
                             <li><b>Filters</b> are located in the <b>top bar</b></li>
                             <li>A <b>dropdown menu</b> enables filtering interactions by <b>known or unknown</b></li>
@@ -594,7 +594,7 @@ export default class GlobalFilterNav extends React.Component {
                             <li>A <b>search bar</b> allows users to search for and <b>select a specific drug</b></li>
                           </ul>
                         </Col>
-                        <Col sm={12} md={6}>
+                        <Col sm={12} md={5}>
                           <Paper zDepth={1} style={{background: "#AA2C3B", width: 200, height: 64}}>
                             <DropDownMenu 
                               className="knownUnknown"
@@ -647,7 +647,7 @@ export default class GlobalFilterNav extends React.Component {
                     />
                     <CardText expandable={true}>
                       <ul>
-                        <li>This view allows <b>direct access</b> to <b>FAERS data</b></li>
+                        <li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
                         <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
                         <li><b>Selecting a report</b> will <b>highlight</b> the <b>corresponding drugs and reactions</b> in all views</li>
                         <li>The <b>narrative section</b> of a report may contain details of a <b>patient's medical history</b></li>
