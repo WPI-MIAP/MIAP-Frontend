@@ -7,6 +7,7 @@ import { selectMinScore } from './selectMinScore'
 import { selectMaxScore } from './selectMaxScore'
 import { treeViewSorting } from './treeViewSorting'
 import { addRules } from './addRules'
+import { isUpdating } from './isUpdating'
 
 const drugInteractionApp = combineReducers({
 	visibilityFilter,
@@ -16,7 +17,8 @@ const drugInteractionApp = combineReducers({
 	treeViewSorting,
 	selectMinScore,
 	selectMaxScore,
-	addRules
+	addRules,
+	isUpdating
 })
 
 export default drugInteractionApp

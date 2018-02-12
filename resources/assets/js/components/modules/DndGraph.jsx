@@ -49,7 +49,7 @@ export default class DndGraph extends Component {
 		super(props);
 
 		this.state = {
-			network: null
+			network: null,
 		}
 
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
@@ -68,6 +68,14 @@ export default class DndGraph extends Component {
 				this.state.network.moveTo(options)
 			}
 		}
+		if (this.props.filter !== nextProps.filter) {
+			console.log('new filter');
+			this.props.isUpdating(false);
+		}
+		if (this.props.minScore !== nextProps.minScore || this.props.maxScore !== nextProps.maxScore) {
+			console.log('new min/max');
+			this.props.isUpdating(false);
+		}
 	}
 
 	componentDidUpdate() {
@@ -82,6 +90,7 @@ export default class DndGraph extends Component {
 	}
 
 	render() {
+
 		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 

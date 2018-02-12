@@ -35,6 +35,13 @@ export const selectMaxScore = score => {
 	}
 }
 
+export const isUpdating = value => {
+	return {
+		type: 'IS_UPDATING',
+		value
+	}
+}
+
 export const clearSearchTerm = () => {
 	return {
 		type: 'CLEAR_SEARCH_TERM'

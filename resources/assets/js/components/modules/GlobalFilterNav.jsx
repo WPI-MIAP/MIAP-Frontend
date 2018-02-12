@@ -213,8 +213,10 @@ export default class GlobalFilterNav extends React.Component {
 
   handleChange(event, index, value) {
     console.log(index + ' ' + value)
-    this.setState({ value })
-
+    this.setState({ 
+      value: value,
+    });
+    this.props.isUpdating(true);
     this.props.onClick(value)
   }
 
@@ -250,6 +252,7 @@ export default class GlobalFilterNav extends React.Component {
     });
     this.callUpdateMaxScore(value[1]);
     this.callUpdateMinScore(value[0]);
+    this.props.isUpdating(true);
   }
 
   openHelp(){
@@ -314,6 +317,10 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   render() {
+    
+		const updating = this.props.updating ? (
+				<i style={{position: 'relative', top: -102, left: 520}} className="MainView__Loading fa fa-spinner fa-spin fa-lg fa-fw" ></i>
+		) : null;
 
     const actions = [
       <FlatButton
@@ -417,6 +424,7 @@ export default class GlobalFilterNav extends React.Component {
                 style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
                 dotStyle={{display: 'none'}}/>
             </div>
+            {updating}
         </div>
         }
         iconElementLeft={wpiLogo}

@@ -1,11 +1,12 @@
 import { connect } from 'react-redux'
-import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore } from '../actions'
+import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore, isUpdating } from '../actions'
 import GlobalFilterNav from '../components/modules/GlobalFilterNav'
 
 
 const mapStateToProps = state => {
   return {
-	rules: state.rulesByStatus.all.rules
+		rules: state.rulesByStatus.all.rules,
+		updating: state.isUpdating,
   }
 }
 
@@ -21,6 +22,10 @@ const mapDispatchToProps = dispatch => {
 
 		updateMaxScore: score => {
 			dispatch(selectMaxScore(score))
+		},
+
+		isUpdating: value => {
+			dispatch(isUpdating(value))
 		}
 	}
 }

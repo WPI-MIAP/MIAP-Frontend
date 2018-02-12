@@ -4,7 +4,7 @@ import App from './components/App.jsx';
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import drugInteractionApp from './reducers'
-import { fetchRules, setFilter } from './actions'
+import { fetchRules, setFilter, isUpdating } from './actions'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -24,6 +24,7 @@ let store = createStore(
 
 store.dispatch(setFilter('all'));
 store.dispatch(fetchRules('all'));
+store.dispatch(isUpdating(false));
 
 render(
 	<MuiThemeProvider>

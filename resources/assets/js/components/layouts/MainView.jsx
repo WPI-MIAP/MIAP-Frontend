@@ -338,6 +338,7 @@ export default class MainView extends Component {
 										filter={this.props.filter}
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
+										isUpdating={this.props.isUpdating}
 										// colGalaxy={this.state.colGalaxy}
 										// colProfile={this.state.colProfile}
 										// colOverview={this.state.colOverview}
