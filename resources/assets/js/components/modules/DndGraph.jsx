@@ -69,11 +69,9 @@ export default class DndGraph extends Component {
 			}
 		}
 		if (this.props.filter !== nextProps.filter) {
-			console.log('new filter');
 			this.props.isUpdating(false);
 		}
 		if (this.props.minScore !== nextProps.minScore || this.props.maxScore !== nextProps.maxScore) {
-			console.log('new min/max');
 			this.props.isUpdating(false);
 		}
 	}

@@ -66,7 +66,7 @@ export default class Report extends React.Component {
           displayRowCheckbox={false}
           stripedRows={true}
           showRowHover={true}
-          preScanRows={false}
+          preScanRows={true}
         >
           {
             (this.props.tableData === null || this.props.tableData === undefined || this.props.tableData.length == 0) ? (

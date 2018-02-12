@@ -156,7 +156,10 @@ export default class MainView extends Component {
 		if (report.type === 'drug') {
 			axios.get('/csv/reports?drug=' + report.title)
 				.then(response => {
-					this.setState({ tableData: response.data })	
+					this.setState({ tableData: response.data });
+					if(this.props.currentSelector === '.galaxy2') {
+						this.props.nextTourStep();
+					}	
 				});
 		}
 
@@ -164,7 +167,7 @@ export default class MainView extends Component {
 			const drugs = report.title.split(" ");
 			axios.get('/csv/reports?drug1=' + drugs[0] + '&drug2=' + drugs[1])
 				.then(response => {
-					this.setState({ tableData: response.data })	
+					this.setState({ tableData: response.data });	
 				});
 
 		}
@@ -179,7 +182,14 @@ export default class MainView extends Component {
   }
 
   handleClose() {
-    this.setState({open: false});
+	this.setState({
+		open: false,
+		tableTitle: '',
+		tableData: [],
+	});
+	if(this.props.currentSelector === '.report') {
+		this.props.nextTourStep();
+	}
   }
 
 
@@ -393,8 +403,7 @@ export default class MainView extends Component {
 										onDeleteNode={this.props.deleteNode}
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
-										nextTourStep={this.props.nextTourStep}
-										currentSelector={this.props.currentSelector}
+										handleOpen={this.handleOpen}
 									/>
 								</GridTile>
 							</Paper>

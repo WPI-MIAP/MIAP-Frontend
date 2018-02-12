@@ -16,66 +16,35 @@ import Report from '../modules/Report'
 export default class DndTreeContainer extends Component {
 	constructor(props) {
 		super(props);
+	}
 
-		this.state = {
-			open: false,
-			tableData: [],
-			tableTitle: ''
+	getStyleByDMECount(numDMEs) {
+		// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
+		// var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
+		var colors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
+		var style = {
+			padding: '20px 0',
+			margin: 0,
+			color: 'white'
 		};
+		
+		if(numDMEs === 0) {
+			style['background'] = colors[0];
+		}else if(numDMEs <= 1) {
+			style['background'] = colors[1];
+		}
+		else if(numDMEs <= 2) {
+			style['background'] = colors[2];
+		}
+		else if(numDMEs <= 3) {
+			style['background'] = colors[3];
+		}
+		else {
+			style['background'] = colors[4];
+		}
 
-		this.handleOpen = this.handleOpen.bind(this);
-		this.handleClose = this.handleClose.bind(this);
+		return style;
 	}
-
-	handleOpen(title) {
-		axios.get('/csv/reports?drug=' + title)
-			.then(response => {
-				this.setState({ tableData: response.data });
-				if(this.props.currentSelector === '.galaxy2') {
-					this.props.nextTourStep();
-				}
-			});
-
-		this.setState({
-			open: true,
-			tableTitle: 'Reports for ' + title
-		});
-  }
-
-  handleClose() {
-	this.setState({open: false});
-	if(this.props.currentSelector === '.report') {
-		this.props.nextTourStep();
-	}
-  }
-
-  getStyleByDMECount(numDMEs) {
-	// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
-	// var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
-	var colors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
-	var style = {
-		padding: '20px 0',
-		margin: 0,
-		color: 'white'
-	};
-	
-	if(numDMEs === 0) {
-		style['background'] = colors[0];
-	}else if(numDMEs <= 1) {
-		style['background'] = colors[1];
-	}
-	else if(numDMEs <= 2) {
-		style['background'] = colors[2];
-	}
-	else if(numDMEs <= 3) {
-		style['background'] = colors[3];
-	}
-	else {
-		style['background'] = colors[4];
-	}
-
-	return style;
-  }
 
 	render() {
 		const colsWidth = this.props.cols == 4 ? 12 : 3;
@@ -109,14 +78,6 @@ export default class DndTreeContainer extends Component {
 				top: -15
 			}
 		};
-
-		const actions = [
-      <FlatButton
-        label="Close"
-        primary={true}
-        onClick={this.handleClose}
-      />
-    ];
 
 		return this.props.testExample ? (
 			<div>
@@ -186,9 +147,7 @@ export default class DndTreeContainer extends Component {
 
 												<IconButton tooltip="Show Reports"
 													iconStyle={{ color: 'white' }}
-													onClick={() => {this.handleOpen(drug[0])}}
-
-													// onClick={() => onClickNode(drug[0])}	
+													onClick={() => {this.props.handleOpen({type: 'drug', title: drug[0]})}}
 												>
 													<EditorInsertChart />
 												</IconButton>
@@ -210,13 +169,6 @@ export default class DndTreeContainer extends Component {
 						}
 					</Row>
 				</Grid>
-				<Report 
-					tableTitle={this.state.tableTitle}
-					open={this.state.open}
-					handleClose={this.state.handleClose}
-					actions={actions}
-					tableData={this.state.tableData}
-				/>
 			</div>
 		)
 
