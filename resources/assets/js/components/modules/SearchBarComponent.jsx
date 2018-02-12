@@ -128,8 +128,10 @@ export default class SearchBarComponent extends React.Component {
     }
 
     onNewRequest() {
-        if(this.props.drugs.indexOf(this.state.value) != -1) {
-            this.props.handleSearchRequest(this.state.value);
+        var lowerCaseDrugs = this.props.drugs.map((drug) => (_.toLower(drug)));
+        var index = lowerCaseDrugs.indexOf(_.toLower(this.state.value));
+        if(index != -1) {
+            this.props.handleSearchRequest(this.props.drugs[index]);
         }
     }
 

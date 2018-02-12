@@ -72,7 +72,6 @@ export default class DndGraph extends Component {
 
 	componentDidUpdate() {
 		if (this.state.network != null) {
-			console.log('update');
 			this.state.network.redraw();
 			// this.state.network.fit();
 		}

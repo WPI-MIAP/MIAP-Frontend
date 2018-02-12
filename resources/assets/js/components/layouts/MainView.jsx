@@ -80,6 +80,8 @@ export default class MainView extends Component {
 			tableData: [],
 			tableTitle: '',
 			open: false,
+			width: 0,
+			height: 0,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -91,6 +93,20 @@ export default class MainView extends Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
+		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateWindowDimensions();
+		window.addEventListener('resize', this.updateWindowDimensions);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	updateWindowDimensions() {
+		this.setState({width: window.innerWidth, height: window.innerHeight});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -110,6 +126,7 @@ export default class MainView extends Component {
 	}
 
 	renderChip(report) {
+		// alert(report.title);
 		const lower = _.toLower(report.title);
 		const titleCase = _.startCase(lower);
 		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
@@ -121,7 +138,7 @@ export default class MainView extends Component {
 		})[0].Score); //TODO: change color based on interaction's score
 		return (
 			<Chip
-				key={report}
+				key={report.title}
 				onRequestDelete={() => this.handleRequestDelete(report)}
 				style={styles.chip}
 				onClick={() => this.handleOpen(report)}
