@@ -291,25 +291,33 @@ export default class GlobalFilterNav extends React.Component {
 
   beginMARAS(){
     const files = this.state.uploadFiles;
-    // start MARAS process on current files
+    if(this.state.uploadFiles.length > 0) {
+      // start MARAS process on current files
 
-    var formData = new FormData();
-    files.forEach((f) => {
-      formData.append('file', f);
-    });
+      var formData = new FormData();
+      files.forEach((f) => {
+        formData.append('file', f);
+      });
 
-    axios.post('/csv/reports', formData).then(
-      (response) => {
-        console.log(response);
-        this.setState({
-          uploadSnackbar: true,
-          uploadSnackbarMessage: (response.data.success) ? "File(s) uploaded, your visualization will be updated when analysis is completed" : "Error uploading files",
-        });
-      },
-      (error) => {console.log(error);}
-    );
+      axios.post('/csv/reports', formData).then(
+        (response) => {
+          console.log(response);
+          this.setState({
+            uploadSnackbar: true,
+            uploadSnackbarMessage: (response.data.success) ? "File(s) uploaded, your visualization will be updated when analysis is completed" : "Error uploading files",
+          });
+        },
+        (error) => {console.log(error);}
+      );
 
-    this.closeUploadDialog();
+      this.closeUploadDialog();
+    }
+    else{
+      this.setState({
+        uploadSnackbar: true,
+        uploadSnackbarMessage: "Add one or more file(s) to begin analysis",
+      });
+    }
   };
 
   onFilesChange(files){
@@ -554,6 +562,13 @@ export default class GlobalFilterNav extends React.Component {
               {/* <FileCloudUpload />	 */}
               <FileUpload />
             </IconButton>
+            <Snackbar
+              open={this.state.uploadSnackbar}
+              message={this.state.uploadSnackbarMessage}
+              autoHideDuration={4000}
+              style={{zIndex: 1400}}
+              onRequestClose={() => {this.setState({uploadSnackbar: false})}}
+            />
             <Dialog
               title="Upload FAERS data"
               contentStyle={{width: "60%", maxWidth: "none"}}
@@ -589,12 +604,6 @@ export default class GlobalFilterNav extends React.Component {
                 }
               </List>
             </Dialog>
-            <Snackbar
-              open={this.state.uploadSnackbar}
-              message={this.state.uploadSnackbarMessage}
-              autoHideDuration={4000}
-              onRequestClose={() => {this.setState({uploadSnackbar: false})}}
-            />
             <IconButton 
               tooltip="Help"
               iconStyle={{ color: 'white' }}
