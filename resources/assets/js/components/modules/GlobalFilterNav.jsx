@@ -34,6 +34,8 @@ import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
+import axios from 'axios';
+import Snackbar from 'material-ui/Snackbar';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -202,6 +204,8 @@ export default class GlobalFilterNav extends React.Component {
       uploadDialog: false,
       uploadFiles: [],
       prevFiles: [],
+      uploadSnackbar: false,
+      uploadSnackbarMessage: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -289,10 +293,27 @@ export default class GlobalFilterNav extends React.Component {
     const files = this.state.uploadFiles;
     // start MARAS process on current files
 
+    var formData = new FormData();
+    files.forEach((f) => {
+      formData.append('file', f);
+    });
+
+    axios.post('/csv/reports', formData).then(
+      (response) => {
+        console.log(response);
+        this.setState({
+          uploadSnackbar: true,
+          uploadSnackbarMessage: (response.data.success) ? "File(s) uploaded, your visualization will be updated when analysis is completed" : "Error uploading files",
+        });
+      },
+      (error) => {console.log(error);}
+    );
+
     this.closeUploadDialog();
   };
 
   onFilesChange(files){
+    console.log(this.state.uploadFiles);
     var newFiles = [];
     //find any new files that have been added
     for(var i = files.length-1; i > files.length-1-(files.length - this.state.prevFiles.length); i--) {
@@ -328,16 +349,12 @@ export default class GlobalFilterNav extends React.Component {
   createRemoveFileHandler(file){
     return function() {
       var files = this.state.uploadFiles;
-      console.log(file);
       for(var i=0; i < files.length; i++) {
-        console.log(files[i].name)
         if(files[i].name === file) {
-          console.log('found file!!!!!!!!!!!!');
           files.splice(i, 1);
           break;
         }
       }
-      console.log(files);
       this.setState({
         uploadFiles: files,
       });
@@ -555,8 +572,8 @@ export default class GlobalFilterNav extends React.Component {
                 minFileSize={0}
                 clickable
                 >
-                <Paper zDepth={1} style={{height: 75, lineHeight: '75px', textAlign: 'center'}}>
-                  <div>Drop files here or click to upload</div>
+                <Paper zDepth={1} style={{height: 76, lineHeight: '38px', textAlign: 'center'}}>
+                  <div>Drop files here or click to upload<br/>(File format must be .zip)</div>
                 </Paper>
               </Files>
               <List>
@@ -572,6 +589,12 @@ export default class GlobalFilterNav extends React.Component {
                 }
               </List>
             </Dialog>
+            <Snackbar
+              open={this.state.uploadSnackbar}
+              message={this.state.uploadSnackbarMessage}
+              autoHideDuration={4000}
+              onRequestClose={() => {this.setState({uploadSnackbar: false})}}
+            />
             <IconButton 
               tooltip="Help"
               iconStyle={{ color: 'white' }}

@@ -27,7 +27,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
 import FlatButton from 'material-ui/FlatButton';
-import axios from 'axios'
+import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 
 
