@@ -79,6 +79,7 @@ export default class MainView extends Component {
 			reportChips: [],
 			tableData: [],
 			tableTitle: '',
+			tableDrugs: [],
 			open: false,
 			width: 0,
 			height: 0,
@@ -156,7 +157,10 @@ export default class MainView extends Component {
 		if (report.type === 'drug') {
 			axios.get('/csv/reports?drug=' + report.title)
 				.then(response => {
-					this.setState({ tableData: response.data });
+					this.setState({ 
+						tableData: response.data,
+						tableDrugs: [report.title],
+					});
 					if(this.props.currentSelector === '.galaxy2') {
 						this.props.nextTourStep();
 					}	
@@ -167,7 +171,10 @@ export default class MainView extends Component {
 			const drugs = report.title.split(" ");
 			axios.get('/csv/reports?drug1=' + drugs[0] + '&drug2=' + drugs[1])
 				.then(response => {
-					this.setState({ tableData: response.data });	
+					this.setState({ 
+						tableData: response.data,
+						tableDrugs: drugs, 
+					});	
 				});
 
 		}
@@ -460,6 +467,7 @@ export default class MainView extends Component {
 				handleClose={this.state.handleClose}
 				actions={actions}
 				tableData={this.state.tableData}
+				drugs={this.state.tableDrugs}
 			/>
 	 	</div>
 		)

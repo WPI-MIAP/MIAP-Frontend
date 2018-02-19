@@ -4,7 +4,6 @@ import SearchBarContainer from '../../containers/SearchBarContainer';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
-import {debounce} from 'throttle-debounce';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -28,6 +27,13 @@ import DndGraph from './DndGraph';
 import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
 import Paper from 'material-ui/Paper';
+import FileCloudUpload from 'material-ui/svg-icons/file/cloud-upload';
+import FileUpload from 'material-ui/svg-icons/file/file-upload';
+import Files from 'react-files';
+import {List, ListItem} from 'material-ui/List'; 
+import Avatar from 'material-ui/Avatar';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -193,6 +199,8 @@ export default class GlobalFilterNav extends React.Component {
       maxScore: 1.0,
       freqDist: [],
       help: false,
+      uploadDialog: false,
+      uploadFiles: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -200,11 +208,14 @@ export default class GlobalFilterNav extends React.Component {
     this.updateMinAndMax = this.updateMinAndMax.bind(this);
     this.openHelp = this.openHelp.bind(this);
     this.closeHelp = this.closeHelp.bind(this);
+    this.openUploadDialog = this.openUploadDialog.bind(this);
+    this.closeUploadDialog = this.closeUploadDialog.bind(this);
     this.findFrequencyDistribution = this.findFrequencyDistribution.bind(this);
-    this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
-    this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
+    this.callUpdateMinScore = this.callUpdateMinScore.bind(this);
+    this.callUpdateMaxScore = this.callUpdateMaxScore.bind(this);
     this.startTour = this.startTour.bind(this);
-    // this.endTour = this.endTour.bind(this);
+    this.beginMARAS = this.beginMARAS.bind(this);
+    this.onFilesChange = this.onFilesChange.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -262,6 +273,49 @@ export default class GlobalFilterNav extends React.Component {
   closeHelp(){
     this.setState({help: false});
   };
+
+  openUploadDialog(){
+    this.setState({uploadDialog: true});
+  };
+
+  closeUploadDialog(){
+    this.setState({uploadDialog: false, uploadFiles: []});
+  };
+
+  beginMARAS(){
+    const files = this.state.uploadFiles;
+    // start MARAS process on current files
+
+    this.closeUploadDialog();
+  };
+
+  onFilesChange(files){
+    console.log(files);
+    var filesWithoutDuplicates = [];
+    files.forEach((file) => {
+      var found = false;
+      filesWithoutDuplicates.forEach((addedFile) => {
+        if(file.name === addedFile.name) {
+          found = true;
+        }
+      });
+      if(!found) {
+        filesWithoutDuplicates.push(file);
+      }
+    });
+    console.log(filesWithoutDuplicates);
+    this.setState({uploadFiles: filesWithoutDuplicates});
+  };
+
+  onFilesError(error, file){
+    console.log(error.message);
+  };
+
+  createRemoveFileHandler(file){
+    return function() {
+      
+    }
+  }
 
   findFrequencyDistribution(){
     if(this.props.rules.length > 1 && this.state.freqDist.length == 0) {
@@ -334,6 +388,20 @@ export default class GlobalFilterNav extends React.Component {
         onClick={this.closeHelp}
       />
     ];
+
+    const uploadFileActions = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        onClick={this.closeUploadDialog}
+      />, 
+      <FlatButton
+        label="Upload"
+        primary={true}
+        onClick={this.beginMARAS}
+      />
+    ];
+
     const marks = {
       [this.state.minScore]: {
           style: {
@@ -430,6 +498,50 @@ export default class GlobalFilterNav extends React.Component {
         iconElementLeft={wpiLogo}
         iconElementRight={ 
           <div style={styles.elementRight}>
+          <IconButton 
+              tooltip="Upload FAERS data"
+              iconStyle={{ color: 'white' }}
+              tooltipPosition='bottom-left'
+              onClick={this.openUploadDialog}
+            >
+              {/* <FileCloudUpload />	 */}
+              <FileUpload />
+            </IconButton>
+            <Dialog
+              title="Upload FAERS data"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={uploadFileActions}
+              modal={false}
+              open={this.state.uploadDialog}
+              onRequestClose={this.closeUploadDialog}
+              autoScrollBodyContent={true}>
+              <Files
+                className='files-dropzone'
+                onChange={this.onFilesChange}
+                onError={this.onFilesError}
+                accepts={['application/x-zip-compressed']}
+                multiple
+                maxFileSize={1000000000}
+                minFileSize={0}
+                clickable
+                >
+                <Paper zDepth={1} style={{height: 75, lineHeight: '75px', textAlign: 'center'}}>
+                  <div>Drop files here or click to upload</div>
+                </Paper>
+              </Files>
+              <List>
+                {
+                  this.state.uploadFiles.map((file) => (
+                    <ListItem
+                      key={file.name}
+                      leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
+                      rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
+                      primaryText={file.name}
+                    />
+                  ))
+                }
+              </List>
+            </Dialog>
             <IconButton 
               tooltip="Help"
               iconStyle={{ color: 'white' }}
