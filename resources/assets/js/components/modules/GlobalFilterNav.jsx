@@ -201,6 +201,7 @@ export default class GlobalFilterNav extends React.Component {
       help: false,
       uploadDialog: false,
       uploadFiles: [],
+      prevFiles: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -216,6 +217,7 @@ export default class GlobalFilterNav extends React.Component {
     this.startTour = this.startTour.bind(this);
     this.beginMARAS = this.beginMARAS.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
+    this.createRemoveFileHandler = this.createRemoveFileHandler.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -256,14 +258,15 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   updateMinAndMax(value) {
-    // alert(value);
-    this.setState({
-      filteredMax: value[1],
-      filteredMin: value[0],
-    });
-    this.callUpdateMaxScore(value[1]);
-    this.callUpdateMinScore(value[0]);
-    this.props.isUpdating(true);
+    if(value[1] !== this.state.filteredMax || value[0] !== this.state.filteredMin) {
+      this.setState({
+        filteredMax: value[1],
+        filteredMin: value[0],
+      });
+      this.callUpdateMaxScore(value[1]);
+      this.callUpdateMinScore(value[0]);
+      this.props.isUpdating(true);
+    }
   }
 
   openHelp(){
@@ -290,21 +293,32 @@ export default class GlobalFilterNav extends React.Component {
   };
 
   onFilesChange(files){
-    console.log(files);
-    var filesWithoutDuplicates = [];
-    files.forEach((file) => {
-      var found = false;
+    var newFiles = [];
+    //find any new files that have been added
+    for(var i = files.length-1; i > files.length-1-(files.length - this.state.prevFiles.length); i--) {
+      newFiles.push(files[i]);
+    }
+
+    // console.log(files);
+    var filesWithoutDuplicates = this.state.uploadFiles;
+    var found = false;
+    //check to see if each new file is a duplicate, otherwise add it to the list of files to upload
+    newFiles.forEach((newFile) => {
       filesWithoutDuplicates.forEach((addedFile) => {
-        if(file.name === addedFile.name) {
+        if(newFile.name === addedFile.name) {
           found = true;
         }
       });
       if(!found) {
-        filesWithoutDuplicates.push(file);
+        filesWithoutDuplicates.push(newFile);
       }
     });
-    console.log(filesWithoutDuplicates);
-    this.setState({uploadFiles: filesWithoutDuplicates});
+      
+    // console.log(filesWithoutDuplicates);
+    this.setState({
+      uploadFiles: filesWithoutDuplicates,
+      prevFiles: files,
+    });
   };
 
   onFilesError(error, file){
@@ -313,8 +327,21 @@ export default class GlobalFilterNav extends React.Component {
 
   createRemoveFileHandler(file){
     return function() {
-      
-    }
+      var files = this.state.uploadFiles;
+      console.log(file);
+      for(var i=0; i < files.length; i++) {
+        console.log(files[i].name)
+        if(files[i].name === file) {
+          console.log('found file!!!!!!!!!!!!');
+          files.splice(i, 1);
+          break;
+        }
+      }
+      console.log(files);
+      this.setState({
+        uploadFiles: files,
+      });
+    }.bind(this);
   }
 
   findFrequencyDistribution(){
@@ -350,10 +377,13 @@ export default class GlobalFilterNav extends React.Component {
       });
 
       freqDist.forEach(entry => {
-        entry['Freq'] = (entry['Freq'] * 100) / ruleCount;
+        entry['Freq'] = (entry['Freq'] * 300) / ruleCount;
       });
 
       freqDist = _.sortBy(freqDist, 'Score');
+
+      minScore = parseFloat(minScore);
+      maxScore = parseFloat(maxScore);
 
       this.setState({
         minScore: minScore,

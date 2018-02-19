@@ -163,7 +163,7 @@ export default class Report extends React.Component {
                       return null;
                     }
                     return (
-                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: '#2C98F0'} : (index % 2 == 0) ? {background: '#73B8F0'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
+                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: '#2C98F0'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
                       >
                         <TableRowColumn>{data.primaryId}</TableRowColumn>
                         <TableRowColumn>{data.event_dt}</TableRowColumn>

@@ -129,6 +129,10 @@ export default class DndGraph extends Component {
 					middle: {enabled: false, scaleFactor:1, type:'arrow'},
 					from:   {enabled: false, scaleFactor:1, type:'arrow'}
 				},
+				// smooth: {
+				// 	type: 'continuous',
+				// },
+				// length: 1000
 			},
 			nodes: {
 				shape: 'dot',
@@ -142,7 +146,19 @@ export default class DndGraph extends Component {
 			},
 			interaction:{
 				hover: true,
-			}
+			},
+			physics:{
+				barnesHut: {
+					springLength: 150,
+					// springConstant: 0.5,
+					avoidOverlap: 0.2,
+				},
+				// repulsion: {
+				// 	// nodeDistance: 10000,
+				// 	// springLength: 1000000,
+				// 	// springConstant: 1.0,
+				// },
+			},
 		};
 
 		const events = {

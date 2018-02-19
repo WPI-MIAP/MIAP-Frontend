@@ -50,7 +50,7 @@ import * as _ from 'lodash';
 				rules.forEach(rule => {
 					let formattedADRName = rule['ADR'].toLowerCase().replace(/\W/g, '');
 					DMEs.forEach(dme => {
-						if (formattedADRName === dme['formattedName'] && drugDMEs.indexOf(dme['name']) === -1) {
+						if (formattedADRName === dme['formattedName']){ //&& drugDMEs.indexOf(dme['name']) === -1) {
 							drugDMEs.push(dme['name']);
 						}
 					});
