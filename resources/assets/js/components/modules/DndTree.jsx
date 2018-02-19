@@ -5,9 +5,9 @@ import Graph from 'react-graph-vis'
 
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	return `
-		<div>Drugs: ${Drug1.name} - ${Drug2.name}</div>
+		<div>Drugs: ${_.startCase(Drug1.name)} - ${_.startCase(Drug2.name)}</div>
 		<div>ADR: ${ADR}</div>
-		<div>Reports Count: ${id.split(',').length}</div>
+		<div>Report Count: ${id.split(',').length}</div>
 		<div>Score: ${Score}</div>
 		<div>Status: ${status}</div>
 	`	

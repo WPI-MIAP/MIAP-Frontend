@@ -147,7 +147,7 @@ export default class DndTreeContainer extends Component {
 
 												<IconButton tooltip="Show Reports"
 													iconStyle={{ color: 'white' }}
-													onClick={() => {this.props.handleOpen({type: 'drug', title: drug[0]})}}
+													onClick={() => {this.props.handleOpen({type: 'drug', drugs: [drug[0]]})}}
 												>
 													<EditorInsertChart />
 												</IconButton>

@@ -114,32 +114,32 @@ export default class MainView extends Component {
 		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
 			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedDrug) == undefined) {
 			var chips = this.state.reportChips;
-			chips.unshift({type: 'drug', title: nextProps.selectedDrug});
+			chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
 			this.setState({reportChips: chips});
 		}
 
 		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
 			nextProps.selectedRule !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedRule) == undefined) {
 			var chips = this.state.reportChips;
-			chips.unshift({type: 'adr', title: nextProps.selectedRule});
+			chips.unshift({type: 'adr', drugs: _.split(nextProps.selectedRule, '---').map((drug) => (_.toLower(_.trim(drug))))});
 			this.setState({reportChips: chips});
 		}	
 	}
 
 	renderChip(report) {
-		// alert(report.title);
-		const lower = _.toLower(report.title);
-		const titleCase = _.startCase(lower);
-		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
-		const drugs = lower.split(" ");
+		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
+		const drug1 = report.drugs[0];
+		const drug2 = report.drugs[1];
+		console.log('drug 1: ' + drug1);
+		console.log('drug 2: ' + drug2);
 		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
-			var match = ((_.toLower(link.Drug1.name) === drugs[0] && _.toLower(link.Drug2.name) === drugs[1]) || 
-			(_.toLower(link.Drug1.name) === drugs[1] && _.toLower(link.Drug2.name) === drugs[0]));
+			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
+			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
 			return match;
-		})[0].Score); //TODO: change color based on interaction's score
+		})[0].Score);
 		return (
 			<Chip
-				key={report.title}
+				key={title}
 				onRequestDelete={() => this.handleRequestDelete(report)}
 				style={styles.chip}
 				onClick={() => this.handleOpen(report)}
@@ -155,11 +155,11 @@ export default class MainView extends Component {
 
 	handleOpen(report) {
 		if (report.type === 'drug') {
-			axios.get('/csv/reports?drug=' + report.title)
+			axios.get('/csv/reports?drug=' + report.drugs[0])
 				.then(response => {
 					this.setState({ 
 						tableData: response.data,
-						tableDrugs: [report.title],
+						tableDrugs: [report.drugs[0]],
 					});
 					if(this.props.currentSelector === '.galaxy2') {
 						this.props.nextTourStep();
@@ -168,23 +168,21 @@ export default class MainView extends Component {
 		}
 
 		if (report.type === 'adr') {
-			const drugs = report.title.split(" ");
-			axios.get('/csv/reports?drug1=' + drugs[0] + '&drug2=' + drugs[1])
+			axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
 				.then(response => {
 					this.setState({ 
 						tableData: response.data,
-						tableDrugs: drugs, 
+						tableDrugs: report.drugs, 
 					});	
 				});
 
 		}
 
-		const titleCase = _.startCase(_.toLower(report.title));
-		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
+		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 
 		this.setState({
 			open: true,
-			tableTitle: 'Reports for ' + title
+			tableTitle: 'Reports for ' + title,
 		});
   }
 

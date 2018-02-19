@@ -229,7 +229,6 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   handleChange(event, index, value) {
-    console.log(index + ' ' + value)
     this.setState({ 
       value: value,
     });
@@ -301,7 +300,6 @@ export default class GlobalFilterNav extends React.Component {
 
       axios.post('/csv/reports', formData).then(
         (response) => {
-          console.log(response);
           this.setState({
             uploadSnackbar: true,
             uploadSnackbarMessage: (response.data.success) ? "File(s) uploaded, your visualization will be updated when analysis is completed" : "Error uploading files",
@@ -321,14 +319,12 @@ export default class GlobalFilterNav extends React.Component {
   };
 
   onFilesChange(files){
-    console.log(this.state.uploadFiles);
     var newFiles = [];
     //find any new files that have been added
     for(var i = files.length-1; i > files.length-1-(files.length - this.state.prevFiles.length); i--) {
       newFiles.push(files[i]);
     }
 
-    // console.log(files);
     var filesWithoutDuplicates = this.state.uploadFiles;
     var found = false;
     //check to see if each new file is a duplicate, otherwise add it to the list of files to upload
@@ -342,8 +338,7 @@ export default class GlobalFilterNav extends React.Component {
         filesWithoutDuplicates.push(newFile);
       }
     });
-      
-    // console.log(filesWithoutDuplicates);
+    
     this.setState({
       uploadFiles: filesWithoutDuplicates,
       prevFiles: files,
@@ -559,7 +554,6 @@ export default class GlobalFilterNav extends React.Component {
               tooltipPosition='bottom-left'
               onClick={this.openUploadDialog}
             >
-              {/* <FileCloudUpload />	 */}
               <FileUpload />
             </IconButton>
             <Snackbar
@@ -634,10 +628,13 @@ export default class GlobalFilterNav extends React.Component {
                           <h5>Overview</h5>
                           <ul>
                             <li>Each <b>node</b> is a <b>drug</b></li>
-                            <li>Each <b>edge</b> is a possible <b>adverse drug reaction (ADR)</b></li>
+                            <li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
+                            <li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
                             <li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
                             <li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
-                            <li>The <b>edge color</b> represents the <b>interaction score</b></li>
+                            <li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
+                            <li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
+                            <li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
@@ -659,7 +656,7 @@ export default class GlobalFilterNav extends React.Component {
                             </Paper>
                             <Col style={{marginLeft: 20}}>
                               <Row style={{height: 34}}>
-                                {'Contrast Score'}
+                                {'Interaction Score'}
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
@@ -685,12 +682,14 @@ export default class GlobalFilterNav extends React.Component {
                         <Col sm={12} md={7}>
                           <h5>Galaxy View</h5>
                           <ul>
-                            <li>The <b>central drug</b> in a window is the <b>drug of interest</b></li>
+                            <li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
                             <li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
+                            <li><b>Surrounding nodes</b> are <b>colored</b> according to the <b>highest score</b> of all <b>interactions between that drug and the drug of interest</b></li>
                             <li>The <b>color</b> of a window's header indicates the <b>severe ADR count</b> associated with the drug of interest</li>
                             <li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
                             <li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
-                            <li>Surrounding nodes are <b>smaller</b> if there is a <b>known interaction</b> with that drug</li>
+                            <li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
+                            <li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
