@@ -430,7 +430,7 @@ export default class MainView extends Component {
 								>
 									<InteractionProfile 
 										mainDrug={this.props.selectedDrug} 
-										rules={this.props.currentDrugs.find(el => el[0] == this.props.selectedDrug)}
+										mainRule={this.props.selectedRule}
 									/>
 								</GridTile>
 							</Paper>

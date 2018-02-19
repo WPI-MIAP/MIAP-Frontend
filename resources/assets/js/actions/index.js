@@ -48,6 +48,12 @@ export const clearSearchTerm = () => {
 	}
 }
 
+export const clearRule = () => {
+	return {
+		type: 'CLEAR_RULE'
+	}
+}
+
 export const deleteDrug = drug => {
 	return {
 		type: 'DELETE_DRUG',

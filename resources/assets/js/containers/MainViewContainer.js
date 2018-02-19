@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, addRules, isUpdating } from '../actions'
+import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, addRules, isUpdating, clearRule } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getIsFetching = (rules, filter) => {
@@ -41,10 +41,13 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onClickNode: drug => {
 			dispatch(clearSearchTerm())
+			dispatch(clearRule())
 			dispatch(selectDrug(drug))
 			dispatch(fetchRulesByDrugName(drug))
 		},
 		onClickEdge: rule => {
+			dispatch(clearRule())
+			dispatch(clearSearchTerm())
 			dispatch(addRules(rule));
 		},
 		showDetailNode: drug => {

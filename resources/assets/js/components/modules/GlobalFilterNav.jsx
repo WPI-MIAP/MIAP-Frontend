@@ -29,6 +29,7 @@ import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
 import Paper from 'material-ui/Paper';
 
+
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
@@ -201,8 +202,10 @@ export default class GlobalFilterNav extends React.Component {
     this.openHelp = this.openHelp.bind(this);
     this.closeHelp = this.closeHelp.bind(this);
     this.findFrequencyDistribution = this.findFrequencyDistribution.bind(this);
-    this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
-    this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
+    // this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
+    // this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
+    this.callUpdateMinScore = this.callUpdateMinScore.bind(this);
+    this.callUpdateMaxScore = this.callUpdateMaxScore.bind(this);
     this.startTour = this.startTour.bind(this);
     // this.endTour = this.endTour.bind(this);
   }
@@ -378,10 +381,10 @@ export default class GlobalFilterNav extends React.Component {
     });
 
     const data = [
-        {									
-            color: "#A9B0B7", 
-            points: points
-        }
+      {									
+        color: "#A9B0B7", 
+        points: points
+      }
     ];
     return (
       <AppBar style={styles.root}
@@ -430,6 +433,14 @@ export default class GlobalFilterNav extends React.Component {
         iconElementLeft={wpiLogo}
         iconElementRight={ 
           <div style={styles.elementRight}>
+            <ToolbarTitle text={this.props.numDrugs+ ' Drugs'}
+              style={{color: 'white', fontSize: '0.91em'}}
+            />
+
+            <ToolbarTitle text={this.props.rules.length + ' Interactions'}
+              style={{color: 'white', fontSize: '0.91em'}}
+            />
+
             <IconButton 
               tooltip="Help"
               iconStyle={{ color: 'white' }}
@@ -680,6 +691,7 @@ export default class GlobalFilterNav extends React.Component {
                 </Row>
               </Grid>
             </Dialog>
+
 
             <SearchBarContainer />
           </div>

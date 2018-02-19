@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import ReactDOM from 'react-dom';
+import * as _ from 'lodash'
+
 
 export default class D3Tree extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      previousDrug: ''
+      previousDrug: '',
+      previousData: []
     }
   }
   componentDidMount() {
@@ -23,10 +26,13 @@ export default class D3Tree extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.treeData[0].children.length > 0) {
-      if (this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase()
+      if (this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
+        (this.state.previousDrug.toLowerCase() === nextProps.treeData[0].name.toLowerCase() && 
+        ! _.isEqual(this.state.previousData, nextProps.treeData[0])
+        )
       ) {
         console.log("state changed");
-        this.setState({ previousDrug: nextProps.treeData[0].name });
+        this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
         removeTree(ReactDOM.findDOMNode(this));
         renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this));
       }

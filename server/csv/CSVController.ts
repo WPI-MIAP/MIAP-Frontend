@@ -35,10 +35,21 @@ import * as _ from 'lodash';
 			}
 
 	 		if (req.query.drug) {
-	 			rules = rules.filter(
-	 				rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(req.query.drug) ||
-	 				_.lowerCase(rule.Drug2.name) === _.lowerCase(req.query.drug)
-				);
+				if (Array.isArray(req.query.drug)) {
+					rules = rules.filter(
+						rule => {
+							return (_.lowerCase(rule.Drug1.name) === _.lowerCase(req.query.drug[0]) &&
+							_.lowerCase(rule.Drug2.name) === _.lowerCase(req.query.drug[1])) ||
+							(_.lowerCase(rule.Drug1.name) === _.lowerCase(req.query.drug[1]) &&
+							_.lowerCase(rule.Drug2.name) === _.lowerCase(req.query.drug[0]));
+						});
+				} else {
+					rules = rules.filter(
+						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(req.query.drug) ||
+						_.lowerCase(rule.Drug2.name) === _.lowerCase(req.query.drug)
+					);
+				}
+
 
 				let DMEFile = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
 				let lines = DMEFile.split("\n");
