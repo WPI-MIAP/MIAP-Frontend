@@ -130,7 +130,7 @@ export class InteractionProfile extends Component {
       } 
   
       else if (nextProps.mainRule != '') {
-        const drugNames = nextProps.mainRule.split(' ');
+        const drugNames = nextProps.mainRule.split(' --- ');
         mainDrug = drugNames[0];
         axios.get('/csv/rules?drug=' + drugNames[0] + '&drug=' + drugNames[1]).then(res => {
           rules = res.data.rules;
