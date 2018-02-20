@@ -2,6 +2,7 @@ import { Request, Response, NextFunction} from 'express';
 import * as fs from 'fs';
 import * as csv from 'csvtojson';
 import * as _ from 'lodash';
+var exec = require('child_process').exec;
 /**
  * {
  * 	drugs: [...],
@@ -13,11 +14,29 @@ import * as _ from 'lodash';
  * Controller class to handle different requests for this feature
  */
  export default class CSVController {
- 	public async store(req: Request, res: Response, next: NextFunction) {
- 		res.json({
- 			message: "File was uploaded"
- 		}, 201);
- 	}
+	 public async uploadReports(req: Request, res: Response, next: NextFunction) {
+		if (!req.files) {
+			console.log("No file received");
+			return res.send({
+			  success: false
+			});
+		
+		} else {
+			console.log('file received');
+			var fileNames = req.files.map((file) => ('/maras/diva-node-web/storage/' + file.filename));
+			fileNames = _.join(fileNames, ' ');
+			console.log(fileNames);
+			var command = '/maras/maras.sh -m=/maras/public-mm -f=' + fileNames + ' -d=/maras/data/knownRules_standardized.csv -j=/maras/2-19-MARAS.jar -o=/maras/diva-node-web/storage/ > log.txt';
+			var child = exec(command, {maxBuffer: 1024 * 1000}, (error, stdout, stderr) => {
+				if (error) {
+					console.log(error);
+				}
+			});
+			return res.send({
+			  success: true
+			})
+		}
+	 }
 
  	/**
  	 * Get rules in json
@@ -61,7 +80,7 @@ import * as _ from 'lodash';
 				rules.forEach(rule => {
 					let formattedADRName = rule['ADR'].toLowerCase().replace(/\W/g, '');
 					DMEs.forEach(dme => {
-						if (formattedADRName === dme['formattedName'] && drugDMEs.indexOf(dme['name']) === -1) {
+						if (formattedADRName === dme['formattedName']){ //&& drugDMEs.indexOf(dme['name']) === -1) {
 							drugDMEs.push(dme['name']);
 						}
 					});

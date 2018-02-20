@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
-import CircularProgress from 'material-ui/CircularProgress'
+import CircularProgress from 'material-ui/CircularProgress';
 
 let network = null;
 
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	return `
-		<div>Drugs: ${Drug1.name} - ${Drug2.name}</div>
+		<div>Drugs: ${_.startCase(Drug1.name)} - ${_.startCase(Drug2.name)}</div>
 		<div>ADR: ${ADR}</div>
-		<div>Reports Count: ${id.split(',').length}</div>
+		<div>Report Count: ${id.split(',').length}</div>
 		<div>Score: ${Score}</div>
 		<div>Status: ${status}</div>
 	`	
@@ -69,11 +69,9 @@ export default class DndGraph extends Component {
 			}
 		}
 		if (this.props.filter !== nextProps.filter) {
-			console.log('new filter');
 			this.props.isUpdating(false);
 		}
 		if (this.props.minScore !== nextProps.minScore || this.props.maxScore !== nextProps.maxScore) {
-			console.log('new min/max');
 			this.props.isUpdating(false);
 		}
 	}
@@ -101,7 +99,7 @@ export default class DndGraph extends Component {
 		}));
 
 		const edgesArray = uniqueLinks.map(link => ({
-			id: link.Drug1.name + ' ' + link.Drug2.name,
+			id: link.Drug1.name + ' --- ' + link.Drug2.name,
 			from: link.Drug1.name, 
 			to: link.Drug2.name, 
 			title: generateTitle(link),
@@ -130,6 +128,10 @@ export default class DndGraph extends Component {
 					middle: {enabled: false, scaleFactor:1, type:'arrow'},
 					from:   {enabled: false, scaleFactor:1, type:'arrow'}
 				},
+				// smooth: {
+				// 	type: 'continuous',
+				// },
+				// length: 1000
 			},
 			nodes: {
 				shape: 'dot',
@@ -143,7 +145,19 @@ export default class DndGraph extends Component {
 			},
 			interaction:{
 				hover: true,
-			}
+			},
+			physics:{
+				barnesHut: {
+					springLength: 150,
+					// springConstant: 0.5,
+					avoidOverlap: 0.2,
+				},
+				// repulsion: {
+				// 	// nodeDistance: 10000,
+				// 	// springLength: 1000000,
+				// 	// springConstant: 1.0,
+				// },
+			},
 		};
 
 		const events = {

@@ -27,9 +27,12 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
 import FlatButton from 'material-ui/FlatButton';
-import axios from 'axios'
+import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
+import Dialog from 'material-ui/Dialog';
 
+const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
+const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
 
 const styles = {
 	root: {
@@ -43,6 +46,7 @@ const styles = {
 	},
 	chip: {
 		margin: 4,
+		height: 32
 	},
 	floatingButton: {
 		position: 'absolute',
@@ -79,9 +83,12 @@ export default class MainView extends Component {
 			reportChips: [],
 			tableData: [],
 			tableTitle: '',
+			tableDrugs: [],
 			open: false,
 			width: 0,
 			height: 0,
+			aboutUs: false,
+			contactUs: false,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -111,34 +118,35 @@ export default class MainView extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
-			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedDrug) == undefined) {
+			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(nextProps.selectedDrug)) && chip.drugs[1] === undefined)) == undefined) {
 			var chips = this.state.reportChips;
-			chips.unshift({type: 'drug', title: nextProps.selectedDrug});
+			chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
 			this.setState({reportChips: chips});
 		}
 
 		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
-			nextProps.selectedRule !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedRule) == undefined) {
-			var chips = this.state.reportChips;
-			chips.unshift({type: 'adr', title: nextProps.selectedRule});
-			this.setState({reportChips: chips});
+			nextProps.selectedRule !== '') {
+			var drugs = _.split(nextProps.selectedRule, '---').map((drug) => (_.toLower(_.trim(drug))));
+			if(_.find(this.state.reportChips, chip => ((chip.drugs[0] == drugs[0] && chip.drugs[1] == drugs[1]) || (chip.drugs[0] == drugs[1] && chip.drugs[1] == drugs[0]))) == undefined) {
+				var chips = this.state.reportChips;
+				chips.unshift({type: 'adr', drugs: drugs});
+				this.setState({reportChips: chips});
+			}
 		}	
 	}
 
 	renderChip(report) {
-		// alert(report.title);
-		const lower = _.toLower(report.title);
-		const titleCase = _.startCase(lower);
-		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
-		const drugs = lower.split(" ");
+		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
+		const drug1 = report.drugs[0];
+		const drug2 = report.drugs[1];
 		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
-			var match = ((_.toLower(link.Drug1.name) === drugs[0] && _.toLower(link.Drug2.name) === drugs[1]) || 
-			(_.toLower(link.Drug1.name) === drugs[1] && _.toLower(link.Drug2.name) === drugs[0]));
+			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
+			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
 			return match;
-		})[0].Score); //TODO: change color based on interaction's score
+		})[0].Score);
 		return (
 			<Chip
-				key={report.title}
+				key={title}
 				onRequestDelete={() => this.handleRequestDelete(report)}
 				style={styles.chip}
 				onClick={() => this.handleOpen(report)}
@@ -154,33 +162,49 @@ export default class MainView extends Component {
 
 	handleOpen(report) {
 		if (report.type === 'drug') {
-			axios.get('/csv/reports?drug=' + report.title)
+			axios.get('/csv/reports?drug=' + report.drugs[0])
 				.then(response => {
-					this.setState({ tableData: response.data })	
+					this.setState({ 
+						tableData: response.data,
+						tableDrugs: [report.drugs[0]],
+					});
+					if(this.props.currentSelector === '.galaxy2') {
+						this.props.nextTourStep();
+					}	
 				});
 		}
 
 		if (report.type === 'adr') {
-			const drugs = report.title.split(" ");
-			axios.get('/csv/reports?drug1=' + drugs[0] + '&drug2=' + drugs[1])
+			axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
 				.then(response => {
-					this.setState({ tableData: response.data })	
+					this.setState({ 
+						tableData: response.data,
+						tableDrugs: report.drugs, 
+					});	
 				});
 
 		}
 
-		const titleCase = _.startCase(_.toLower(report.title));
-		const title = report.type === 'drug' ? titleCase : titleCase.split(" ").join(" - ");
+		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 
 		this.setState({
 			open: true,
-			tableTitle: 'Reports for ' + title
+			tableTitle: 'Reports for ' + title,
 		});
-  }
+  	}
 
-  handleClose() {
-    this.setState({open: false});
-  }
+	handleClose() {
+		this.setState({
+			open: false,
+			tableTitle: '',
+			tableData: [],
+			aboutUs: false,
+			contactUs: false,
+		});
+		if(this.props.currentSelector === '.report') {
+			this.props.nextTourStep();
+		}
+	}
 
 
 	handleRequestDelete(key) {	
@@ -271,14 +295,14 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
+				<Grid fluid style={{ marginTop: 25, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={'#2D3E46'}
 						style={{
 							position: 'absolute',
 							right: 30,
-							bottom: 30,
+							bottom: '18vh',
 							zIndex: 100,
 							display: this.state.col === 12 ? 'block' : 'none'
 						}}
@@ -344,6 +368,33 @@ export default class MainView extends Component {
 										// colOverview={this.state.colOverview}
 									/>
 								</GridTile>
+								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+									<Col>
+										<Row>
+											<Col style={{margin: '0 auto'}}>
+												<div>Interaction Score</div>
+											</Col>
+										</Row>
+										<Row>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>Under 0.0</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[1], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0.0 - 0.01</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[2], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0.01 - 0.2</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[3], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>Above 0.2</div>
+											</Col>
+										</Row>
+									</Col>
+								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
@@ -393,10 +444,40 @@ export default class MainView extends Component {
 										onDeleteNode={this.props.deleteNode}
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
-										nextTourStep={this.props.nextTourStep}
-										currentSelector={this.props.currentSelector}
+										handleOpen={this.handleOpen}
 									/>
 								</GridTile>
+								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 20, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+									<Col>
+										<Row>
+											<Col style={{margin: '0 auto'}}>
+												<div>Severe ADR Count</div>
+											</Col>
+										</Row>
+										<Row>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[1], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>1</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[2], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>2</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[3], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>3</div>
+											</Col>
+											<Col>
+												<div style={{height: 35, width: 34, background: dmeColors[4], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>4+</div>
+											</Col>
+										</Row>
+									</Col>
+								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -432,25 +513,87 @@ export default class MainView extends Component {
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
 									/>
+									<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+										<Col style={{marginRight: 10}}>
+											<div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+											<div>Severe ADR</div>
+										</Col>
+										<Col>
+											<div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+											<div>Normal ADR</div>
+										</Col>
+									</Row>
 								</GridTile>
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0' }}> 
-						{this.state.reportChips.map(this.renderChip, this)}
+					<Row style={{ margin: '8px 0', minHeight: '12%'}}> 
+							{this.state.reportChips.map(this.renderChip, this)}
 					</Row>
-					<Row style={{marginTop: '10px', marginBottom: '10px'}}>
-						<p style={{textAlign: 'center', margin: '0 auto'}}>
-							Developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. To contact the developers, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
-						</p>
+					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -15, marginRight: -15}}>
+						<Col sm={6}>
+							<p style={{textAlign: 'left'}}>
+								© 2018. Worcester Polytechnic Institute. All Rights Reserved.
+							</p>
+						</Col>
+						<Col sm={6} style={{textAlign: 'right'}}>
+							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
+							{/* {' | '}
+							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a> */}
+						</Col>
 					</Row>
 			</Grid>
+			<Dialog
+              title="About Us"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={actions}
+              modal={false}
+              open={this.state.aboutUs}
+              onRequestClose={() => {this.setState({aboutUs: false})}}
+              autoScrollBodyContent={true}
+			>
+				<br/>
+				This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
+				was composed of: <br/><br/>
+				<b>Undergraduate Students:</b> 
+				<ul>
+					<li>Brian McCarthy, Senior, CS '18</li>
+					<li>Andrew Schade, Senior, CS '18</li>
+					<li>Huy Tran, Senior, CS '18</li>
+					<li>Brian Zylich, BS/MS Candidate, CS '19</li>
+				</ul>
+				<b>Graduate Student Mentors:</b>
+				<ul>
+					<li>Xiao Qin, PhD Candidate</li>
+					<li>Tabassum Kakar, PhD Candidate</li>
+				</ul>
+				<b>Faculty Advisor:</b> Elke Rundensteiner<br/>
+				<b>Visualization Expert:</b> Lane Harrison<br/>
+				<b>FDA Consultants:</b>
+				<ul>
+					<li>Sanjay K. Sahoo MS. MBA.</li>
+					<li>Suranjan De MS. MBA.</li>
+				</ul>
+				<br/>
+				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
+			</Dialog>
+			{/* <Dialog
+              title="Contact Us"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={actions}
+              modal={false}
+              open={this.state.contactUs}
+              onRequestClose={() => {this.setState({contactUs: false})}}
+              autoScrollBodyContent={true}>
+
+			</Dialog> */}
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}
 				handleClose={this.state.handleClose}
 				actions={actions}
 				tableData={this.state.tableData}
+				drugs={this.state.tableDrugs}
 			/>
 	 	</div>
 		)

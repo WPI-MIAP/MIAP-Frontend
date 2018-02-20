@@ -4,7 +4,6 @@ import SearchBarContainer from '../../containers/SearchBarContainer';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
-import {debounce} from 'throttle-debounce';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -28,6 +27,16 @@ import DndGraph from './DndGraph';
 import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
 import Paper from 'material-ui/Paper';
+import FileCloudUpload from 'material-ui/svg-icons/file/cloud-upload';
+import FileUpload from 'material-ui/svg-icons/file/file-upload';
+import Files from 'react-files';
+import {List, ListItem} from 'material-ui/List'; 
+import Avatar from 'material-ui/Avatar';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
+import axios from 'axios';
+import Snackbar from 'material-ui/Snackbar';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
 
 
 const Slider = require('rc-slider');
@@ -75,6 +84,8 @@ const styles = {
 
 const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
 const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
+
+const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
 
 const dummyData = {
   nodes: [
@@ -194,6 +205,12 @@ export default class GlobalFilterNav extends React.Component {
       maxScore: 1.0,
       freqDist: [],
       help: false,
+      uploadDialog: false,
+      uploadFiles: [],
+      prevFiles: [],
+      uploadSnackbar: false,
+      uploadSnackbarMessage: '',
+      helpBarSelectedIndex: -1,
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -201,13 +218,15 @@ export default class GlobalFilterNav extends React.Component {
     this.updateMinAndMax = this.updateMinAndMax.bind(this);
     this.openHelp = this.openHelp.bind(this);
     this.closeHelp = this.closeHelp.bind(this);
+    this.openUploadDialog = this.openUploadDialog.bind(this);
+    this.closeUploadDialog = this.closeUploadDialog.bind(this);
     this.findFrequencyDistribution = this.findFrequencyDistribution.bind(this);
-    // this.callUpdateMinScore = debounce(1000, this.callUpdateMinScore.bind(this));
-    // this.callUpdateMaxScore = debounce(1000, this.callUpdateMaxScore.bind(this));
     this.callUpdateMinScore = this.callUpdateMinScore.bind(this);
     this.callUpdateMaxScore = this.callUpdateMaxScore.bind(this);
     this.startTour = this.startTour.bind(this);
-    // this.endTour = this.endTour.bind(this);
+    this.beginMARAS = this.beginMARAS.bind(this);
+    this.onFilesChange = this.onFilesChange.bind(this);
+    this.createRemoveFileHandler = this.createRemoveFileHandler.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -215,7 +234,6 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   handleChange(event, index, value) {
-    console.log(index + ' ' + value)
     this.setState({ 
       value: value,
     });
@@ -248,14 +266,15 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   updateMinAndMax(value) {
-    // alert(value);
-    this.setState({
-      filteredMax: value[1],
-      filteredMin: value[0],
-    });
-    this.callUpdateMaxScore(value[1]);
-    this.callUpdateMinScore(value[0]);
-    this.props.isUpdating(true);
+    if(value[1] !== this.state.filteredMax || value[0] !== this.state.filteredMin) {
+      this.setState({
+        filteredMax: value[1],
+        filteredMin: value[0],
+      });
+      this.callUpdateMaxScore(value[1]);
+      this.callUpdateMinScore(value[0]);
+      this.props.isUpdating(true);
+    }
   }
 
   openHelp(){
@@ -265,6 +284,90 @@ export default class GlobalFilterNav extends React.Component {
   closeHelp(){
     this.setState({help: false});
   };
+
+  openUploadDialog(){
+    this.setState({uploadDialog: true});
+  };
+
+  closeUploadDialog(){
+    this.setState({uploadDialog: false, uploadFiles: []});
+  };
+
+  beginMARAS(){
+    const files = this.state.uploadFiles;
+    if(this.state.uploadFiles.length > 0) {
+      // start MARAS process on current files
+
+      var formData = new FormData();
+      files.forEach((f) => {
+        formData.append('file', f);
+      });
+
+      axios.post('/csv/reports', formData).then(
+        (response) => {
+          this.setState({
+            uploadSnackbar: true,
+            uploadSnackbarMessage: (response.data.success) ? "File(s) uploaded, your visualization will be updated when analysis is completed" : "Error uploading files",
+          });
+        },
+        (error) => {console.log(error);}
+      );
+
+      this.closeUploadDialog();
+    }
+    else{
+      this.setState({
+        uploadSnackbar: true,
+        uploadSnackbarMessage: "Add one or more file(s) to begin analysis",
+      });
+    }
+  };
+
+  onFilesChange(files){
+    var newFiles = [];
+    //find any new files that have been added
+    for(var i = files.length-1; i > files.length-1-(files.length - this.state.prevFiles.length); i--) {
+      newFiles.push(files[i]);
+    }
+
+    var filesWithoutDuplicates = this.state.uploadFiles;
+    var found = false;
+    //check to see if each new file is a duplicate, otherwise add it to the list of files to upload
+    newFiles.forEach((newFile) => {
+      filesWithoutDuplicates.forEach((addedFile) => {
+        if(newFile.name === addedFile.name) {
+          found = true;
+        }
+      });
+      if(!found) {
+        filesWithoutDuplicates.push(newFile);
+      }
+    });
+    
+    this.setState({
+      uploadFiles: filesWithoutDuplicates,
+      prevFiles: files,
+    });
+  };
+
+  onFilesError(error, file){
+    console.log(error.message);
+  };
+
+  createRemoveFileHandler(file){
+    return function() {
+      var files = this.state.uploadFiles;
+      for(var i=0; i < files.length; i++) {
+        if(files[i].name === file) {
+          files.splice(i, 1);
+          break;
+        }
+      }
+      this.setState({
+        uploadFiles: files,
+      });
+    }.bind(this);
+  }
 
   findFrequencyDistribution(){
     if(this.props.rules.length > 1 && this.state.freqDist.length == 0) {
@@ -299,10 +402,13 @@ export default class GlobalFilterNav extends React.Component {
       });
 
       freqDist.forEach(entry => {
-        entry['Freq'] = (entry['Freq'] * 100) / ruleCount;
+        entry['Freq'] = (entry['Freq'] * 300) / ruleCount;
       });
 
       freqDist = _.sortBy(freqDist, 'Score');
+
+      minScore = parseFloat(minScore);
+      maxScore = parseFloat(maxScore);
 
       this.setState({
         minScore: minScore,
@@ -337,6 +443,20 @@ export default class GlobalFilterNav extends React.Component {
         onClick={this.closeHelp}
       />
     ];
+
+    const uploadFileActions = [
+      <FlatButton
+        label="Cancel"
+        primary={false}
+        onClick={this.closeUploadDialog}
+      />, 
+      <FlatButton
+        label="Upload"
+        primary={true}
+        onClick={this.beginMARAS}
+      />
+    ];
+
     const marks = {
       [this.state.minScore]: {
           style: {
@@ -440,7 +560,56 @@ export default class GlobalFilterNav extends React.Component {
             <ToolbarTitle text={this.props.rules.length + ' Interactions'}
               style={{color: 'white', fontSize: '0.91em'}}
             />
-
+          <IconButton 
+              tooltip="Upload FAERS data"
+              iconStyle={{ color: 'white' }}
+              tooltipPosition='bottom-left'
+              onClick={this.openUploadDialog}
+            >
+              <FileUpload />
+            </IconButton>
+            <Snackbar
+              open={this.state.uploadSnackbar}
+              message={this.state.uploadSnackbarMessage}
+              autoHideDuration={4000}
+              style={{zIndex: 1400}}
+              onRequestClose={() => {this.setState({uploadSnackbar: false})}}
+            />
+            <Dialog
+              title="Upload FAERS data"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={uploadFileActions}
+              modal={false}
+              open={this.state.uploadDialog}
+              onRequestClose={this.closeUploadDialog}
+              autoScrollBodyContent={true}>
+              <Files
+                className='files-dropzone'
+                onChange={this.onFilesChange}
+                onError={this.onFilesError}
+                accepts={['application/x-zip-compressed']}
+                multiple
+                maxFileSize={1000000000}
+                minFileSize={0}
+                clickable
+                >
+                <Paper zDepth={1} style={{height: 76, lineHeight: '38px', textAlign: 'center'}}>
+                  <div>Drop files here or click to upload<br/>(File format must be .zip)</div>
+                </Paper>
+              </Files>
+              <List>
+                {
+                  this.state.uploadFiles.map((file) => (
+                    <ListItem
+                      key={file.name}
+                      leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
+                      rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
+                      primaryText={file.name}
+                    />
+                  ))
+                }
+              </List>
+            </Dialog>
             <IconButton 
               tooltip="Help"
               iconStyle={{ color: 'white' }}
@@ -471,10 +640,13 @@ export default class GlobalFilterNav extends React.Component {
                           <h5>Overview</h5>
                           <ul>
                             <li>Each <b>node</b> is a <b>drug</b></li>
-                            <li>Each <b>edge</b> is a possible <b>adverse drug reaction (ADR)</b></li>
+                            <li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
+                            <li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
                             <li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
                             <li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
-                            <li>The <b>edge color</b> represents the <b>interaction score</b></li>
+                            <li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
+                            <li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
+                            <li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
@@ -496,7 +668,7 @@ export default class GlobalFilterNav extends React.Component {
                             </Paper>
                             <Col style={{marginLeft: 20}}>
                               <Row style={{height: 34}}>
-                                {'Contrast Score'}
+                                {'Interaction Score'}
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
@@ -522,12 +694,14 @@ export default class GlobalFilterNav extends React.Component {
                         <Col sm={12} md={7}>
                           <h5>Galaxy View</h5>
                           <ul>
-                            <li>The <b>central drug</b> in a window is the <b>drug of interest</b></li>
+                            <li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
                             <li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
+                            <li><b>Surrounding nodes</b> are <b>colored</b> according to the <b>highest score</b> of all <b>interactions between that drug and the drug of interest</b></li>
                             <li>The <b>color</b> of a window's header indicates the <b>severe ADR count</b> associated with the drug of interest</li>
                             <li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
                             <li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
-                            <li>Surrounding nodes are <b>smaller</b> if there is a <b>known interaction</b> with that drug</li>
+                            <li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
+                            <li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
@@ -581,18 +755,30 @@ export default class GlobalFilterNav extends React.Component {
                             <li>The <b>root node</b> is the <b>selected drug</b></li>
                             <li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
                             <li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
-                            <li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>tan</b></li>
+                            <li><b>Severe ADRs</b> are <b>black</b>, while <b>other ADRs</b> are <b>white</b></li>
+                            <li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
                           <Row>
                             <Paper zDepth={1} style={{height: 210, width: '100%', overflow: 'hidden',}}>
-                              <InteractionProfile 
-                                mainDrug={dummyData.selectedDrug} 
-                                rules={dummyData.currentDrugs.find(el => el[0] == dummyData.selectedDrug)}
+                              <InteractionProfile
+                                helpExample={true}
                               />
+                              <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
+                                <Col style={{marginRight: 10}}>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div>Severe ADR</div>
+                                </Col>
+                                <Col>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div>Normal ADR</div>
+                                </Col>
+                              </Row>
                             </Paper>
+                            
                           </Row>
+                          
                         </Col>
                       </Row>
                     </CardText>
@@ -665,25 +851,30 @@ export default class GlobalFilterNav extends React.Component {
                       showExpandableButton={true}
                     />
                     <CardText expandable={true}>
-                      <ul>
-                        <li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
-                        <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
-                        <li><b>Selecting a report</b> will <b>highlight</b> the <b>corresponding drugs and reactions</b> in all views</li>
-                        <li>The <b>narrative section</b> of a report may contain details of a <b>patient's medical history</b></li>
-                        <li>Users can <b>search for key words</b> in the <b>narrative sections</b> of the reports</li>
-                      </ul>
-                    </CardText>
-                  </Card>
-                  <Card initiallyExpanded={false} style={{width: '100%'}}>
-                    <CardHeader
-                      title="About Us"
-                      actAsExpander={true}
-                      showExpandableButton={true}
-                    />
-                    <CardText expandable={true}>
-                      This software was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
-                      was composed of undergraduate students Brian McCarthy, Andrew Schade, Huy Tran, and Brian Zylich. The team was advised
-                      by Professor Elke Rundensteiner and graduate students Xiao Qin and Tabassum Kakar. To contact the team, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
+                      <Row>
+                        <Col sm={6}>
+                          <ul>
+                            <li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
+                            <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
+                            <li>A <b>bar graph</b> shows (up to) the <b>top 10 drugs</b> also found in reports containing the chosen drug or drug interaction</li>
+                            <li><b>Selecting a drug name</b> or the <b>corresponding bar on the graph</b> will <b>highlight</b> all <b>reports containing that drug</b></li>
+                          </ul>
+                        </Col>
+                        <Col sm={6}>
+                          <BarChart style={{margin: '0 auto'}} width={400} height={100} data={dummyDrugFreqs}>
+                            <XAxis hide={true} dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="freq" onClick={(data, index) => {this.setState({helpBarSelectedIndex: index})}}>
+                              {
+                                dummyDrugFreqs.map((entry, index) => (
+                                  <Cell cursor="pointer" fill={index === this.state.helpBarSelectedIndex ? '#2C98F0' : '#73B8F0'} key={`cell-${index}`}/>
+                                ))
+                              }
+                            </Bar>
+                          </BarChart>
+                        </Col>
+                      </Row>
                     </CardText>
                   </Card>
                 </Row>
@@ -697,28 +888,6 @@ export default class GlobalFilterNav extends React.Component {
           </div>
         }
       />
-        /* <ToolbarGroup firstChild={true}>
-          <SelectField
-            value={this.state.value}
-            onChange={this.handleChange}
-            floatingLabelText="Filter DIARs"
-            style={styles.selectField}
-            selectedMenuItemStyle={{ color: '#1FBCD3' }}
-          >
-            <MenuItem value='all' primaryText="All DIARs" />
-            <MenuItem value='known' primaryText="Known DIARs" />
-            <MenuItem value='unknown' primaryText="Unknown DIARs" />
-          </SelectField>
-          <TextField
-            style={styles.textField}
-            hintText="Score"
-            value={this.state.score}
-            onChange={this.updateScore}
-          />
-        </ToolbarGroup>
-        <ToolbarGroup firstChild={true}>
-          <SearchBarContainer />
-        </ToolbarGroup> */
     )
   }
 }

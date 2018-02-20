@@ -214,12 +214,37 @@ const renderTree = (treeData, svgDomNode) => {
         return 4.5;
       })
       .style("stroke", d => {
-        return d.data.Score ? "#ccc" : "none";
+        if(d.data.Score) {
+          return "#A9B0B7";
+        }
+        else if(d.data.name === root.data.name) {
+          return "#0069C0";
+        }
+        else if(d.data.maxScore) {
+          const score = d.data.maxScore;
+          if (score < 0 || score <= 0) {
+            return "#E8BA54";
+          }
+          else if (score > 0 && score <= 0.01) {
+            return "#E37E36";
+          }
+          else if (score > 0.01 && score <= 0.2) {
+            return "#C2230C";
+          }
+          else if (score > 0.2) {
+            return "#610000";
+          }
+        }
+        else{
+          return 'none';
+        }
+        // return d.data.Score ? "#A9B0B7" : "none";
       })
 
       .style("fill", d => {
         if (d.data.name === root.data.name) {
-          return '#5eafee';
+          // return '#5eafee';
+          return '#2C98F0';
         }
 
         if (d.data.maxScore) {

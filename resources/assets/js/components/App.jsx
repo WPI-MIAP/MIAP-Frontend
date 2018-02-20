@@ -176,6 +176,7 @@ export default class App extends Component {
 					allowClicksThruHole={true}
 					keyboardNavigation={false}
 					disableOverlay={false}
+					scrollToSteps={true}
 				/>
 				{/* <Navigation /> */}
 				<GlobalFilterNavContainer startTour={this.startTour}/>
