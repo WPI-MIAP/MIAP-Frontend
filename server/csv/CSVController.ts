@@ -26,7 +26,7 @@ var exec = require('child_process').exec;
 			var fileNames = req.files.map((file) => ('/maras/diva-node-web/storage/' + file.filename));
 			fileNames = _.join(fileNames, ' ');
 			console.log(fileNames);
-			var command = '/maras/maras.sh -m=/maras/public-mm -f=' + fileNames + ' -d=/maras/data/knownRules_standardized.csv -j=/maras/2-19-MARAS.jar -o=/maras/diva-node-web/storage/';
+			var command = '/maras/maras.sh -m=/maras/public-mm -f=' + fileNames + ' -d=/maras/data/knownRules_standardized.csv -j=/maras/2-19-MARAS.jar -o=/maras/diva-node-web/storage/ > log.txt';
 			var child = exec(command, {maxBuffer: 1024 * 1000}, (error, stdout, stderr) => {
 				if (error) {
 					console.log(error);

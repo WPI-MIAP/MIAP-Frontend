@@ -12,7 +12,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import Dialog from 'material-ui/Dialog';
-import {BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
 
 
 export default class Report extends React.Component {

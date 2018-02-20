@@ -52,7 +52,7 @@ export default class DndTreeContainer extends Component {
 		const styles = {
 			root: {
 				overflow: 'auto',
-				height: '75vh',
+				height: '80vh',
 				paddingTop: 75
 			},
 			title: {

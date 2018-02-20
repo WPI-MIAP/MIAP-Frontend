@@ -31,6 +31,8 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 
+const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
+const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
 
 const styles = {
 	root: {
@@ -366,6 +368,33 @@ export default class MainView extends Component {
 										// colOverview={this.state.colOverview}
 									/>
 								</GridTile>
+								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+									<Col>
+										<Row>
+											<Col style={{margin: '0 auto'}}>
+												<div>Interaction Score</div>
+											</Col>
+										</Row>
+										<Row>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>Under 0.0</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[1], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0.0 - 0.01</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[2], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0.01 - 0.2</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: scoreColors[3], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>Above 0.2</div>
+											</Col>
+										</Row>
+									</Col>
+								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
@@ -418,6 +447,37 @@ export default class MainView extends Component {
 										handleOpen={this.handleOpen}
 									/>
 								</GridTile>
+								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 20, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+									<Col>
+										<Row>
+											<Col style={{margin: '0 auto'}}>
+												<div>Severe ADR Count</div>
+											</Col>
+										</Row>
+										<Row>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[1], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>1</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[2], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>2</div>
+											</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, background: dmeColors[3], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>3</div>
+											</Col>
+											<Col>
+												<div style={{height: 35, width: 34, background: dmeColors[4], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>4+</div>
+											</Col>
+										</Row>
+									</Col>
+								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -453,6 +513,16 @@ export default class MainView extends Component {
 										mainDrug={this.props.selectedDrug} 
 										rules={this.props.currentDrugs.find(el => el[0] == this.props.selectedDrug)}
 									/>
+									<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+										<Col style={{marginRight: 10}}>
+											<div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+											<div>Severe ADR</div>
+										</Col>
+										<Col>
+											<div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+											<div>Normal ADR</div>
+										</Col>
+									</Row>
 								</GridTile>
 							</Paper>
 						</Col>
@@ -469,8 +539,8 @@ export default class MainView extends Component {
 						</Col>
 						<Col sm={6} style={{textAlign: 'right'}}>
 							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
-							{' | '}
-							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a>
+							{/* {' | '}
+							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a> */}
 						</Col>
 					</Row>
 			</Grid>
@@ -483,6 +553,7 @@ export default class MainView extends Component {
               onRequestClose={() => {this.setState({aboutUs: false})}}
               autoScrollBodyContent={true}
 			>
+				<br/>
 				This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
 				was composed of: <br/><br/>
 				<b>Undergraduate Students:</b> 
@@ -504,8 +575,10 @@ export default class MainView extends Component {
 					<li>Sanjay K. Sahoo MS. MBA.</li>
 					<li>Suranjan De MS. MBA.</li>
 				</ul>
+				<br/>
+				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
 			</Dialog>
-			<Dialog
+			{/* <Dialog
               title="Contact Us"
               contentStyle={{width: "60%", maxWidth: "none"}}
               actions={actions}
@@ -514,7 +587,7 @@ export default class MainView extends Component {
               onRequestClose={() => {this.setState({contactUs: false})}}
               autoScrollBodyContent={true}>
 
-			</Dialog>
+			</Dialog> */}
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}

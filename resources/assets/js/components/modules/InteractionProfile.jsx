@@ -25,7 +25,7 @@ const InteractionProfile = ({ mainDrug = '', rules = ['', { drugs: [], rules: []
   }
 
   return (
-    <div id="treeWrapper" width="100%">
+    <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%'}}>
       <D3Tree treeData={myTreeData} mainDrug={mainDrug} fullscreen={fullscreen}/>
     </div>
   )

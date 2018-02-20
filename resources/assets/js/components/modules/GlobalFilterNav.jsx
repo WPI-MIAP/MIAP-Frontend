@@ -36,6 +36,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -82,6 +83,8 @@ const styles = {
 
 const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
 const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
+
+const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
 
 const dummyData = {
   nodes: [
@@ -206,6 +209,7 @@ export default class GlobalFilterNav extends React.Component {
       prevFiles: [],
       uploadSnackbar: false,
       uploadSnackbarMessage: '',
+      helpBarSelectedIndex: -1,
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateMinScore = this.updateMinScore.bind(this);
@@ -743,7 +747,8 @@ export default class GlobalFilterNav extends React.Component {
                             <li>The <b>root node</b> is the <b>selected drug</b></li>
                             <li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
                             <li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
-                            <li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>tan</b></li>
+                            <li><b>Severe ADRs</b> are <b>black</b>, while <b>other ADRs</b> are <b>white</b></li>
+                            <li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
@@ -753,8 +758,20 @@ export default class GlobalFilterNav extends React.Component {
                                 mainDrug={dummyData.selectedDrug} 
                                 rules={dummyData.currentDrugs.find(el => el[0] == dummyData.selectedDrug)}
                               />
+                              <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
+                                <Col style={{marginRight: 10}}>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div>Severe ADR</div>
+                                </Col>
+                                <Col>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div>Normal ADR</div>
+                                </Col>
+                              </Row>
                             </Paper>
+                            
                           </Row>
+                          
                         </Col>
                       </Row>
                     </CardText>
@@ -827,27 +844,32 @@ export default class GlobalFilterNav extends React.Component {
                       showExpandableButton={true}
                     />
                     <CardText expandable={true}>
-                      <ul>
-                        <li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
-                        <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
-                        <li><b>Selecting a report</b> will <b>highlight</b> the <b>corresponding drugs and reactions</b> in all views</li>
-                        <li>The <b>narrative section</b> of a report may contain details of a <b>patient's medical history</b></li>
-                        <li>Users can <b>search for key words</b> in the <b>narrative sections</b> of the reports</li>
-                      </ul>
+                      <Row>
+                        <Col sm={6}>
+                          <ul>
+                            <li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
+                            <li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
+                            <li>A <b>bar graph</b> shows (up to) the <b>top 10 drugs</b> also found in reports containing the chosen drug or drug interaction</li>
+                            <li><b>Selecting a drug name</b> or the <b>corresponding bar on the graph</b> will <b>highlight</b> all <b>reports containing that drug</b></li>
+                          </ul>
+                        </Col>
+                        <Col sm={6}>
+                          <BarChart style={{margin: '0 auto'}} width={400} height={100} data={dummyDrugFreqs}>
+                            <XAxis hide={true} dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="freq" onClick={(data, index) => {this.setState({helpBarSelectedIndex: index})}}>
+                              {
+                                dummyDrugFreqs.map((entry, index) => (
+                                  <Cell cursor="pointer" fill={index === this.state.helpBarSelectedIndex ? '#2C98F0' : '#73B8F0'} key={`cell-${index}`}/>
+                                ))
+                              }
+                            </Bar>
+                          </BarChart>
+                        </Col>
+                      </Row>
                     </CardText>
                   </Card>
-                  {/* <Card initiallyExpanded={false} style={{width: '100%'}}>
-                    <CardHeader
-                      title="About Us"
-                      actAsExpander={true}
-                      showExpandableButton={true}
-                    />
-                    <CardText expandable={true}>
-                      This software was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
-                      was composed of undergraduate students Brian McCarthy, Andrew Schade, Huy Tran, and Brian Zylich. The team was advised
-                      by Professor Elke Rundensteiner and graduate students Xiao Qin and Tabassum Kakar. To contact the team, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
-                    </CardText>
-                  </Card> */}
                 </Row>
                 <Row>
                 </Row>
@@ -858,28 +880,6 @@ export default class GlobalFilterNav extends React.Component {
           </div>
         }
       />
-        /* <ToolbarGroup firstChild={true}>
-          <SelectField
-            value={this.state.value}
-            onChange={this.handleChange}
-            floatingLabelText="Filter DIARs"
-            style={styles.selectField}
-            selectedMenuItemStyle={{ color: '#1FBCD3' }}
-          >
-            <MenuItem value='all' primaryText="All DIARs" />
-            <MenuItem value='known' primaryText="Known DIARs" />
-            <MenuItem value='unknown' primaryText="Unknown DIARs" />
-          </SelectField>
-          <TextField
-            style={styles.textField}
-            hintText="Score"
-            value={this.state.score}
-            onChange={this.updateScore}
-          />
-        </ToolbarGroup>
-        <ToolbarGroup firstChild={true}>
-          <SearchBarContainer />
-        </ToolbarGroup> */
     )
   }
 }
