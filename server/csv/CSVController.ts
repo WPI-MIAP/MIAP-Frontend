@@ -23,10 +23,10 @@ var exec = require('child_process').exec;
 		
 		} else {
 			console.log('file received');
-			var fileNames = req.files.map((file) => ('./storage/' + file.filename));
+			var fileNames = req.files.map((file) => ('/maras/diva-node-web/storage/' + file.filename));
 			fileNames = _.join(fileNames, ' ');
 			console.log(fileNames);
-			var command = '../maras.sh -m=../public-mm -f=' + fileNames + ' -d=../data/knownRules_standardized.csv -j=../2-19-MARAS.jar -o=./storage/';
+			var command = '/maras/maras.sh -m=/maras/public-mm -f=' + fileNames + ' -d=/maras/data/knownRules_standardized.csv -j=/maras/2-19-MARAS.jar -o=/maras/diva-node-web/storage/';
 			var child = exec(command, {maxBuffer: 1024 * 1000}, (error, stdout, stderr) => {
 				if (error) {
 					console.log(error);
