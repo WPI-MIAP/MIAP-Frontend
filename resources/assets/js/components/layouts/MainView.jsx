@@ -29,6 +29,7 @@ import Report from '../modules/Report'
 import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
+import Dialog from 'material-ui/Dialog';
 
 
 const styles = {
@@ -43,6 +44,7 @@ const styles = {
 	},
 	chip: {
 		margin: 4,
+		height: 32
 	},
 	floatingButton: {
 		position: 'absolute',
@@ -83,6 +85,8 @@ export default class MainView extends Component {
 			open: false,
 			width: 0,
 			height: 0,
+			aboutUs: false,
+			contactUs: false,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -112,17 +116,20 @@ export default class MainView extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
-			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedDrug) == undefined) {
+			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(nextProps.selectedDrug)) && chip.drugs[1] === undefined)) == undefined) {
 			var chips = this.state.reportChips;
 			chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
 			this.setState({reportChips: chips});
 		}
 
 		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
-			nextProps.selectedRule !== '' && _.find(this.state.reportChips, chip => chip.title == nextProps.selectedRule) == undefined) {
-			var chips = this.state.reportChips;
-			chips.unshift({type: 'adr', drugs: _.split(nextProps.selectedRule, '---').map((drug) => (_.toLower(_.trim(drug))))});
-			this.setState({reportChips: chips});
+			nextProps.selectedRule !== '') {
+			var drugs = _.split(nextProps.selectedRule, '---').map((drug) => (_.toLower(_.trim(drug))));
+			if(_.find(this.state.reportChips, chip => ((chip.drugs[0] == drugs[0] && chip.drugs[1] == drugs[1]) || (chip.drugs[0] == drugs[1] && chip.drugs[1] == drugs[0]))) == undefined) {
+				var chips = this.state.reportChips;
+				chips.unshift({type: 'adr', drugs: drugs});
+				this.setState({reportChips: chips});
+			}
 		}	
 	}
 
@@ -130,8 +137,6 @@ export default class MainView extends Component {
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
-		console.log('drug 1: ' + drug1);
-		console.log('drug 2: ' + drug2);
 		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
 			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
@@ -184,18 +189,20 @@ export default class MainView extends Component {
 			open: true,
 			tableTitle: 'Reports for ' + title,
 		});
-  }
+  	}
 
-  handleClose() {
-	this.setState({
-		open: false,
-		tableTitle: '',
-		tableData: [],
-	});
-	if(this.props.currentSelector === '.report') {
-		this.props.nextTourStep();
+	handleClose() {
+		this.setState({
+			open: false,
+			tableTitle: '',
+			tableData: [],
+			aboutUs: false,
+			contactUs: false,
+		});
+		if(this.props.currentSelector === '.report') {
+			this.props.nextTourStep();
+		}
 	}
-  }
 
 
 	handleRequestDelete(key) {	
@@ -286,7 +293,7 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 25, height: '75vh' }}>
+				<Grid fluid style={{ marginTop: 25, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={'#2D3E46'}
@@ -450,15 +457,64 @@ export default class MainView extends Component {
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0' }}> 
-						{this.state.reportChips.map(this.renderChip, this)}
+					<Row style={{ margin: '8px 0', minHeight: '12%'}}> 
+							{this.state.reportChips.map(this.renderChip, this)}
 					</Row>
-					<Row style={{marginTop: '10px', marginBottom: '10px'}}>
-						<p style={{textAlign: 'center', margin: '0 auto'}}>
-							Developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. To contact the developers, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
-						</p>
+					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -15, marginRight: -15}}>
+						<Col sm={6}>
+							<p style={{textAlign: 'left'}}>
+								© 2018. Worcester Polytechnic Institute. All Rights Reserved. 
+								{/* <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a> */}
+							</p>
+						</Col>
+						<Col sm={6} style={{textAlign: 'right'}}>
+							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
+							{' | '}
+							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a>
+						</Col>
 					</Row>
 			</Grid>
+			<Dialog
+              title="About Us"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={actions}
+              modal={false}
+              open={this.state.aboutUs}
+              onRequestClose={() => {this.setState({aboutUs: false})}}
+              autoScrollBodyContent={true}
+			>
+				This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
+				was composed of: <br/><br/>
+				<b>Undergraduate Students:</b> 
+				<ul>
+					<li>Brian McCarthy, Senior, CS '18</li>
+					<li>Andrew Schade, Senior, CS '18</li>
+					<li>Huy Tran, Senior, CS '18</li>
+					<li>Brian Zylich, BS/MS Candidate, CS '19</li>
+				</ul>
+				<b>Graduate Student Mentors:</b>
+				<ul>
+					<li>Xiao Qin, PhD Candidate</li>
+					<li>Tabassum Kakar, PhD Candidate</li>
+				</ul>
+				<b>Faculty Advisor:</b> Elke Rundensteiner<br/>
+				<b>Visualization Expert:</b> Lane Harrison<br/>
+				<b>FDA Consultants:</b>
+				<ul>
+					<li>Sanjay K. Sahoo MS. MBA.</li>
+					<li>Suranjan De MS. MBA.</li>
+				</ul>
+			</Dialog>
+			<Dialog
+              title="Contact Us"
+              contentStyle={{width: "60%", maxWidth: "none"}}
+              actions={actions}
+              modal={false}
+              open={this.state.contactUs}
+              onRequestClose={() => {this.setState({contactUs: false})}}
+              autoScrollBodyContent={true}>
+
+			</Dialog>
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}

@@ -836,7 +836,7 @@ export default class GlobalFilterNav extends React.Component {
                       </ul>
                     </CardText>
                   </Card>
-                  <Card initiallyExpanded={false} style={{width: '100%'}}>
+                  {/* <Card initiallyExpanded={false} style={{width: '100%'}}>
                     <CardHeader
                       title="About Us"
                       actAsExpander={true}
@@ -847,7 +847,7 @@ export default class GlobalFilterNav extends React.Component {
                       was composed of undergraduate students Brian McCarthy, Andrew Schade, Huy Tran, and Brian Zylich. The team was advised
                       by Professor Elke Rundensteiner and graduate students Xiao Qin and Tabassum Kakar. To contact the team, email <a href='mailto:divamqp1718@WPI.EDU'>divamqp1718@WPI.EDU</a>.
                     </CardText>
-                  </Card>
+                  </Card> */}
                 </Row>
                 <Row>
                 </Row>
