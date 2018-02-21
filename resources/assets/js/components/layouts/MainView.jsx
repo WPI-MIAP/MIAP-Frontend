@@ -30,6 +30,8 @@ import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+
 
 const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
 const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
@@ -53,6 +55,22 @@ const styles = {
 		right: 30,
 		bottom: 30,
 		zIndex: 100
+	},
+	legendSevere: {
+		backgroundColor: 'black',
+		border: '3px solid grey',
+		borderRadius: '50%',
+		height: 25,
+		width: 25,
+		textAlign: 'center'
+	},
+	legendNormal: {
+		backgroundColor: 'white',
+		border: '3px solid grey',
+		borderRadius: '50%',
+		height: 25,
+		width: 25,
+		textAlign: 'center'
 	}
 };
 
@@ -295,14 +313,14 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 25, height: '80vh'}}>
+				<Grid fluid style={{ marginTop: 15, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={'#2D3E46'}
 						style={{
 							position: 'absolute',
 							right: 30,
-							bottom: '18vh',
+							bottom: '5vh',
 							zIndex: 100,
 							display: this.state.col === 12 ? 'block' : 'none'
 						}}
@@ -368,33 +386,27 @@ export default class MainView extends Component {
 										// colOverview={this.state.colOverview}
 									/>
 								</GridTile>
-								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
 									<Col>
-										<Row>
-											<Col style={{margin: '0 auto'}}>
-												<div>Interaction Score</div>
+										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<Row style={{marginTop: 10, paddingBottom: 10}}>
+											<Col xs={3} md={3}>
+												<div style={{height: 5, width: 50, background: scoreColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>Score &lt; 0.0</div>
 											</Col>
-										</Row>
-										<Row>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: scoreColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Under 0.0</div>
-											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: scoreColors[1], margin: '0 auto'}}/>
+											<Col xs={3} md={3}>
+												<div style={{height: 5, width: 50, background: scoreColors[1], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>0.0 - 0.01</div>
 											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: scoreColors[2], margin: '0 auto'}}/>
+											<Col xs={3} md={3}>
+												<div style={{height: 5, width: 50, background: scoreColors[2], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>0.01 - 0.2</div>
 											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: scoreColors[3], margin: '0 auto'}}/>
+											<Col xs={3} md={3}>
+												<div style={{height: 5, width: 50, background: scoreColors[3], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>Above 0.2</div>
 											</Col>
 										</Row>
 									</Col>
-								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
@@ -441,43 +453,39 @@ export default class MainView extends Component {
 										width={this.props.width}
 										height={this.props.height} 
 										onClickNode={this.props.showDetailNode}
+										onClickEdge={this.props.onClickEdge}
 										onDeleteNode={this.props.deleteNode}
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
 										handleOpen={this.handleOpen}
 									/>
 								</GridTile>
-								<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 20, marginTop: -100, padding: 10, paddingTop: 5, paddingBottom: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
 									<Col>
-										<Row>
-											<Col style={{margin: '0 auto'}}>
-												<div>Severe ADR Count</div>
+										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<Row style={{marginTop: 10, paddingBottom: 10}}>
+											<Col xs={2.4} md={2.4}>
+												<div style={{height: 5, width: 50, background: dmeColors[0], margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>0 Severe</div>
 											</Col>
-										</Row>
-										<Row>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: dmeColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0</div>
-											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: dmeColors[1], margin: '0 auto'}}/>
+											<Col xs={2.4} md={2.4}>
+												<div style={{height: 5, width: 50, background: dmeColors[1], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>1</div>
 											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: dmeColors[2], margin: '0 auto'}}/>
+											<Col xs={2.4} md={2.4}>
+												<div style={{height: 5, width: 50, background: dmeColors[2], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>2</div>
 											</Col>
-											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, background: dmeColors[3], margin: '0 auto'}}/>
+											<Col xs={2.4} md={2.4}>
+												<div style={{height: 5, width: 50, background: dmeColors[3], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>3</div>
 											</Col>
-											<Col>
-												<div style={{height: 35, width: 34, background: dmeColors[4], margin: '0 auto'}}/>
+
+											<Col xs={2.4} md={2.4}>
+												<div style={{height: 5, width: 50, background: dmeColors[4], margin: '0 auto'}}/>
 												<div style={{textAlign: 'center'}}>4+</div>
 											</Col>
 										</Row>
 									</Col>
-								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -513,7 +521,7 @@ export default class MainView extends Component {
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
 									/>
-									<Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
+									{/* <Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
 										<Col style={{marginRight: 10}}>
 											<div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
 											<div>Severe ADR</div>
@@ -522,15 +530,30 @@ export default class MainView extends Component {
 											<div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
 											<div>Normal ADR</div>
 										</Col>
-									</Row>
+									</Row> */}
 								</GridTile>
+								<Col>
+									<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
+										<Col xs={4} md={4}>
+											<div style={styles.legendSevere}>
+												<span style={{ marginLeft: 30 }}>Severe&nbsp;ADR</span>
+											</div>
+										</Col>
+										<Col xs={4} md={4}>
+											<div style={styles.legendNormal}>
+												<span style={{ marginLeft: 30 }}>Normal&nbsp;ADR</span>
+											</div>
+										</Col>
+									</Row>
+								</Col>
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0', minHeight: '12%'}}> 
+					<Row style={{ margin: '8px 0'}}> 
 							{this.state.reportChips.map(this.renderChip, this)}
 					</Row>
-					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -15, marginRight: -15}}>
+					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
 						<Col sm={6}>
 							<p style={{textAlign: 'left'}}>
 								© 2018. Worcester Polytechnic Institute. All Rights Reserved.

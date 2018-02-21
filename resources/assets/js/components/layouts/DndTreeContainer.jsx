@@ -161,7 +161,7 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
+											<DndTree currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} onClickEdge={this.props.onClickEdge} />
 										</div>
 									</div>
 								</Col>

@@ -76,6 +76,7 @@ export default class DndTree extends Component {
 		const sortedLinks = _.orderBy(this.props.data.rules, ['r_Drugname', 'Score'], ['asc', 'desc'])
 		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 		const edgesArray = uniqueLinks.map(link => ({
+			id: link.Drug1.name + ' --- ' + link.Drug2.name,
 			from: link.Drug1.name, 
 			to: link.Drug2.name, 
 			title: generateTitle(link),
@@ -132,9 +133,17 @@ export default class DndTree extends Component {
 		}
 
 		const events = {
-			select(event) {
+			select: (event) => {
 				const { nodes, edges } = event;
-			},
+				console.log(nodes);
+				// if (typeof nodes[0] !== undefined && nodes.length !== 0) {
+				// 	this.props.onClickNode(nodes[0]);
+				// } 
+
+				if (typeof edges[0] !== undefined && nodes.length === 0) {
+					this.props.onClickEdge(edges[0]);
+				}
+			}
 		}
 
 		return (
