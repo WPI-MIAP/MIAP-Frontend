@@ -31,6 +31,7 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 
 
 const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
@@ -106,7 +107,6 @@ export default class MainView extends Component {
 			width: 0,
 			height: 0,
 			aboutUs: false,
-			contactUs: false,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -118,6 +118,7 @@ export default class MainView extends Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
+		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
 
@@ -186,7 +187,7 @@ export default class MainView extends Component {
 						tableData: response.data,
 						tableDrugs: [report.drugs[0]],
 					});
-					if(this.props.currentSelector === '.galaxy2') {
+					if(this.props.currentSelector === '.galaxyReports') {
 						this.props.nextTourStep();
 					}	
 				});
@@ -217,7 +218,6 @@ export default class MainView extends Component {
 			tableTitle: '',
 			tableData: [],
 			aboutUs: false,
-			contactUs: false,
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();
@@ -285,9 +285,16 @@ export default class MainView extends Component {
 		});
 	}
 
+	onClickEdgeTour(interaction) {
+		this.props.onClickEdge(interaction);
+		if(this.props.currentSelector === '.overview2'){
+			this.props.nextTourStep();
+		}
+	}
+
 	onClickNodeTour(drug) {
 		this.props.onClickNode(drug);
-		if(this.props.currentSelector === '.overview2'){
+		if(this.props.currentSelector === '.overview3'){
 			this.props.nextTourStep();
 		}
 	}
@@ -313,7 +320,7 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 15, height: '80vh'}}>
+				<Grid fluid style={{ marginTop: 10, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={'#2D3E46'}
@@ -327,6 +334,12 @@ export default class MainView extends Component {
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
+					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
+						<EditorInsertChart color="#2D3E46" style={{height: 54, width: 54}}/>
+						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
+							{this.state.reportChips.map(this.renderChip, this)}
+						</div>
+					</Paper>
 					<Row>
 						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
@@ -348,7 +361,7 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
-									className="overview overview2"
+									className="overview overview2 overview3"
 									// titleBackground="#24915C"
 									titleBackground="#2D3E46"
 									style={{
@@ -375,7 +388,7 @@ export default class MainView extends Component {
 										height={this.props.height} 
 										selectedDrug={this.props.selectedDrug}
 										onClickNode={this.onClickNodeTour}
-										onClickEdge={this.props.onClickEdge}
+										onClickEdge={this.onClickEdgeTour}
 										isFetching={this.props.isFetching}
 										filter={this.props.filter}
 										minScore={this.props.minScore}
@@ -420,7 +433,7 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
-									className="galaxy galaxy2"
+									className="galaxy"
 									actionIcon={ 
 										<div>
 											<IconButton 
@@ -550,10 +563,7 @@ export default class MainView extends Component {
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0'}}> 
-							{this.state.reportChips.map(this.renderChip, this)}
-					</Row>
-					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
+					<Row style={{background: '#2D3E46', color: 'white', marginTop: 10, paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
 						<Col sm={6}>
 							<p style={{textAlign: 'left'}}>
 								© 2018. Worcester Polytechnic Institute. All Rights Reserved.
@@ -561,8 +571,6 @@ export default class MainView extends Component {
 						</Col>
 						<Col sm={6} style={{textAlign: 'right'}}>
 							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
-							{/* {' | '}
-							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a> */}
 						</Col>
 					</Row>
 			</Grid>
@@ -600,16 +608,6 @@ export default class MainView extends Component {
 				<br/>
 				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
 			</Dialog>
-			{/* <Dialog
-              title="Contact Us"
-              contentStyle={{width: "60%", maxWidth: "none"}}
-              actions={actions}
-              modal={false}
-              open={this.state.contactUs}
-              onRequestClose={() => {this.setState({contactUs: false})}}
-              autoScrollBodyContent={true}>
-
-			</Dialog> */}
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}
@@ -617,6 +615,8 @@ export default class MainView extends Component {
 				actions={actions}
 				tableData={this.state.tableData}
 				drugs={this.state.tableDrugs}
+				currentSelector={this.props.currentSelector}
+				nextTourStep={this.props.nextTourStep}
 			/>
 	 	</div>
 		)

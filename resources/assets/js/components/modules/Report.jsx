@@ -88,10 +88,20 @@ export default class Report extends React.Component {
       }
     }
 
+    // componentDidUpdate(prevProps, prevState){
+    //   if(prevProps.tableData !== this.props.tableData && this.props.tableData !== undefined && this.props.tableData !== null && this.props.tableData.length !== 0) {
+    //     if(this.props.currentSelector === '.galaxyReports') {
+    //       //after 1 second go to next tour step
+    //       setTimeout(function() {
+    //         this.props.nextTourStep();
+    //       }.bind(this), 1000);
+    //     }
+    //   }
+    // }
+
     render() {
       return (
         <Dialog
-          className="report"
           title={_.upperFirst(this.props.tableTitle) + ' (' + this.props.tableData.length + ' results)'}
           actions={this.props.actions}
           modal={false}
@@ -99,6 +109,7 @@ export default class Report extends React.Component {
           onRequestClose={this.props.handleClose}
           autoScrollBodyContent={true}
           contentStyle={{width: "90%", maxWidth: "none", overflow: 'auto' }}
+          className="report"
         >
         {
           (this.props.tableData === null || this.props.tableData === undefined || this.props.tableData.length == 0) ? (

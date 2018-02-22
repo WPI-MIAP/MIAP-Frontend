@@ -80,6 +80,7 @@ export default class DndTreeContainer extends Component {
 		};
 
 		return this.props.testExample ? (
+			//HELP PAGE VERSION
 			<div>
 				{this.props.currentDrugs.map(drug => (
 								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
@@ -123,6 +124,7 @@ export default class DndTreeContainer extends Component {
 							))}
 			</div>
 			) : (
+			//NORMAL VERSION				
 			<div>
 				<Grid fluid style={styles.root}>
 					<Row style={styles.row}>
@@ -145,7 +147,7 @@ export default class DndTreeContainer extends Component {
 													<ActionOpenInNew />
 												</IconButton>
 
-												<IconButton tooltip="Show Reports"
+												<IconButton className="galaxyReports" tooltip="Show Reports"
 													iconStyle={{ color: 'white' }}
 													onClick={() => {this.props.handleOpen({type: 'drug', drugs: [drug[0]]})}}
 												>
