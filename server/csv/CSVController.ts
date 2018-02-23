@@ -109,16 +109,17 @@ var exec = require('child_process').exec;
 
 			if (req.query.drug) {
 				reports = reports.filter(report => {
-					let drugnames = report.drugname_updated.split(', ');
-					drugnames = drugnames.map(name => _.lowerCase(name));
-					return _.includes(drugnames, _.lowerCase(req.query.drug));
+					let drugnames = report.drugname_matched.split(', ');
+					// let drugnames = report.drugname_updated.split(', ');
+					drugnames = drugnames.map(name => _.toLower(_.trim(name)));
+					return _.includes(drugnames, _.toLower(_.trim(req.query.drug)));
 				});
 			}
 
 			if (req.query.drug1 && req.query.drug2) {
 				let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
-				rules = rules.filter(rule => _.lowerCase(rule.r_Drugname) === `${_.lowerCase(req.query.drug1)} ${_.lowerCase(req.query.drug2)}` || 
-				_.lowerCase(rule.r_Drugname) === `${_.lowerCase(req.query.drug2)} ${_.lowerCase(req.query.drug1)}`);
+				rules = rules.filter(rule => _.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug1))}] [${_.toLower(_.trim(req.query.drug2))}]` || 
+				_.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug2))}] [${_.toLower(_.trim(req.query.drug1))}]`);
 				const reportIds = _.uniq(_.flattenDeep(rules.map(rule => rule.id.split(','))));
 				reports = _.at(_.keyBy(reports, 'primaryId'), reportIds);
 				res.send(reports);
