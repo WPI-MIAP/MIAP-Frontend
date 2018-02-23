@@ -53,8 +53,15 @@ const styles = {
   root: {
     background: '#AA2C3B'
   },
-  customWidth: {
-    width: 200,
+  dropDown: {
+    width: 165,
+    height: 56,
+    border: '1px white', 
+    borderStyle: 'solid',
+    borderRadius: 5,
+    paddingBottom: 6,
+    marginTop: 4,
+    marginLeft: 10,
   },
   elementRight: {
     display: 'flex',
@@ -515,7 +522,7 @@ export default class GlobalFilterNav extends React.Component {
               className="knownUnknown"
               value={this.state.value}
               onChange={this.handleChange} 
-              style={styles.customWidth}
+              style={styles.dropDown}
               autoWidth={false} 
               labelStyle={{ color: 'white' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -526,26 +533,28 @@ export default class GlobalFilterNav extends React.Component {
               <MenuItem value='known' primaryText="Known DIARs" />
               <MenuItem value='unknown' primaryText="Unknown DIARs" />
             </DropDownMenu> 
-            <div 
-              style={{position: 'relative', top: -75, marginLeft: 200}}>
-              <LineChart
-                width={274}
-                height={60}
-                data={data}
-                xMin={this.state.minScore}
-                xMax={this.state.maxScore}
-                yMax={0}
-                yMin={180}
-                hidePoints={true}
-                hideXLabel={true}
-                hideYLabel={true}
-                hideXAxis={true}
-                hideYAxis={true}
-                margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
-              <Range className='scoreMinMax scoreMinMax2'
-                defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-                style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
-                dotStyle={{display: 'none'}}/>
+            <div style={{height: 56, width: 312, position: 'relative', top: -56, marginLeft: 200, border: '1px white', borderStyle: 'solid', paddingBottom: 9, borderRadius: 5}}>
+              <div 
+                style={{position: 'absolute', bottom: 7}}>
+                <LineChart
+                  width={274}
+                  height={60}
+                  data={data}
+                  xMin={this.state.minScore}
+                  xMax={this.state.maxScore}
+                  yMax={0}
+                  yMin={180}
+                  hidePoints={true}
+                  hideXLabel={true}
+                  hideYLabel={true}
+                  hideXAxis={true}
+                  hideYAxis={true}
+                  margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
+                <Range className='scoreMinMax scoreMinMax2'
+                  defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
+                  style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                  dotStyle={{display: 'none'}}/>
+              </div>
             </div>
             {updating}
         </div>
@@ -805,7 +814,7 @@ export default class GlobalFilterNav extends React.Component {
                               className="knownUnknown"
                               value={this.state.value}
                               onChange={() => {}} 
-                              style={styles.customWidth}
+                              style={styles.dropDown}
                               autoWidth={false} 
                               labelStyle={{ color: 'white' }}
                               targetOrigin={{horizontal: 'right', vertical: 'top'}}
