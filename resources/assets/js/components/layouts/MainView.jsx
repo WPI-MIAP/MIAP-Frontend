@@ -588,25 +588,37 @@ export default class MainView extends Component {
 				was composed of: <br/><br/>
 				<b>Undergraduate Students:</b> 
 				<ul>
-					<li>Brian McCarthy, Senior, CS '18</li>
-					<li>Andrew Schade, Senior, CS '18</li>
-					<li>Huy Tran, Senior, CS '18</li>
-					<li>Brian Zylich, BS/MS Candidate, CS '19</li>
+					<li><b>Brian McCarthy</b>, Senior, CS '18</li>
+					<li><b>Andrew Schade</b>, Senior, CS '18</li>
+					<li><b>Huy Tran</b>, Senior, CS '18</li>
+					<li><b>Brian Zylich</b>, BS/MS Candidate, CS '19</li>
 				</ul>
 				<b>Graduate Student Mentors:</b>
 				<ul>
-					<li>Xiao Qin, PhD Candidate</li>
-					<li>Tabassum Kakar, PhD Candidate</li>
+					<li><b>Xiao Qin</b>, PhD Candidate</li>
+					<li><b>Tabassum Kakar</b>, PhD Candidate</li>
 				</ul>
-				<b>Faculty Advisor:</b> Elke Rundensteiner<br/>
-				<b>Visualization Expert:</b> Lane Harrison<br/>
-				<b>FDA Consultants:</b>
+				<b>Faculty:</b> <b>Prof. Rundensteiner</b> and <b>Prof. Harrison</b><br/>
+				<b>FDA:</b>
 				<ul>
-					<li>Sanjay K. Sahoo MS. MBA.</li>
-					<li>Suranjan De MS. MBA.</li>
+					<li><b>Suranjan De</b>, MS, MBA.<br/>{'Deputy Director, Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
+					<li><b>Sanjay K. Sahoo</b>, MS, MBA<br/>{'Team Lead (Acting) Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
+					<li><b>FDA Safety Evaluators:</b></li>
+					<ul>
+						<li><b>Christian Cao</b></li>
+						<li><b>Monica Munoz</b></li>
+						<li><b>Tingting Gao</b></li>
+						<li><b>Jo Wyeth</b></li>
+						<li><b>Oanh Dang</b></li>
+						<li><b>Cathy Miller</b></li>
+						<li><b>Madhuri Patel</b></li>
+					</ul>
 				</ul>
+				
+				Tabassum and Xiao are thankful to Oak Ridge Institute for Science and Education (ORISE) managed for the U.S. Department of Energy (DOE) by Oak Ridge Associated Universities (ORAU) for supporting this work.
 				<br/>
-				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
+				<br/>
+				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Prof. Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
 			</Dialog>
 			<Report 
 				tableTitle={this.state.tableTitle}
@@ -617,6 +629,7 @@ export default class MainView extends Component {
 				drugs={this.state.tableDrugs}
 				currentSelector={this.props.currentSelector}
 				nextTourStep={this.props.nextTourStep}
+				windowWidth={this.state.width}
 			/>
 	 	</div>
 		)
