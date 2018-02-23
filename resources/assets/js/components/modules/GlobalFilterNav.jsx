@@ -241,10 +241,12 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   handleChange(event, index, value) {
+    if(value !== this.state.value) {
+      this.props.isUpdating(true);
+    }
     this.setState({ 
       value: value,
     });
-    this.props.isUpdating(true);
     this.props.onClick(value)
   }
 
@@ -533,7 +535,7 @@ export default class GlobalFilterNav extends React.Component {
               <MenuItem value='known' primaryText="Known DIARs" />
               <MenuItem value='unknown' primaryText="Unknown DIARs" />
             </DropDownMenu> 
-            <div style={{height: 56, width: 312, position: 'relative', top: -56, marginLeft: 200, border: '1px white', borderStyle: 'solid', paddingBottom: 9, borderRadius: 5}}>
+            <div style={{height: 56, width: 312, position: 'relative', top: -56, marginLeft: 185, border: '1px white', borderStyle: 'solid', paddingBottom: 9, borderRadius: 5}}>
               <div 
                 style={{position: 'absolute', bottom: 7}}>
                 <LineChart
