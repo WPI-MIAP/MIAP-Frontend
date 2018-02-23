@@ -58,16 +58,16 @@ const styles = {
 		zIndex: 100
 	},
 	legendSevere: {
-		backgroundColor: 'black',
-		border: '3px solid grey',
+		backgroundColor: '#6A51A3',
+		border: '3px solid #A9B0B7',
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
 		textAlign: 'center'
 	},
 	legendNormal: {
-		backgroundColor: 'white',
-		border: '3px solid grey',
+		backgroundColor: '#A9B0B7',
+		border: '3px solid #A9B0B7',
 		borderRadius: '50%',
 		height: 25,
 		width: 25,

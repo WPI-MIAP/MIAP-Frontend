@@ -755,7 +755,7 @@ export default class GlobalFilterNav extends React.Component {
                             <li>The <b>root node</b> is the <b>selected drug</b></li>
                             <li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
                             <li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
-                            <li><b>Severe ADRs</b> are <b>black</b>, while <b>other ADRs</b> are <b>white</b></li>
+                            <li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
                             <li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
                           </ul>
                         </Col>
@@ -767,11 +767,11 @@ export default class GlobalFilterNav extends React.Component {
                               />
                               <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
                                 <Col style={{marginRight: 10}}>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#6A51A3', border: '#A9B0B7', borderStyle: 'solid'}}/>
                                   <div>Severe ADR</div>
                                 </Col>
                                 <Col>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#A9B0B7', border: '#A9B0B7', borderStyle: 'solid'}}/>
                                   <div>Normal ADR</div>
                                 </Col>
                               </Row>

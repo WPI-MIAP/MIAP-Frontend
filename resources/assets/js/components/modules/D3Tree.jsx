@@ -215,12 +215,15 @@ const renderTree = (treeData, svgDomNode) => {
       })
       .style("stroke", d => {
         if(d.data.Score) {
+          //border for ADR
           return "#A9B0B7";
         }
         else if(d.data.name === root.data.name) {
+          //border for base node
           return "#0069C0";
         }
         else if(d.data.maxScore) {
+          //border for interior nodes
           const score = d.data.maxScore;
           if (score < 0 || score <= 0) {
             return "#E8BA54";
@@ -238,16 +241,16 @@ const renderTree = (treeData, svgDomNode) => {
         else{
           return 'none';
         }
-        // return d.data.Score ? "#A9B0B7" : "none";
       })
 
       .style("fill", d => {
         if (d.data.name === root.data.name) {
-          // return '#5eafee';
+          //fill for base node
           return '#2C98F0';
         }
 
         if (d.data.maxScore) {
+          //fill for interior nodes
           const score = d.data.maxScore;
           if (score < 0 || score <= 0) {
             return low_color;
@@ -264,10 +267,12 @@ const renderTree = (treeData, svgDomNode) => {
         }
 
         if (d.data.critical) {
-          return 'black';
+          //fill for severe ADRs
+          return '#6A51A3';
         }
 
-        return "white"
+        //fill for regular ADRs
+        return "#A9B0B7";
       })
 
       .attr('cursor', 'pointer');
