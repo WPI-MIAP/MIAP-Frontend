@@ -15,21 +15,6 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 	`	
 }
 
-const generateColor = score => {
-	if (score <= 0.0) {
-		return '#fecc5c'
-	} 
-	else if (score > 0.0 && score <= 0.01) {
-		return '#fd8d3c'
-	}
-	else if (score > 0.01 && score <= 0.2) {
-		return '#f03b20'
-	}
-	else if (score > 0.2) {
-		return 'hsl(0, 100%, 25%)'
-	}
-}
-
 const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
 	return (filter !== 'all' && filter != status) || (score > maxScore || score < minScore)
 }
@@ -53,6 +38,7 @@ export default class DndGraph extends Component {
 		}
 
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
+		this.generateColor = this.generateColor.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -82,6 +68,21 @@ export default class DndGraph extends Component {
 		}
 	}
 
+	generateColor(score){
+		if (score <= this.props.scoreRange[0]) {
+			return '#fecc5c'
+		} 
+		else if (score > this.props.scoreRange[0] && score <= this.props.scoreRange[1]) {
+			return '#fd8d3c'
+		}
+		else if (score > this.props.scoreRange[1] && score <= this.props.scoreRange[2]) {
+			return '#f03b20'
+		}
+		else if (score > this.props.scoreRange[2]) {
+			return 'hsl(0, 100%, 25%)'
+		}
+	}
+
 	setNetworkInstance(nw) {
 		this.setState({ network: nw });
 	}
@@ -106,9 +107,9 @@ export default class DndGraph extends Component {
 			dashes: link.status === 'known',
 			width: link.status === 'known' ? 2 : 4,
 			color: {
-				color: generateColor(link.Score),
-				highlight: generateColor(link.Score),
-				hover: generateColor(link.Score),
+				color: this.generateColor(link.Score),
+				highlight: this.generateColor(link.Score),
+				hover: this.generateColor(link.Score),
 				opacity: 1.0
 			},
 			hidden: isEdgeHidden(this.props.filter, link.status, link.Score, this.props.minScore, this.props.maxScore)

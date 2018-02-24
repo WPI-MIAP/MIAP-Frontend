@@ -88,6 +88,7 @@ export const receiveRules = (status, json) => {
 		status,
 		rules: json.rules,
 		drugs: json.drugs,
+		scoreRange: json.scoreRange,
 	    receivedAt: Date.now()
 	}
 }

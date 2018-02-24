@@ -33,7 +33,8 @@ const mapStateToProps = state => {
 		selectedRule: state.addRules,
 		filter: state.visibilityFilter,
 		minScore: state.selectMinScore,
-		maxScore: state.selectMaxScore
+		maxScore: state.selectMaxScore,
+		scoreRange: state.rulesByStatus.all.scoreRange
 	}
 }
 

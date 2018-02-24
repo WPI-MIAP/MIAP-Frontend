@@ -115,7 +115,7 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
+											<DndTree scoreRange={this.props.scoreRange} testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
 										</div>
 									</div>
 								</Col>
@@ -161,7 +161,7 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} onClickEdge={this.props.onClickEdge} />
+											<DndTree scoreRange={this.props.scoreRange} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} onClickEdge={this.props.onClickEdge} />
 										</div>
 									</div>
 								</Col>

@@ -47,7 +47,19 @@ var exec = require('child_process').exec;
  	public async getRules(req: Request, res: Response, next: NextFunction) {
  		try {
 	 		let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
-	 		if (req.query.status === 'known') {
+			let maxScore = _.max(rules.map((rule) => (parseFloat(rule.Score))));
+			let minScore = _.min(rules.map((rule) => (parseFloat(rule.Score))));
+			let scoreRange = [];
+
+			let range = maxScore - minScore;
+			let numColors = 4;
+			for(var i=1; i <= numColors; i++) {
+				scoreRange.push(minScore + (i * range)/numColors);
+			}
+
+
+			// console.log("Min: " + minScore + " Max: " + maxScore);
+			if (req.query.status === 'known') {
 	 			rules = rules.filter(rule => rule.status === 'known');
 	 		} else if (req.query.status === 'unknown') {
 	 			rules = rules.filter(rule => rule.status === 'unknown');
@@ -96,7 +108,8 @@ var exec = require('child_process').exec;
 	 		const drugs = getDrugsFromRules(rules);
 	 		res.json({
 	 			drugs,
-	 			rules
+	 			rules,
+				scoreRange
 	 		});
  		} catch (err) {
  			console.log(err);

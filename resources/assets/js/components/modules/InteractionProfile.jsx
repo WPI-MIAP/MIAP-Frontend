@@ -165,7 +165,7 @@ export class InteractionProfile extends Component {
   render() {
     return (
       <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%'}}>
-        <D3Tree treeData={this.state.myTreeData}/>
+        <D3Tree scoreRange={this.props.scoreRange} treeData={this.state.myTreeData}/>
       </div>
     )
   }

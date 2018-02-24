@@ -675,6 +675,7 @@ export default class GlobalFilterNav extends React.Component {
                                 filter='all'
                                 minScore={-50}
                                 maxScore={50}
+                                scoreRange={this.props.scoreRange}
                               />
                             </Paper>
                             <Col style={{marginLeft: 20}}>
@@ -683,19 +684,19 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
-                                <div><p>{'Under 0.0'}</p></div>
+                                <div><p>{'Low'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
-                                <div><p>{'0.0 - 0.01'}</p></div>
+                                <div><p>{'Medium Low'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
-                                <div><p>{'0.01 - 0.2'}</p></div>
+                                <div><p>{'Medium High'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
-                                <div><p>{'Above 0.2'}</p></div>
+                                <div><p>{'High'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -728,6 +729,7 @@ export default class GlobalFilterNav extends React.Component {
                                 cols={4}
                                 selectedDrug={dummyData.selectedDrug}
                                 testExample={true}
+                                scoreRange={this.props.scoreRange}
                               />
                             </Paper>
                             <Col style={{marginLeft: 20}}>
@@ -775,6 +777,7 @@ export default class GlobalFilterNav extends React.Component {
                             <Paper zDepth={1} style={{height: 210, width: '100%', overflow: 'hidden',}}>
                               <InteractionProfile
                                 helpExample={true}
+                                scoreRange={this.props.scoreRange}
                               />
                               <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
                                 <Col style={{marginRight: 10}}>

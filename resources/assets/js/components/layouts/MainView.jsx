@@ -75,21 +75,6 @@ const styles = {
 	}
 };
 
-const generateColor = score => {
-	if (score <= 0.0) {
-		return '#fecc5c'
-	} 
-	else if (score > 0.0 && score <= 0.01) {
-		return '#fd8d3c'
-	}
-	else if (score > 0.01 && score <= 0.2) {
-		return '#f03b20'
-	}
-	else if (score > 0.2) {
-		return 'hsl(0, 100%, 25%)'
-	}
-}
-
 export default class MainView extends Component {
 	constructor(props) {
 		super(props);
@@ -120,6 +105,7 @@ export default class MainView extends Component {
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
 		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.generateColor = this.generateColor.bind(this);
 	}
 
 	componentDidMount() {
@@ -129,6 +115,21 @@ export default class MainView extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	generateColor(score){
+		if (score <= this.props.scoreRange[0]) {
+			return '#fecc5c'
+		} 
+		else if (score > this.props.scoreRange[0] && score <= this.props.scoreRange[1]) {
+			return '#fd8d3c'
+		}
+		else if (score > this.props.scoreRange[1] && score <= this.props.scoreRange[2]) {
+			return '#f03b20'
+		}
+		else if (score > this.props.scoreRange[2]) {
+			return 'hsl(0, 100%, 25%)'
+		}
 	}
 
 	updateWindowDimensions() {
@@ -158,7 +159,7 @@ export default class MainView extends Component {
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
+		const avatarColor = report.type === 'drug' ? "#2C98F0" : this.generateColor(this.props.links.filter((link) => {
 			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
 			return match;
@@ -394,9 +395,7 @@ export default class MainView extends Component {
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
 										isUpdating={this.props.isUpdating}
-										// colGalaxy={this.state.colGalaxy}
-										// colProfile={this.state.colProfile}
-										// colOverview={this.state.colOverview}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 									<Col>
@@ -404,21 +403,22 @@ export default class MainView extends Component {
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Score &lt; 0.0</div>
+												<div style={{textAlign: 'center'}}>Low</div>
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[1], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0.0 - 0.01</div>
+												<div style={{textAlign: 'center'}}>Medium Low</div>
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[2], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0.01 - 0.2</div>
+												<div style={{textAlign: 'center'}}>Medium High</div>
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[3], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Above 0.2</div>
+												<div style={{textAlign: 'center'}}>High</div>
 											</Col>
 										</Row>
+										<Row><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -471,6 +471,7 @@ export default class MainView extends Component {
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
 										handleOpen={this.handleOpen}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 									<Col>
@@ -498,6 +499,7 @@ export default class MainView extends Component {
 												<div style={{textAlign: 'center'}}>4+</div>
 											</Col>
 										</Row>
+										<Row><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -533,6 +535,7 @@ export default class MainView extends Component {
 									<InteractionProfile 
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
+										scoreRange={this.props.scoreRange}
 									/>
 									{/* <Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
 										<Col style={{marginRight: 10}}>
@@ -550,15 +553,16 @@ export default class MainView extends Component {
 									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
 										<Col xs={4} md={4}>
 											<div style={styles.legendSevere}>
-												<span style={{ marginLeft: 30 }}>Severe&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Severe</span>
 											</div>
 										</Col>
 										<Col xs={4} md={4}>
 											<div style={styles.legendNormal}>
-												<span style={{ marginLeft: 30 }}>Normal&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
 											</div>
 										</Col>
 									</Row>
+									<Row><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
 								</Col>
 							</Paper>
 						</Col>
