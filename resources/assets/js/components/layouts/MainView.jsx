@@ -1,28 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types';
 import DndGraph from '../modules/DndGraph';
 import InteractionProfile from '../modules/InteractionProfile';
 import DndTreeContainer from './DndTreeContainer';
-import { Resizable, ResizableBox } from 'react-resizable';
-import IconMenu from 'material-ui/IconMenu';
 import {GridList, GridTile} from 'material-ui/GridList';
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
-import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
 import Share from 'material-ui/svg-icons/social/share';
-import {blue300, indigo900} from 'material-ui/styles/colors';
-import * as d3 from 'd3';
-
-import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Chip from 'material-ui/Chip';
-import 'intro.js/introjs.css';
-import Steps from 'intro.js-react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
@@ -31,10 +20,8 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-
-
-const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
-const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
+import { dmeColors, scoreColors } from '../../utilities/constants'
+import { generateColor } from '../../utilities/functions'
 
 const styles = {
 	root: {
@@ -44,7 +31,6 @@ const styles = {
 	},
 	gridList: {
 		width: window.clientWidth,
-		// border: '1px solid grey'
 	},
 	chip: {
 		margin: 4,
@@ -73,21 +59,6 @@ const styles = {
 		textAlign: 'center'
 	}
 };
-
-const generateColor = score => {
-	if (score <= 0.0) {
-		return '#fecc5c'
-	} 
-	else if (score > 0.0 && score <= 0.01) {
-		return '#fd8d3c'
-	}
-	else if (score > 0.01 && score <= 0.2) {
-		return '#f03b20'
-	}
-	else if (score > 0.2) {
-		return 'hsl(0, 100%, 25%)'
-	}
-}
 
 export default class MainView extends Component {
 	constructor(props) {
@@ -158,9 +129,8 @@ export default class MainView extends Component {
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
 		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
-			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
+			return ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
-			return match;
 		})[0].Score);
 		return (
 			<Chip
@@ -246,7 +216,6 @@ export default class MainView extends Component {
 	toggleFullscreenGalaxy() {
 		this.setState((prevState, props) => {
 			return {
-				// col: prevState.col == 4 ? 12 : 4,
 				col: 12,
 				isOverviewFullscreen: false,
 				isGalaxyFullscreen: true,
@@ -259,7 +228,6 @@ export default class MainView extends Component {
 		this.setState((prevState, props) => {
 			return {
 				col: 12,
-				// col: prevState.col == 4 ? 12 : 4,
 				isOverviewFullscreen: false,
 				isGalaxyFullscreen: false,
 				isProfileFullscreen: true
@@ -268,13 +236,13 @@ export default class MainView extends Component {
 	}
 
 	getTabsIndex() {
-		if(this.state.isOverviewFullscreen) {
+		if (this.state.isOverviewFullscreen) {
 			return 0;
-		}else if(this.state.isGalaxyFullscreen) {
+		} else if (this.state.isGalaxyFullscreen) {
 			return 1;
-		}else if(this.state.isProfileFullscreen) {
+		} else if (this.state.isProfileFullscreen) {
 			return 2;
-		}else {
+		} else {
 			return 0;
 		}
 	}
@@ -320,7 +288,7 @@ export default class MainView extends Component {
 						style={{
 							position: 'absolute',
 							right: 30,
-							bottom: '5vh',
+							bottom: 30,
 							zIndex: 100,
 							display: this.state.col === 12 ? 'block' : 'none'
 						}}
@@ -349,13 +317,10 @@ export default class MainView extends Component {
 									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
 									className="overview overview2"
-									// titleBackground="#24915C"
 									titleBackground="#2D3E46"
 									style={{
-										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
-
 									}}
 									actionIcon={
 										<IconButton 
@@ -381,36 +346,22 @@ export default class MainView extends Component {
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
 										isUpdating={this.props.isUpdating}
-										// colGalaxy={this.state.colGalaxy}
-										// colProfile={this.state.colProfile}
-										// colOverview={this.state.colOverview}
 									/>
 								</GridTile>
 									<Col>
 										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
-											<Col xs={3} md={3}>
-												<div style={{height: 5, width: 50, background: scoreColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Score &lt; 0.0</div>
-											</Col>
-											<Col xs={3} md={3}>
-												<div style={{height: 5, width: 50, background: scoreColors[1], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0.0 - 0.01</div>
-											</Col>
-											<Col xs={3} md={3}>
-												<div style={{height: 5, width: 50, background: scoreColors[2], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0.01 - 0.2</div>
-											</Col>
-											<Col xs={3} md={3}>
-												<div style={{height: 5, width: 50, background: scoreColors[3], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Above 0.2</div>
-											</Col>
+											{scoreColors.map(scoreColor => (
+												<Col xs={3} md={3}>
+													<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
+													<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
+												</Col>
+											))}
 										</Row>
 									</Col>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
-							// display: this.state.colOverview == 4 && this.state.colProfile == 4 ? 'block' : 'none',
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
 							top: this.state.col == 12 ? -14 : 0
 						}}
@@ -436,12 +387,8 @@ export default class MainView extends Component {
 									}
 									titleBackground="#2D3E46"
 									style={{
-										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
-										// top: this.state.colGalaxy == 12 ? -14 : 0
-										// overflow: 'auto',
-										// marginTop: 75
 									}}
 									cols={this.state.colGalaxy}
 								>
@@ -463,43 +410,25 @@ export default class MainView extends Component {
 									<Col>
 										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
+										{dmeColors.map(dmeColor => (
 											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0 Severe</div>
+												<div style={{height: 5, width: 50, background: dmeColor.color, margin: '0 auto'}}/>
+												<div style={{textAlign: 'center'}}>{dmeColor.text}</div>
 											</Col>
-											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColors[1], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>1</div>
-											</Col>
-											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColors[2], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>2</div>
-											</Col>
-											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColors[3], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>3</div>
-											</Col>
-
-											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColors[4], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>4+</div>
-											</Col>
+										))}
 										</Row>
 									</Col>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
-							// display: this.state.colGalaxy == 4 && this.state.colOverview == 4 ? 'block' : 'none',
 							display: (this.state.col === 12 && (this.state.isGalaxyFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
 							top: this.state.col == 12 ? -14 : 0
 						}}>
 							<Paper zDepth={1}>
 								<GridTile
-									// title={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")}
 									title={this.state.col != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
 									titlePosition="top"
 									className="profile"
-									// titleBackground="#2B81AC"
 									titleBackground="#2D3E46"
 									style={{
 										// border: '1px solid #F0F0F0', 
@@ -521,16 +450,6 @@ export default class MainView extends Component {
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
 									/>
-									{/* <Row style={{float: 'right', position: 'relative', zIndex: 400, marginRight: 10, marginTop: -80, padding: 5, background: 'white', border: 'black', borderStyle: 'solid'}}>
-										<Col style={{marginRight: 10}}>
-											<div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
-											<div>Severe ADR</div>
-										</Col>
-										<Col>
-											<div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
-											<div>Normal ADR</div>
-										</Col>
-									</Row> */}
 								</GridTile>
 								<Col>
 									<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
@@ -561,8 +480,6 @@ export default class MainView extends Component {
 						</Col>
 						<Col sm={6} style={{textAlign: 'right'}}>
 							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
-							{/* {' | '}
-							<a onClick={() => {this.setState({contactUs: true})}} style={{color: 'white'}}>Contact Us</a> */}
 						</Col>
 					</Row>
 			</Grid>
@@ -600,16 +517,6 @@ export default class MainView extends Component {
 				<br/>
 				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
 			</Dialog>
-			{/* <Dialog
-              title="Contact Us"
-              contentStyle={{width: "60%", maxWidth: "none"}}
-              actions={actions}
-              modal={false}
-              open={this.state.contactUs}
-              onRequestClose={() => {this.setState({contactUs: false})}}
-              autoScrollBodyContent={true}>
-
-			</Dialog> */}
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}
