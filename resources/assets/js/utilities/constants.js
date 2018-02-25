@@ -1,3 +1,4 @@
+import React from 'react';
 
 //COLORS
 	export const dmeColors = [
@@ -40,4 +41,9 @@
 	export const complementaryColor = '#2D3E46';
 
 
-//
+//images
+	export const wpiLogo = <img style={{
+		height: 45,
+		marginLeft: 10
+	}} 
+	src={require('../../../images/WPI_Inst_Prim_White_Rev.png')} />;

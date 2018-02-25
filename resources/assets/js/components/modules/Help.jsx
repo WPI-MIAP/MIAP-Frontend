@@ -12,42 +12,11 @@ import InteractionProfile from './InteractionProfile';
 import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor } from '../../utilities/constants';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import LineChart from 'react-linechart';
-import 'react-linechart/dist/styles.css';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
-import 'rc-slider/assets/index.css';
-
-const Slider = require('rc-slider');
-const createSliderWithTooltip = Slider.createSliderWithTooltip;
-const Range = createSliderWithTooltip(Slider.Range);
+import DistributionRangeSlider from './DistributionRangeSlider';
+import KnownUnknownDropDown from './KnownUnknownDropDown';
 
 const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
-
-const styles = {
-	dropDown: {
-	  width: 165,
-	  height: 56,
-	  border: '1px white', 
-	  borderStyle: 'solid',
-	  borderRadius: 5,
-	  paddingBottom: 6,
-	  marginTop: 4,
-	  marginLeft: 10,
-	},
-	slider: {
-	  position: 'relative',
-	  top: -10,
-	  width: 200,
-	  zIndex: 1200,
-	  marginLeft: 55
-	},
-	sliderTip: {
-	  position: 'relative',
-	  zIndex: 1200,
-	  placement: 'bottom',
-	  background: 'black'
-	}
-  };
   
 
 const dummyData = {
@@ -160,8 +129,8 @@ export default class Help extends Component {
 	constructor(props) {
 	  super(props);
 	  this.state = {
-		dialogOpen: false,
-		helpBarSelectedIndex: -1
+			dialogOpen: false,
+			helpBarSelectedIndex: -1
 	  }
 
 	  this.startTour = this.startTour.bind(this);
@@ -339,18 +308,18 @@ export default class Help extends Component {
 									<Row>
 									<Paper zDepth={1} style={{height: 210, width: '100%', overflow: 'hidden',}}>
 										<InteractionProfile
-										helpExample={true}
-										scoreRange={this.props.scoreRange}
-										/>
+											helpExample={true}
+											scoreRange={this.props.scoreRange}
+											/>
 										<Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
-										<Col style={{marginRight: 10}}>
-											<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
-											<div>Severe ADR</div>
-										</Col>
-										<Col>
-											<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
-											<div>Normal ADR</div>
-										</Col>
+											<Col style={{marginRight: 10}}>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div>Severe ADR</div>
+											</Col>
+											<Col>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div>Normal ADR</div>
+											</Col>
 										</Row>
 									</Paper>
 									</Row>
@@ -375,45 +344,20 @@ export default class Help extends Component {
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
-									<Paper zDepth={1} style={{background: primaryColor, width: 200, height: 64}}>
-									<DropDownMenu 
-										className="knownUnknown"
-										value={this.props.dropDownValue}
-										onChange={() => {}} 
-										style={styles.dropDown}
-										autoWidth={false} 
-										labelStyle={{ color: 'white' }}
-										targetOrigin={{horizontal: 'right', vertical: 'top'}}
-										anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-										selectedMenuItemStyle={{ color: primaryColor }}
-									>
-										<MenuItem value='all' primaryText="All DIARs" />
-										<MenuItem value='known' primaryText="Known DIARs" />
-										<MenuItem value='unknown' primaryText="Unknown DIARs" />
-									</DropDownMenu> 
+									<Paper zDepth={1} style={{background: primaryColor, width: 185, height: 64}}>
+										<KnownUnknownDropDown
+											isUpdating={() => {}}
+											onClick={() => {}}/>
 									</Paper>
-									<Paper zDepth={1} style={{background: primaryColor, width: 310, height: 64, marginTop: 10}}>
-									<div 
-										style={{position: 'relative', top: -25, marginLeft: 0}}>
-										<LineChart
-										width={274}
-										height={60}
-										data={this.props.scoreDistribution}
-										xMin={this.props.minScore}
-										xMax={this.props.maxScore}
-										yMax={0}
-										yMin={180}
-										hidePoints={true}
-										hideXLabel={true}
-										hideYLabel={true}
-										hideXAxis={true}
-										hideYAxis={true}
-										margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
-										<Range className='scoreMinMax scoreMinMax2'
-										defaultValue={[this.props.minScore, this.props.maxScore]} allowCross={false} min={this.props.minScore} max={this.props.maxScore} step={0.01} onAfterChange={() => {}} 
-										style={styles.slider} tipProps={styles.sliderTip} marks={dummyMarks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
-										dotStyle={{display: 'none'}}/>
-									</div>
+									<Paper zDepth={1} style={{background: primaryColor, width: 320, height: 64, marginTop: 10, paddingLeft: 4}}>
+									{
+										<DistributionRangeSlider
+											rules={this.props.rules} 
+											updateMinScore={() => {}} 
+											updateMaxScore={() => {}}
+											isUpdating={() => {}}
+											helpExample={true}/>
+									}
 									</Paper>
 								</Col>
 								</Row>
