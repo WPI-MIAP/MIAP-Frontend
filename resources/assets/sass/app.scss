@@ -5,6 +5,8 @@ $fa-font-path: '~font-awesome/fonts';
 @import './modules/navigation';
 @import './modules/navbar.sass';
 @import '~react-joyride/lib/react-joyride';
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
 
 .vis-tooltip {
 	position: absolute !important;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
 import CircularProgress from 'material-ui/CircularProgress';
+import { generateColor } from '../../utilities/functions';
+import {baseNodeColor} from '../../utilities/constants';
 
 let network = null;
 
@@ -13,21 +15,6 @@ const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
 		<div>Score: ${Score}</div>
 		<div>Status: ${status}</div>
 	`	
-}
-
-const generateColor = score => {
-	if (score <= 0.0) {
-		return '#fecc5c'
-	} 
-	else if (score > 0.0 && score <= 0.01) {
-		return '#fd8d3c'
-	}
-	else if (score > 0.01 && score <= 0.2) {
-		return '#f03b20'
-	}
-	else if (score > 0.2) {
-		return 'hsl(0, 100%, 25%)'
-	}
 }
 
 const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
@@ -106,9 +93,9 @@ export default class DndGraph extends Component {
 			dashes: link.status === 'known',
 			width: link.status === 'known' ? 2 : 4,
 			color: {
-				color: generateColor(link.Score),
-				highlight: generateColor(link.Score),
-				hover: generateColor(link.Score),
+				color: generateColor(link.Score, this.props.scoreRange),
+				highlight: generateColor(link.Score, this.props.scoreRange),
+				hover: generateColor(link.Score, this.props.scoreRange),
 				opacity: 1.0
 			},
 			hidden: isEdgeHidden(this.props.filter, link.status, link.Score, this.props.minScore, this.props.maxScore)
@@ -135,7 +122,7 @@ export default class DndGraph extends Component {
 			},
 			nodes: {
 				shape: 'dot',
-				color: '#2C98F0',
+				color: baseNodeColor,
 				size: 10,
 				font: {
 					color: '#343434',

@@ -12,7 +12,8 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import Dialog from 'material-ui/Dialog';
-import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
+import {barColor, barSelectedColor} from '../../utilities/constants';
 
 
 export default class Report extends React.Component {
@@ -75,10 +76,10 @@ export default class Report extends React.Component {
         //sort drug frequencies in descending order
         freqs = _.sortBy(freqs, [(d) => (d['freq'])]).reverse();
 
-        //select up to top 10 drugs for visualization in bar graph
+        //select up to top 30 drugs for visualization in bar graph
         var graphData = [];
         var i = 0;
-        while(i < 10 && i < freqs.length) {
+        while(i < 30 && i < freqs.length) {
           graphData.push(freqs[i]);
           i++;
         }
@@ -91,7 +92,6 @@ export default class Report extends React.Component {
     render() {
       return (
         <Dialog
-          className="report"
           title={_.upperFirst(this.props.tableTitle) + ' (' + this.props.tableData.length + ' results)'}
           actions={this.props.actions}
           modal={false}
@@ -99,6 +99,7 @@ export default class Report extends React.Component {
           onRequestClose={this.props.handleClose}
           autoScrollBodyContent={true}
           contentStyle={{width: "90%", maxWidth: "none", overflow: 'auto' }}
+          className="report"
         >
         {
           (this.props.tableData === null || this.props.tableData === undefined || this.props.tableData.length == 0) ? (
@@ -107,14 +108,16 @@ export default class Report extends React.Component {
             </span>
           ) : (
             <div>
-              <BarChart width={400} height={100} data={this.state.drugFreqs}>
-                <XAxis hide={true} dataKey="name" />
+              <BarChart style={{margin: '0 auto'}} width={this.props.windowWidth * 0.8} height={100} data={this.state.drugFreqs}>
+                <XAxis tick={false} hide={false} dataKey="name">
+                  <Label value="Drug Co-occurrences" offset={10} position="insideBottom" />
+                </XAxis>
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="freq" onClick={this.handleBarClick}>
                   {
                     this.state.drugFreqs.map((entry, index) => (
-                      <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? '#2C98F0' : '#73B8F0'} key={`cell-${index}`}/>
+                      <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? barSelectedColor : barColor} key={`cell-${index}`}/>
                     ))
                   }
                 </Bar>
@@ -163,7 +166,7 @@ export default class Report extends React.Component {
                       return null;
                     }
                     return (
-                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: '#2C98F0'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
+                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: barSelectedColor, color: 'black'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
                       >
                         <TableRowColumn>{data.primaryId}</TableRowColumn>
                         <TableRowColumn>{data.event_dt}</TableRowColumn>
@@ -185,7 +188,7 @@ export default class Report extends React.Component {
                           {
                             _.split(data.drugname, ',').map((drug, index, array) => (
                               <div>
-                                <a onClick={this.createOnClickDrugListener(drug)} key={drug}>{_.capitalize(_.trim(drug))}</a>
+                                <a style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {color: 'black'} : {}} onClick={this.createOnClickDrugListener(drug)} key={drug}>{_.capitalize(_.trim(drug))}</a>
                                 {(index !== array.length-1) ? ',' : ''}
                               </div>
                             ))

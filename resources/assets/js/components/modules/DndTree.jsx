@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
+import {baseNodeColor} from '../../utilities/constants';
+import {generateColor} from '../../utilities/functions';
 
 
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
@@ -32,21 +34,6 @@ const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
 		(filter === 'unknown' && status === 'unknown') || 
 		filter === 'all') ||
 		(score > maxScore || score < minScore)
-}
-
-const generateColor = score => {
-	if (score <= 0.0) {
-		return '#fecc5c'
-	} 
-	else if (score > 0.0 && score <= 0.01) {
-		return '#fd8d3c'
-	}
-	else if (score > 0.01 && score <= 0.2) {
-		return '#f03b20'
-	}
-	else if (score > 0.2) {
-		return 'hsl(0, 100%, 25%)'
-	}
 }
 
 export default class DndTree extends Component {
@@ -100,7 +87,7 @@ export default class DndTree extends Component {
 			hidden: isNodeHidden(this.props.filter, this.props.data.rules, node, this.props.currentDrug, this.props.minScore, this.props.maxScore),
 			color: node != this.props.currentDrug ? generateColor(this.props.data.rules.find(el => 
 				(el.Drug1.name == node || el.Drug2.name == node)
-			).Score) : '#349AED'
+			).Score, this.props.scoreRange) : baseNodeColor
 		}))
 
 		const graph = {

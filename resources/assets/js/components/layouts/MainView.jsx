@@ -20,8 +20,11 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import { dmeColors, scoreColors } from '../../utilities/constants'
-import { generateColor } from '../../utilities/functions'
+import { dmeColors, scoreColors, regularADRColor, adrBorderColor, complementaryColor, selectedColor, baseNodeColor, secondaryColor } from '../../utilities/constants';
+import { generateColor } from '../../utilities/functions';
+import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
+import Footer from '../modules/Footer';
+import Slider from 'react-slick';
 
 const styles = {
 	root: {
@@ -43,16 +46,16 @@ const styles = {
 		zIndex: 100
 	},
 	legendSevere: {
-		backgroundColor: 'black',
-		border: '3px solid grey',
+		backgroundColor: dmeColors[3].color,
+		border: '3px solid ' + adrBorderColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
 		textAlign: 'center'
 	},
 	legendNormal: {
-		backgroundColor: 'white',
-		border: '3px solid grey',
+		backgroundColor: regularADRColor,
+		border: '3px solid ' + adrBorderColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
@@ -77,7 +80,6 @@ export default class MainView extends Component {
 			width: 0,
 			height: 0,
 			aboutUs: false,
-			contactUs: false,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -89,6 +91,7 @@ export default class MainView extends Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
+		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
 
@@ -106,14 +109,6 @@ export default class MainView extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
-		// 	nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(nextProps.selectedDrug)) && chip.drugs[1] === undefined)) == undefined) {
-		// 	var chips = this.state.reportChips;
-		// 	chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
-		// 	this.setState({reportChips: chips});
-		// }
-		console.log(nextProps.currentDrugs);
-		
 		nextProps.currentDrugs.forEach(drug => {
 			if (! _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(drug[0])) && ! chip.drugs[1]))) {
 				let chips = this.state.reportChips;
@@ -145,10 +140,12 @@ export default class MainView extends Component {
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
-			return ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
+
+		const avatarColor = report.type === 'drug' ? baseNodeColor : generateColor(this.props.links.filter((link) => {
+			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
-		})[0].Score);
+			return match;
+		})[0].Score, this.props.scoreRange);
 		return (
 			<Chip
 				key={title}
@@ -173,7 +170,7 @@ export default class MainView extends Component {
 						tableData: response.data,
 						tableDrugs: [report.drugs[0]],
 					});
-					if(this.props.currentSelector === '.galaxy2') {
+					if(this.props.currentSelector === '.galaxyReports') {
 						this.props.nextTourStep();
 					}	
 				});
@@ -204,7 +201,6 @@ export default class MainView extends Component {
 			tableTitle: '',
 			tableData: [],
 			aboutUs: false,
-			contactUs: false,
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();
@@ -283,20 +279,58 @@ export default class MainView extends Component {
 		});
 	}
 
-	onClickNodeTour(drug) {
-		this.props.onClickNode(drug);
+	onClickEdgeTour(interaction) {
+		this.props.onClickEdge(interaction);
 		if(this.props.currentSelector === '.overview2'){
 			this.props.nextTourStep();
 		}
 	}
 
+	onClickNodeTour(drug) {
+		this.props.onClickNode(drug);
+		if(this.props.currentSelector === '.overview3'){
+			this.props.nextTourStep();
+		}
+	}
+
 	render() {
+		const settings = {
+			dots: true,
+			infinite: false,
+			speed: 500,
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			initialSlide: 0,
+			responsive: [{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 3,
+					infinite: true,
+					dots: true
+				}
+			}, {
+				breakpoint: 600,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 2,
+					initialSlide: 2
+				}
+			}, {
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1
+				}
+			}]
+		};
+
 		const actions = [
-      <FlatButton
-        label="Close"
-        primary={true}
-        onClick={this.handleClose}
-      />
+			<FlatButton
+				label="Close"
+				primary={true}
+				onClick={this.handleClose}
+			/>
 		];
 		
 		let topPosition;
@@ -309,12 +343,21 @@ export default class MainView extends Component {
 			topPosition = 0;
 		}
 
+		let profileTitle = 'Interaction Profile';
+		if (this.props.selectedDrug != '') {
+			profileTitle += `: ${_.capitalize(this.props.selectedDrug)}`;
+		} else if (this.props.selectedRule != '') {
+			const drugsString = this.props.selectedRule.split(' --- ').map(drug => _.capitalize(drug)).join(' - ');
+			profileTitle += `: ${drugsString}`;
+		}
+		// const profileTitle = this.state.col != 12 ? ('Interaction Profile ' + drugString) : '';
+
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 15, height: '80vh'}}>
+				<Grid fluid style={{ marginTop: 10, height: '70vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
-						backgroundColor={'#2D3E46'}
+						backgroundColor={complementaryColor}
 						style={{
 							position: 'absolute',
 							right: 30,
@@ -325,16 +368,22 @@ export default class MainView extends Component {
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
+					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
+						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54}}/>
+						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
+							{this.state.reportChips.map(this.renderChip, this)}
+						</div>
+					</Paper>
 					<Row>
 						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
 								display: this.state.col === 4 ? 'none' : 'block'}}
-								inkBarStyle={{background: '#29ACBF', height: '4px', marginTop: '-4px'}}
+								inkBarStyle={{background: selectedColor, height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
-								<Tab label={'Overview'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenOverview} value={0}/>
-								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
-								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenProfile} value={2}/>
+								<Tab label={'Overview'} style={{background: complementaryColor}} onActive={this.toggleFullscreenOverview} value={0}/>
+								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: complementaryColor}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+								<Tab label={profileTitle} style={{background: complementaryColor}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -346,8 +395,8 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
-									className="overview overview2"
-									titleBackground="#2D3E46"
+									className="overview overview2 overview3"
+									titleBackground={complementaryColor}
 									style={{
 										boxSizing: 'border-box',
 										background: 'white',
@@ -370,16 +419,17 @@ export default class MainView extends Component {
 										height={this.props.height} 
 										selectedDrug={this.props.selectedDrug}
 										onClickNode={this.onClickNodeTour}
-										onClickEdge={this.props.onClickEdge}
+										onClickEdge={this.onClickEdgeTour}
 										isFetching={this.props.isFetching}
 										filter={this.props.filter}
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
 										isUpdating={this.props.isUpdating}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 									<Col>
-										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 											{scoreColors.map(scoreColor => (
 												<Col xs={3} md={3}>
@@ -388,6 +438,7 @@ export default class MainView extends Component {
 												</Col>
 											))}
 										</Row>
+										<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -401,7 +452,7 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
-									className="galaxy galaxy2"
+									className="galaxy"
 									actionIcon={ 
 										<div>
 											<IconButton 
@@ -415,31 +466,41 @@ export default class MainView extends Component {
 											<TreeViewFilterContainer /> 
 										</div>
 									}
-									titleBackground="#2D3E46"
+									titleBackground={complementaryColor}
 									style={{
 										boxSizing: 'border-box',
 										background: 'white',
 									}}
 									cols={this.state.colGalaxy}
 								>
-									<DndTreeContainer 
-										currentDrugs={this.props.currentDrugs}
-										filter={this.props.filter}
-										minScore={this.props.minScore}
-										maxScore={this.props.maxScore}
-										width={this.props.width}
-										height={this.props.height} 
-										onClickNode={this.props.showDetailNode}
-										onClickEdge={this.props.onClickEdge}
-										onDeleteNode={this.props.deleteNode}
-										onClearDrug={this.props.clearSearchTerm}
-										cols={this.state.col}
-										selectedDrug={this.props.selectedDrug}
-										handleOpen={this.handleOpen}
-									/>
+									{
+										_.isEmpty(this.props.currentDrugs) ? 
+										<div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+											<h4 style={{ color: 'grey' }}>
+												No drugs are being selected
+											</h4>
+										</div> :
+										<DndTreeContainer 
+											currentDrugs={this.props.currentDrugs}
+											filter={this.props.filter}
+											minScore={this.props.minScore}
+											maxScore={this.props.maxScore}
+											width={this.props.width}
+											height={this.props.height} 
+											onClickNode={this.props.showDetailNode}
+											onClickEdge={this.props.onClickEdge}
+											onDeleteNode={this.props.deleteNode}
+											onClearDrug={this.props.clearSearchTerm}
+											cols={this.state.col}
+											selectedDrug={this.props.selectedDrug}
+											handleOpen={this.handleOpen}
+											scoreRange={this.props.scoreRange}
+											dmeRange={this.props.dmeRange}
+										/>
+									}
 								</GridTile>
 									<Col>
-										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 										{dmeColors.map(dmeColor => (
 											<Col xs={2.4} md={2.4}>
@@ -448,6 +509,7 @@ export default class MainView extends Component {
 											</Col>
 										))}
 										</Row>
+										<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -457,12 +519,11 @@ export default class MainView extends Component {
 						}}>
 							<Paper zDepth={1}>
 								<GridTile
-									title={this.state.col != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
+									title={this.state.col != 12 ? profileTitle : ''}
 									titlePosition="top"
 									className="profile"
-									titleBackground="#2D3E46"
+									titleBackground={complementaryColor}
 									style={{
-										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
 									}}
@@ -480,74 +541,30 @@ export default class MainView extends Component {
 									<InteractionProfile 
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 								<Col>
-									<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+									<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
 										<Col xs={4} md={4}>
 											<div style={styles.legendSevere}>
-												<span style={{ marginLeft: 30 }}>Severe&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Severe</span>
 											</div>
 										</Col>
 										<Col xs={4} md={4}>
 											<div style={styles.legendNormal}>
-												<span style={{ marginLeft: 30 }}>Normal&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
 											</div>
 										</Col>
 									</Row>
+									<Row style={{paddingBottom: 10}}><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
 								</Col>
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0'}}> 
-							{this.state.reportChips.map(this.renderChip, this)}
-					</Row>
-					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
-						<Col sm={6}>
-							<p style={{textAlign: 'left'}}>
-								© 2018. Worcester Polytechnic Institute. All Rights Reserved.
-							</p>
-						</Col>
-						<Col sm={6} style={{textAlign: 'right'}}>
-							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
-						</Col>
-					</Row>
+					<Footer />
 			</Grid>
-			<Dialog
-              title="About Us"
-              contentStyle={{width: "60%", maxWidth: "none"}}
-              actions={actions}
-              modal={false}
-              open={this.state.aboutUs}
-              onRequestClose={() => {this.setState({aboutUs: false})}}
-              autoScrollBodyContent={true}
-			>
-				<br/>
-				This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
-				was composed of: <br/><br/>
-				<b>Undergraduate Students:</b> 
-				<ul>
-					<li>Brian McCarthy, Senior, CS '18</li>
-					<li>Andrew Schade, Senior, CS '18</li>
-					<li>Huy Tran, Senior, CS '18</li>
-					<li>Brian Zylich, BS/MS Candidate, CS '19</li>
-				</ul>
-				<b>Graduate Student Mentors:</b>
-				<ul>
-					<li>Xiao Qin, PhD Candidate</li>
-					<li>Tabassum Kakar, PhD Candidate</li>
-				</ul>
-				<b>Faculty Advisor:</b> Elke Rundensteiner<br/>
-				<b>Visualization Expert:</b> Lane Harrison<br/>
-				<b>FDA Consultants:</b>
-				<ul>
-					<li>Sanjay K. Sahoo MS. MBA.</li>
-					<li>Suranjan De MS. MBA.</li>
-				</ul>
-				<br/>
-				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
-			</Dialog>
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}
@@ -555,6 +572,9 @@ export default class MainView extends Component {
 				actions={actions}
 				tableData={this.state.tableData}
 				drugs={this.state.tableDrugs}
+				currentSelector={this.props.currentSelector}
+				nextTourStep={this.props.nextTourStep}
+				windowWidth={this.state.width}
 			/>
 	 	</div>
 		)

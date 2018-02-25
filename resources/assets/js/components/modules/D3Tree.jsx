@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 import ReactDOM from 'react-dom';
 import * as _ from 'lodash'
+import { generateColor, generateScoreBorderColor } from '../../utilities/functions';
+import { baseNodeColor, baseNodeBorderColor, adrBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
 
 
 export default class D3Tree extends Component {
@@ -19,7 +21,7 @@ export default class D3Tree extends Component {
     // Render the tree usng d3 after first component mount
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this));
+        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
       }
     }
   }
@@ -34,7 +36,7 @@ export default class D3Tree extends Component {
         console.log("state changed");
         this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
         removeTree(ReactDOM.findDOMNode(this));
-        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this));
+        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
       }
     }
   }
@@ -52,13 +54,12 @@ const removeTree = (svgDomNode) => {
   d3.select(svgDomNode).selectAll("*").remove();
 }
 
-const renderTree = (treeData, svgDomNode) => {
+const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
   const height = svgDomNode.parentNode.parentNode.parentNode.parentNode.parentNode.clientHeight
   console.log(svgDomNode.parentNode.parentNode.parentNode);
   const width = '100%';
   const duration = 750;
-  const low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
 
   let svg = d3.select(svgDomNode)
     .attr("width", width)
@@ -215,59 +216,40 @@ const renderTree = (treeData, svgDomNode) => {
       })
       .style("stroke", d => {
         if(d.data.Score) {
-          return "#A9B0B7";
+          //border for ADR
+          return adrBorderColor;
         }
         else if(d.data.name === root.data.name) {
-          return "#0069C0";
+          //border for base node
+          return baseNodeBorderColor;
         }
         else if(d.data.maxScore) {
-          const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
-            return "#E8BA54";
-          }
-          else if (score > 0 && score <= 0.01) {
-            return "#E37E36";
-          }
-          else if (score > 0.01 && score <= 0.2) {
-            return "#C2230C";
-          }
-          else if (score > 0.2) {
-            return "#610000";
-          }
+          //border for interior nodes
+          return generateScoreBorderColor(d.data.maxScore, scoreRange);
         }
         else{
           return 'none';
         }
-        // return d.data.Score ? "#A9B0B7" : "none";
       })
 
       .style("fill", d => {
         if (d.data.name === root.data.name) {
-          // return '#5eafee';
-          return '#2C98F0';
+          //fill for base node
+          return baseNodeColor;
         }
 
         if (d.data.maxScore) {
-          const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
-            return low_color;
-          }
-          else if (score > 0 && score <= 0.01) {
-            return low_med_color;
-          }
-          else if (score > 0.01 && score <= 0.2) {
-            return med_color;
-          }
-          else if (score > 0.2) {
-            return high_color;
-          }
+          //fill for interior nodes
+          return generateColor(d.data.maxScore, scoreRange);
         }
 
         if (d.data.critical) {
-          return 'black';
+          //fill for severe ADRs
+          return severeADRColor;
         }
 
-        return "white"
+        //fill for regular ADRs
+        return regularADRColor;
       })
 
       .attr('cursor', 'pointer');
@@ -302,35 +284,11 @@ const renderTree = (treeData, svgDomNode) => {
       })
       .style("stroke", d => {
         if (d.data.maxScore) {
-          const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
-            return low_color;
-          }
-          else if (score > 0 && score <= 0.01) {
-            return low_med_color;
-          }
-          else if (score > 0.01 && score <= 0.2) {
-            return med_color;
-          }
-          else if (score > 0.2) {
-            return high_color;
-          }
+          return generateColor(d.data.maxScore, scoreRange);
         }
 
         if (d.data.Score) {
-          const score = d.data.Score;
-          if (score < 0 || score <= 0) {
-            return low_color;
-          }
-          else if (score > 0 && score <= 0.01) {
-            return low_med_color;
-          }
-          else if (score > 0.01 && score <= 0.2) {
-            return med_color;
-          }
-          else if (score > 0.2) {
-            return high_color;
-          } 
+          return generateColor(d.data.Score, scoreRange);
         }
       })
       .style("stroke-width",
@@ -371,12 +329,3 @@ const renderTree = (treeData, svgDomNode) => {
   update(root);
   centerNode(root);
 }
-
-// var renderTree = function(treeData, svgDomNode) {
-//     // Add the javascript code that renders the tree from
-//     // http://bl.ocks.org/d3noob/8329404
-//     // And replace the line that reads
-//     // var svg = d3.select("body").append("svg")
-//     // with 
-//     // var svg = d3.select(svgDomNode)
-// }

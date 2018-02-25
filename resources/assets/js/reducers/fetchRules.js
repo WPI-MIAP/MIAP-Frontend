@@ -11,7 +11,9 @@ export const rules = (
 	state = {
 		isFetching: false,
 		rules: [],
-		drugs: []
+		drugs: [],
+		scoreRange: [],
+		dmeRange: []
 	},
 	action
 ) => {
@@ -25,6 +27,8 @@ export const rules = (
 				isFetching: false,
 				rules: action.rules,
 				drugs: action.drugs,
+				scoreRange: action.scoreRange,
+				dmeRange: action.dmeRange,
 		        lastUpdated: action.receivedAt
 			})
 		default:

@@ -164,8 +164,11 @@ export class InteractionProfile extends Component {
 
   render() {
     return (
-      <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%'}}>
-        <D3Tree treeData={this.state.myTreeData}/>
+      <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        {(this.props.mainDrug != '' || this.props.mainRule != '') ?
+          <D3Tree scoreRange={this.props.scoreRange} treeData={this.state.myTreeData}/> :
+          <h4 style={{color: 'grey'}}>No interaction profiles are being selected</h4>
+        }
       </div>
     )
   }
