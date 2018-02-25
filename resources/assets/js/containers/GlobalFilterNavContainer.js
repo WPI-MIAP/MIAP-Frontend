@@ -9,6 +9,7 @@ const mapStateToProps = state => {
 		numDrugs: state.rulesByStatus.all.drugs.length,
 		updating: state.isUpdating,
 		scoreRange: state.rulesByStatus.all.scoreRange,
+		dmeRange: state.rulesByStatus.all.dmeRange
   }
 }
 

@@ -407,11 +407,11 @@ export default class MainView extends Component {
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[1], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Medium Low</div>
+												<div style={{textAlign: 'center'}}>Med. Low</div>
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[2], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>Medium High</div>
+												<div style={{textAlign: 'center'}}>Med. High</div>
 											</Col>
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColors[3], margin: '0 auto'}}/>
@@ -472,6 +472,7 @@ export default class MainView extends Component {
 										selectedDrug={this.props.selectedDrug}
 										handleOpen={this.handleOpen}
 										scoreRange={this.props.scoreRange}
+										dmeRange={this.props.dmeRange}
 									/>
 								</GridTile>
 									<Col>
@@ -479,24 +480,24 @@ export default class MainView extends Component {
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 											<Col xs={2.4} md={2.4}>
 												<div style={{height: 5, width: 50, background: dmeColors[0], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>0 Severe</div>
+												<div style={{textAlign: 'center'}}>None</div>
 											</Col>
 											<Col xs={2.4} md={2.4}>
 												<div style={{height: 5, width: 50, background: dmeColors[1], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>1</div>
+												<div style={{textAlign: 'center'}}>Low</div>
 											</Col>
 											<Col xs={2.4} md={2.4}>
 												<div style={{height: 5, width: 50, background: dmeColors[2], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>2</div>
+												<div style={{textAlign: 'center'}}>Med. Low</div>
 											</Col>
 											<Col xs={2.4} md={2.4}>
 												<div style={{height: 5, width: 50, background: dmeColors[3], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>3</div>
+												<div style={{textAlign: 'center'}}>Med. High</div>
 											</Col>
 
 											<Col xs={2.4} md={2.4}>
 												<div style={{height: 5, width: 50, background: dmeColors[4], margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>4+</div>
+												<div style={{textAlign: 'center'}}>High</div>
 											</Col>
 										</Row>
 										<Row><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>

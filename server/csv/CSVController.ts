@@ -46,17 +46,58 @@ var exec = require('child_process').exec;
  	 */
  	public async getRules(req: Request, res: Response, next: NextFunction) {
  		try {
-	 		let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
-			let maxScore = _.max(rules.map((rule) => (parseFloat(rule.Score))));
-			let minScore = _.min(rules.map((rule) => (parseFloat(rule.Score))));
-			let scoreRange = [];
-
-			let range = maxScore - minScore;
-			let numColors = 4;
-			for(var i=1; i <= numColors; i++) {
-				scoreRange.push(minScore + (i * range)/numColors);
+			let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
+			const drugs = getDrugsFromRules(rules);
+			let DMEFile = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
+			let lines = DMEFile.split("\n");
+			let DMEs = [];
+			for (let i = 1; i < lines.length; i++) {
+				DMEs.push({'name': lines[i].trim(), 'formattedName': lines[i].toLowerCase().replace(/\W/g, '')});
 			}
 
+			let dmeRange = [], scoreRange = [];
+			if(!req.query.drug){
+				let maxScore = _.max(rules.map((rule) => (parseFloat(rule.Score))));
+				let minScore = _.min(rules.map((rule) => (parseFloat(rule.Score))));
+
+				let range = maxScore - minScore;
+				let numColors = 4;
+				for(var i=1; i <= numColors; i++) {
+					scoreRange.push(minScore + (i * range)/numColors);
+				}
+
+				
+				let numDMEColors = 5;
+				//find max number of Severe ADRs associated with any one drug
+				let maxNumDMEs = 0;
+				drugs.forEach(drug => {
+					let rulesCopy = rules.filter(
+						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(drug) ||
+						_.lowerCase(rule.Drug2.name) === _.lowerCase(drug)
+					);
+
+					let drugDMEs = [];
+					rulesCopy.forEach(rule => {
+						let formattedADRName = rule['ADR'].toLowerCase().replace(/\W/g, '');
+						DMEs.forEach(dme => {
+							if (formattedADRName === dme['formattedName']){
+								drugDMEs.push(dme['name']);
+							}
+						});
+					});
+
+					if(drugDMEs.length > maxNumDMEs) {
+						maxNumDMEs = drugDMEs.length;
+					}
+				});
+
+				if(maxNumDMEs < numDMEColors - 1) {
+					maxNumDMEs = numDMEColors - 1;
+				}
+				for(var i=1; i <= numDMEColors - 1; i++) {
+					dmeRange.push((i * maxNumDMEs)/(numDMEColors - 1));
+				}
+			}
 
 			// console.log("Min: " + minScore + " Max: " + maxScore);
 			if (req.query.status === 'known') {
@@ -81,18 +122,11 @@ var exec = require('child_process').exec;
 					);
 				}
 
-
-				let DMEFile = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
-				let lines = DMEFile.split("\n");
-				let DMEs = [];
-				for (let i = 1; i < lines.length; i++) {
-					DMEs.push({'name': lines[i].trim(), 'formattedName': lines[i].toLowerCase().replace(/\W/g, '')});
-				}
 				let drugDMEs = [];
 				rules.forEach(rule => {
 					let formattedADRName = rule['ADR'].toLowerCase().replace(/\W/g, '');
 					DMEs.forEach(dme => {
-						if (formattedADRName === dme['formattedName']){ //&& drugDMEs.indexOf(dme['name']) === -1) {
+						if (formattedADRName === dme['formattedName']){
 							drugDMEs.push(dme['name']);
 						}
 					});
@@ -105,11 +139,11 @@ var exec = require('child_process').exec;
 				});
 			}
 
-	 		const drugs = getDrugsFromRules(rules);
 	 		res.json({
 	 			drugs,
 	 			rules,
-				scoreRange
+				scoreRange,
+				dmeRange
 	 		});
  		} catch (err) {
  			console.log(err);

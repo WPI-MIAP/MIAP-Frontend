@@ -16,6 +16,8 @@ import Report from '../modules/Report'
 export default class DndTreeContainer extends Component {
 	constructor(props) {
 		super(props);
+
+		this.getStyleByDMECount = this.getStyleByDMECount.bind(this);
 	}
 
 	getStyleByDMECount(numDMEs) {
@@ -28,13 +30,13 @@ export default class DndTreeContainer extends Component {
 		
 		if(numDMEs === 0) {
 			style['background'] = colors[0];
-		}else if(numDMEs <= 1) {
+		}else if(numDMEs <= this.props.dmeRange[0]) {
 			style['background'] = colors[1];
 		}
-		else if(numDMEs <= 2) {
+		else if(numDMEs <= this.props.dmeRange[1]) {
 			style['background'] = colors[2];
 		}
-		else if(numDMEs <= 3) {
+		else if(numDMEs <= this.props.dmeRange[2]) {
 			style['background'] = colors[3];
 		}
 		else {

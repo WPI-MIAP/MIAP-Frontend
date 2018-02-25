@@ -36,7 +36,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
-import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
 
 
 const Slider = require('rc-slider');
@@ -688,11 +688,11 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
-                                <div><p>{'Medium Low'}</p></div>
+                                <div><p>{'Med. Low'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
-                                <div><p>{'Medium High'}</p></div>
+                                <div><p>{'Med. High'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
@@ -730,6 +730,7 @@ export default class GlobalFilterNav extends React.Component {
                                 selectedDrug={dummyData.selectedDrug}
                                 testExample={true}
                                 scoreRange={this.props.scoreRange}
+                                dmeRange={this.props.dmeRange}
                               />
                             </Paper>
                             <Col style={{marginLeft: 20}}>
@@ -738,23 +739,23 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[0], marginRight: 10}}/>
-                                <div><p>{'0'}</p></div>
+                                <div><p>{'None'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[1], marginRight: 10}}/>
-                                <div><p>{'1'}</p></div>
+                                <div><p>{'Low'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[2], marginRight: 10}}/>
-                                <div><p>{'2'}</p></div>
+                                <div><p>{'Med. Low'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[3], marginRight: 10}}/>
-                                <div><p>{'3'}</p></div>
+                                <div><p>{'Med. High'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[4], marginRight: 10}}/>
-                                <div><p>{'Above 4'}</p></div>
+                                <div><p>{'High'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -876,7 +877,9 @@ export default class GlobalFilterNav extends React.Component {
                         </Col>
                         <Col sm={6}>
                           <BarChart style={{margin: '0 auto'}} width={400} height={100} data={dummyDrugFreqs}>
-                            <XAxis hide={true} dataKey="name" />
+                            <XAxis tick={false} hide={false} dataKey="name">
+                              <Label value="Drug Co-occurrences" offset={10} position="insideBottom" />
+                            </XAxis>
                             <YAxis />
                             <Tooltip />
                             <Bar dataKey="freq" onClick={(data, index) => {this.setState({helpBarSelectedIndex: index})}}>
