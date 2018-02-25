@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, addRules, isUpdating, clearRule } from '../actions'
+import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, selectRule, isUpdating, clearRule } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getIsFetching = (rules, filter) => {
@@ -19,7 +19,7 @@ const filterTreeView = (currentDrugs, sortByTerm) => {
 		case 'count':
 			return _.sortBy(currentDrugsArray, [function(o) { return o[1].rules.length; }]).reverse();
 		case 'severity':
-			return _.sortBy(currentDrugsArray, [function(o) { return o[1].drugDMEs == undefined ? 0 : o[1].drugDMEs.length; }]).reverse();
+			return _.sortBy(currentDrugsArray, [function(o) { return o[1].drugDMEs ? 0 : o[1].drugDMEs.length; }]).reverse();
 	}
 }
 
@@ -30,7 +30,7 @@ const mapStateToProps = state => {
 		nodes: state.rulesByStatus.all.drugs,
 		currentDrugs: filterTreeView(state.currentDrugs, state.treeViewSorting),
 		selectedDrug: state.selectDrug,
-		selectedRule: state.addRules,
+		selectedRule: state.selectRule,
 		filter: state.visibilityFilter,
 		minScore: state.selectMinScore,
 		maxScore: state.selectMaxScore
@@ -48,7 +48,7 @@ const mapDispatchToProps = dispatch => {
 		onClickEdge: rule => {
 			dispatch(clearRule())
 			dispatch(clearSearchTerm())
-			dispatch(addRules(rule));
+			dispatch(selectRule(rule));
 		},
 		showDetailNode: drug => {
 			dispatch(clearSearchTerm())
@@ -60,6 +60,12 @@ const mapDispatchToProps = dispatch => {
 		isUpdating: value => {
 			dispatch(isUpdating(value))
 		},
+		clearRule: () => {
+			dispatch(clearRule());
+		},
+		clearSearchTerm: () => {
+			dispatch(clearSearchTerm());
+		}
 	}
 }
 

@@ -106,12 +106,29 @@ export default class MainView extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
-			nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(nextProps.selectedDrug)) && chip.drugs[1] === undefined)) == undefined) {
-			var chips = this.state.reportChips;
-			chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
-			this.setState({reportChips: chips});
-		}
+		// if(this.props.selectedDrug !== nextProps.selectedDrug && nextProps.selectedDrug !== undefined && 
+		// 	nextProps.selectedDrug !== '' && _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(nextProps.selectedDrug)) && chip.drugs[1] === undefined)) == undefined) {
+		// 	var chips = this.state.reportChips;
+		// 	chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(nextProps.selectedDrug))]});
+		// 	this.setState({reportChips: chips});
+		// }
+		console.log(nextProps.currentDrugs);
+		
+		nextProps.currentDrugs.forEach(drug => {
+			if (! _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(drug[0])) && ! chip.drugs[1]))) {
+				let chips = this.state.reportChips;
+				chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(drug[0]))]});
+				this.setState({reportChips: chips});
+			}
+		})
+
+		this.setState((prevState, props) => {
+			return {
+				reportChips: prevState.reportChips.filter(chip => {
+					return _.find(props.currentDrugs, drug => (drug[0] == _.toLower(_.trim(chip.drugs[0])))) || chip.type == "adr"
+				})
+			}
+		});
 
 		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
 			nextProps.selectedRule !== '') {
@@ -200,6 +217,19 @@ export default class MainView extends Component {
 		const chipToDelete = this.reportChips.indexOf(key);
 		this.reportChips.splice(chipToDelete, 1);
 		this.setState({reportChips: this.reportChips});
+
+		/**
+		 * Clear rule or drug when deleting the currently selected one
+		 */
+		if (key.type === "drug") {
+			this.props.deleteNode(key.drugs[0]);
+			if (this.props.selectedDrug === key.drugs[0]) {
+				this.props.clearSearchTerm();
+			}
+		}
+		if (key.type === "adr" && this.props.selectedRule === key.drugs.join(' --- ')) {
+			this.props.clearRule();
+		}
 	}
 
 	toggleFullscreenOverview() {
@@ -402,6 +432,7 @@ export default class MainView extends Component {
 										onClickNode={this.props.showDetailNode}
 										onClickEdge={this.props.onClickEdge}
 										onDeleteNode={this.props.deleteNode}
+										onClearDrug={this.props.clearSearchTerm}
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
 										handleOpen={this.handleOpen}

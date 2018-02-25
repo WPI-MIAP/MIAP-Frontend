@@ -14,9 +14,9 @@ export const selectDrug = drug => {
 	}
 }
 
-export const addRules = rule => {
+export const selectRule = rule => {
 	return {
-		type: 'ADD_RULES',
+		type: 'SELECT_RULE',
 		rule
 	}
 }

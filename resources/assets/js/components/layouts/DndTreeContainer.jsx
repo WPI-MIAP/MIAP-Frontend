@@ -16,6 +16,16 @@ import Report from '../modules/Report'
 export default class DndTreeContainer extends Component {
 	constructor(props) {
 		super(props);
+
+		this.onDeleteNode = this.onDeleteNode.bind(this);
+	}
+
+	onDeleteNode(drug) {
+		this.props.onDeleteNode(drug);
+
+		if (this.props.selectedDrug === drug) {
+			this.props.onClearDrug();
+		}
 	}
 
 	getStyleByDMECount(numDMEs) {
@@ -154,7 +164,7 @@ export default class DndTreeContainer extends Component {
 
 												<IconButton tooltip="Close Window"
 													iconStyle={{ color: 'white' }}
-													onClick={() => this.props.onDeleteNode(drug[0])}	
+													onClick={() => this.onDeleteNode(drug[0])}	
 												>
 													<NavigationClose />
 												</IconButton>
