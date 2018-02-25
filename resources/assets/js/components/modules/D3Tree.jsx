@@ -19,7 +19,7 @@ export default class D3Tree extends Component {
     // Render the tree usng d3 after first component mount
     if (this.props.treeData) {
       if (this.props.treeData[0].name !== "") {
-        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this));
+        renderTree(this.props.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
       }
     }
   }
@@ -34,7 +34,7 @@ export default class D3Tree extends Component {
         console.log("state changed");
         this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
         removeTree(ReactDOM.findDOMNode(this));
-        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this));
+        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
       }
     }
   }
@@ -52,7 +52,7 @@ const removeTree = (svgDomNode) => {
   d3.select(svgDomNode).selectAll("*").remove();
 }
 
-const renderTree = (treeData, svgDomNode) => {
+const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
   const height = svgDomNode.parentNode.parentNode.parentNode.parentNode.parentNode.clientHeight
   console.log(svgDomNode.parentNode.parentNode.parentNode);
@@ -215,59 +215,64 @@ const renderTree = (treeData, svgDomNode) => {
       })
       .style("stroke", d => {
         if(d.data.Score) {
+          //border for ADR
           return "#A9B0B7";
         }
         else if(d.data.name === root.data.name) {
+          //border for base node
           return "#0069C0";
         }
         else if(d.data.maxScore) {
+          //border for interior nodes
           const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
+          if (score <= scoreRange[0]) {
             return "#E8BA54";
           }
-          else if (score > 0 && score <= 0.01) {
+          else if (score > scoreRange[0] && score <= scoreRange[1]) {
             return "#E37E36";
           }
-          else if (score > 0.01 && score <= 0.2) {
+          else if (score > scoreRange[1] && score <= scoreRange[2]) {
             return "#C2230C";
           }
-          else if (score > 0.2) {
+          else if (score > scoreRange[2]) {
             return "#610000";
           }
         }
         else{
           return 'none';
         }
-        // return d.data.Score ? "#A9B0B7" : "none";
       })
 
       .style("fill", d => {
         if (d.data.name === root.data.name) {
-          // return '#5eafee';
+          //fill for base node
           return '#2C98F0';
         }
 
         if (d.data.maxScore) {
+          //fill for interior nodes
           const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
+          if (score <= scoreRange[0]) {
             return low_color;
           }
-          else if (score > 0 && score <= 0.01) {
+          else if (score > scoreRange[0] && score <= scoreRange[1]) {
             return low_med_color;
           }
-          else if (score > 0.01 && score <= 0.2) {
+          else if (score > scoreRange[1] && score <= scoreRange[2]) {
             return med_color;
           }
-          else if (score > 0.2) {
+          else if (score > scoreRange[2]) {
             return high_color;
           }
         }
 
         if (d.data.critical) {
-          return 'black';
+          //fill for severe ADRs
+          return '#6A51A3';
         }
 
-        return "white"
+        //fill for regular ADRs
+        return "#A9B0B7";
       })
 
       .attr('cursor', 'pointer');
@@ -303,32 +308,32 @@ const renderTree = (treeData, svgDomNode) => {
       .style("stroke", d => {
         if (d.data.maxScore) {
           const score = d.data.maxScore;
-          if (score < 0 || score <= 0) {
+          if (score <= scoreRange[0]) {
             return low_color;
           }
-          else if (score > 0 && score <= 0.01) {
+          else if (score > scoreRange[0] && score <= scoreRange[1]) {
             return low_med_color;
           }
-          else if (score > 0.01 && score <= 0.2) {
+          else if (score > scoreRange[1] && score <= scoreRange[2]) {
             return med_color;
           }
-          else if (score > 0.2) {
+          else if (score > scoreRange[2]) {
             return high_color;
           }
         }
 
         if (d.data.Score) {
           const score = d.data.Score;
-          if (score < 0 || score <= 0) {
+          if (score <= scoreRange[0]) {
             return low_color;
           }
-          else if (score > 0 && score <= 0.01) {
+          else if (score > scoreRange[0] && score <= scoreRange[1]) {
             return low_med_color;
           }
-          else if (score > 0.01 && score <= 0.2) {
+          else if (score > scoreRange[1] && score <= scoreRange[2]) {
             return med_color;
           }
-          else if (score > 0.2) {
+          else if (score > scoreRange[2]) {
             return high_color;
           } 
         }

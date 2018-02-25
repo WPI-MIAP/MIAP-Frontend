@@ -20,8 +20,9 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import { dmeColors, scoreColors } from '../../utilities/constants'
-import { generateColor } from '../../utilities/functions'
+import { dmeColors, scoreColors } from '../../utilities/constants';
+import { generateColor } from '../../utilities/functions';
+import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 
 const styles = {
 	root: {
@@ -43,16 +44,16 @@ const styles = {
 		zIndex: 100
 	},
 	legendSevere: {
-		backgroundColor: 'black',
-		border: '3px solid grey',
+		backgroundColor: '#6A51A3',
+		border: '3px solid #A9B0B7',
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
 		textAlign: 'center'
 	},
 	legendNormal: {
-		backgroundColor: 'white',
-		border: '3px solid grey',
+		backgroundColor: '#A9B0B7',
+		border: '3px solid #A9B0B7',
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
@@ -77,7 +78,6 @@ export default class MainView extends Component {
 			width: 0,
 			height: 0,
 			aboutUs: false,
-			contactUs: false,
 		}
 
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
@@ -89,7 +89,9 @@ export default class MainView extends Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
+		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.generateColor = this.generateColor.bind(this);
 	}
 
 	componentDidMount() {
@@ -99,6 +101,21 @@ export default class MainView extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	generateColor(score){
+		if (score <= this.props.scoreRange[0]) {
+			return '#fecc5c'
+		} 
+		else if (score > this.props.scoreRange[0] && score <= this.props.scoreRange[1]) {
+			return '#fd8d3c'
+		}
+		else if (score > this.props.scoreRange[1] && score <= this.props.scoreRange[2]) {
+			return '#f03b20'
+		}
+		else if (score > this.props.scoreRange[2]) {
+			return 'hsl(0, 100%, 25%)'
+		}
 	}
 
 	updateWindowDimensions() {
@@ -128,9 +145,11 @@ export default class MainView extends Component {
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : generateColor(this.props.links.filter((link) => {
-			return ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
+
+		const avatarColor = report.type === 'drug' ? "#2C98F0" : this.generateColor(this.props.links.filter((link) => {
+			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
+			return match;
 		})[0].Score);
 		return (
 			<Chip
@@ -156,7 +175,7 @@ export default class MainView extends Component {
 						tableData: response.data,
 						tableDrugs: [report.drugs[0]],
 					});
-					if(this.props.currentSelector === '.galaxy2') {
+					if(this.props.currentSelector === '.galaxyReports') {
 						this.props.nextTourStep();
 					}	
 				});
@@ -187,7 +206,6 @@ export default class MainView extends Component {
 			tableTitle: '',
 			tableData: [],
 			aboutUs: false,
-			contactUs: false,
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();
@@ -253,9 +271,16 @@ export default class MainView extends Component {
 		});
 	}
 
+	onClickEdgeTour(interaction) {
+		this.props.onClickEdge(interaction);
+		if(this.props.currentSelector === '.overview2'){
+			this.props.nextTourStep();
+		}
+	}
+
 	onClickNodeTour(drug) {
 		this.props.onClickNode(drug);
-		if(this.props.currentSelector === '.overview2'){
+		if(this.props.currentSelector === '.overview3'){
 			this.props.nextTourStep();
 		}
 	}
@@ -281,7 +306,7 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 15, height: '80vh'}}>
+				<Grid fluid style={{ marginTop: 10, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={'#2D3E46'}
@@ -295,6 +320,12 @@ export default class MainView extends Component {
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
+					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
+						<EditorInsertChart color="#2D3E46" style={{height: 54, width: 54}}/>
+						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
+							{this.state.reportChips.map(this.renderChip, this)}
+						</div>
+					</Paper>
 					<Row>
 						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
@@ -316,7 +347,7 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
-									className="overview overview2"
+									className="overview overview2 overview3"
 									titleBackground="#2D3E46"
 									style={{
 										boxSizing: 'border-box',
@@ -340,12 +371,13 @@ export default class MainView extends Component {
 										height={this.props.height} 
 										selectedDrug={this.props.selectedDrug}
 										onClickNode={this.onClickNodeTour}
-										onClickEdge={this.props.onClickEdge}
+										onClickEdge={this.onClickEdgeTour}
 										isFetching={this.props.isFetching}
 										filter={this.props.filter}
 										minScore={this.props.minScore}
 										maxScore={this.props.maxScore}
 										isUpdating={this.props.isUpdating}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 									<Col>
@@ -358,6 +390,7 @@ export default class MainView extends Component {
 												</Col>
 											))}
 										</Row>
+										<Row><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -371,7 +404,7 @@ export default class MainView extends Component {
 								<GridTile
 									title={this.state.col != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
-									className="galaxy galaxy2"
+									className="galaxy"
 									actionIcon={ 
 										<div>
 											<IconButton 
@@ -405,6 +438,8 @@ export default class MainView extends Component {
 										cols={this.state.col}
 										selectedDrug={this.props.selectedDrug}
 										handleOpen={this.handleOpen}
+										scoreRange={this.props.scoreRange}
+										dmeRange={this.props.dmeRange}
 									/>
 								</GridTile>
 									<Col>
@@ -417,6 +452,7 @@ export default class MainView extends Component {
 											</Col>
 										))}
 										</Row>
+										<Row><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>
 									</Col>
 							</Paper>
 						</Col>
@@ -449,6 +485,7 @@ export default class MainView extends Component {
 									<InteractionProfile 
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
+										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
 								<Col>
@@ -456,23 +493,21 @@ export default class MainView extends Component {
 									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
 										<Col xs={4} md={4}>
 											<div style={styles.legendSevere}>
-												<span style={{ marginLeft: 30 }}>Severe&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Severe</span>
 											</div>
 										</Col>
 										<Col xs={4} md={4}>
 											<div style={styles.legendNormal}>
-												<span style={{ marginLeft: 30 }}>Normal&nbsp;ADR</span>
+												<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
 											</div>
 										</Col>
 									</Row>
+									<Row><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
 								</Col>
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{ margin: '8px 0'}}> 
-							{this.state.reportChips.map(this.renderChip, this)}
-					</Row>
-					<Row style={{background: '#2D3E46', color: 'white', paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
+					<Row style={{background: '#2D3E46', color: 'white', marginTop: 10, paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
 						<Col sm={6}>
 							<p style={{textAlign: 'left'}}>
 								© 2018. Worcester Polytechnic Institute. All Rights Reserved.
@@ -497,25 +532,37 @@ export default class MainView extends Component {
 				was composed of: <br/><br/>
 				<b>Undergraduate Students:</b> 
 				<ul>
-					<li>Brian McCarthy, Senior, CS '18</li>
-					<li>Andrew Schade, Senior, CS '18</li>
-					<li>Huy Tran, Senior, CS '18</li>
-					<li>Brian Zylich, BS/MS Candidate, CS '19</li>
+					<li><b>Brian McCarthy</b>, Senior, CS '18</li>
+					<li><b>Andrew Schade</b>, Senior, CS '18</li>
+					<li><b>Huy Tran</b>, Senior, CS '18</li>
+					<li><b>Brian Zylich</b>, BS/MS Candidate, CS '19</li>
 				</ul>
 				<b>Graduate Student Mentors:</b>
 				<ul>
-					<li>Xiao Qin, PhD Candidate</li>
-					<li>Tabassum Kakar, PhD Candidate</li>
+					<li><b>Xiao Qin</b>, PhD Candidate</li>
+					<li><b>Tabassum Kakar</b>, PhD Candidate</li>
 				</ul>
-				<b>Faculty Advisor:</b> Elke Rundensteiner<br/>
-				<b>Visualization Expert:</b> Lane Harrison<br/>
-				<b>FDA Consultants:</b>
+				<b>Faculty:</b> <b>Prof. Rundensteiner</b> and <b>Prof. Harrison</b><br/>
+				<b>FDA:</b>
 				<ul>
-					<li>Sanjay K. Sahoo MS. MBA.</li>
-					<li>Suranjan De MS. MBA.</li>
+					<li><b>Suranjan De</b>, MS, MBA.<br/>{'Deputy Director, Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
+					<li><b>Sanjay K. Sahoo</b>, MS, MBA<br/>{'Team Lead (Acting) Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
+					<li><b>FDA Safety Evaluators:</b></li>
+					<ul>
+						<li><b>Christian Cao</b></li>
+						<li><b>Monica Munoz</b></li>
+						<li><b>Tingting Gao</b></li>
+						<li><b>Jo Wyeth</b></li>
+						<li><b>Oanh Dang</b></li>
+						<li><b>Cathy Miller</b></li>
+						<li><b>Madhuri Patel</b></li>
+					</ul>
 				</ul>
+				
+				Tabassum and Xiao are thankful to Oak Ridge Institute for Science and Education (ORISE) managed for the U.S. Department of Energy (DOE) by Oak Ridge Associated Universities (ORAU) for supporting this work.
 				<br/>
-				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Professor Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
+				<br/>
+				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Prof. Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
 			</Dialog>
 			<Report 
 				tableTitle={this.state.tableTitle}
@@ -524,6 +571,9 @@ export default class MainView extends Component {
 				actions={actions}
 				tableData={this.state.tableData}
 				drugs={this.state.tableDrugs}
+				currentSelector={this.props.currentSelector}
+				nextTourStep={this.props.nextTourStep}
+				windowWidth={this.state.width}
 			/>
 	 	</div>
 		)

@@ -16,11 +16,11 @@ import Report from '../modules/Report'
 export default class DndTreeContainer extends Component {
 	constructor(props) {
 		super(props);
+
+		this.getStyleByDMECount = this.getStyleByDMECount.bind(this);
 	}
 
 	getStyleByDMECount(numDMEs) {
-		// var colors = ['#AB85FF','#9D5FFF', '#6328BF', '#370E7F', '#170540'];
-		// var colors = ['#23C5FF','#1C9CCC', '#1670B2', '#1B4BB2', '#132D9D'];
 		var colors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
 		var style = {
 			padding: '20px 0',
@@ -30,13 +30,13 @@ export default class DndTreeContainer extends Component {
 		
 		if(numDMEs === 0) {
 			style['background'] = colors[0];
-		}else if(numDMEs <= 1) {
+		}else if(numDMEs <= this.props.dmeRange[0]) {
 			style['background'] = colors[1];
 		}
-		else if(numDMEs <= 2) {
+		else if(numDMEs <= this.props.dmeRange[1]) {
 			style['background'] = colors[2];
 		}
-		else if(numDMEs <= 3) {
+		else if(numDMEs <= this.props.dmeRange[2]) {
 			style['background'] = colors[3];
 		}
 		else {
@@ -80,6 +80,7 @@ export default class DndTreeContainer extends Component {
 		};
 
 		return this.props.testExample ? (
+			//HELP PAGE VERSION
 			<div>
 				{this.props.currentDrugs.map(drug => (
 								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
@@ -116,13 +117,14 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
+											<DndTree scoreRange={this.props.scoreRange} testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
 										</div>
 									</div>
 								</Col>
 							))}
 			</div>
 			) : (
+			//NORMAL VERSION				
 			<div>
 				<Grid fluid style={styles.root}>
 					<Row style={styles.row}>
@@ -145,7 +147,7 @@ export default class DndTreeContainer extends Component {
 													<ActionOpenInNew />
 												</IconButton>
 
-												<IconButton tooltip="Show Reports"
+												<IconButton className="galaxyReports" tooltip="Show Reports"
 													iconStyle={{ color: 'white' }}
 													onClick={() => {this.props.handleOpen({type: 'drug', drugs: [drug[0]]})}}
 												>
@@ -161,7 +163,7 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} onClickEdge={this.props.onClickEdge} />
+											<DndTree scoreRange={this.props.scoreRange} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} onClickEdge={this.props.onClickEdge} />
 										</div>
 									</div>
 								</Col>

@@ -36,7 +36,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
-import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell} from 'recharts';
+import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
 
 
 const Slider = require('rc-slider');
@@ -53,8 +53,15 @@ const styles = {
   root: {
     background: '#AA2C3B'
   },
-  customWidth: {
-    width: 200,
+  dropDown: {
+    width: 165,
+    height: 56,
+    border: '1px white', 
+    borderStyle: 'solid',
+    borderRadius: 5,
+    paddingBottom: 6,
+    marginTop: 4,
+    marginLeft: 10,
   },
   elementRight: {
     display: 'flex',
@@ -234,10 +241,12 @@ export default class GlobalFilterNav extends React.Component {
   }
 
   handleChange(event, index, value) {
+    if(value !== this.state.value) {
+      this.props.isUpdating(true);
+    }
     this.setState({ 
       value: value,
     });
-    this.props.isUpdating(true);
     this.props.onClick(value)
   }
 
@@ -515,7 +524,7 @@ export default class GlobalFilterNav extends React.Component {
               className="knownUnknown"
               value={this.state.value}
               onChange={this.handleChange} 
-              style={styles.customWidth}
+              style={styles.dropDown}
               autoWidth={false} 
               labelStyle={{ color: 'white' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -526,26 +535,28 @@ export default class GlobalFilterNav extends React.Component {
               <MenuItem value='known' primaryText="Known DIARs" />
               <MenuItem value='unknown' primaryText="Unknown DIARs" />
             </DropDownMenu> 
-            <div 
-              style={{position: 'relative', top: -75, marginLeft: 200}}>
-              <LineChart
-                width={274}
-                height={60}
-                data={data}
-                xMin={this.state.minScore}
-                xMax={this.state.maxScore}
-                yMax={0}
-                yMin={180}
-                hidePoints={true}
-                hideXLabel={true}
-                hideYLabel={true}
-                hideXAxis={true}
-                hideYAxis={true}
-                margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
-              <Range className='scoreMinMax scoreMinMax2'
-                defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-                style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
-                dotStyle={{display: 'none'}}/>
+            <div style={{height: 56, width: 312, position: 'relative', top: -56, marginLeft: 185, border: '1px white', borderStyle: 'solid', paddingBottom: 9, borderRadius: 5}}>
+              <div 
+                style={{position: 'absolute', bottom: 7}}>
+                <LineChart
+                  width={274}
+                  height={60}
+                  data={data}
+                  xMin={this.state.minScore}
+                  xMax={this.state.maxScore}
+                  yMax={0}
+                  yMin={180}
+                  hidePoints={true}
+                  hideXLabel={true}
+                  hideYLabel={true}
+                  hideXAxis={true}
+                  hideYAxis={true}
+                  margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
+                <Range className='scoreMinMax scoreMinMax2'
+                  defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
+                  style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                  dotStyle={{display: 'none'}}/>
+              </div>
             </div>
             {updating}
         </div>
@@ -664,6 +675,7 @@ export default class GlobalFilterNav extends React.Component {
                                 filter='all'
                                 minScore={-50}
                                 maxScore={50}
+                                scoreRange={this.props.scoreRange}
                               />
                             </Paper>
                             <Col style={{marginLeft: 20}}>
@@ -672,19 +684,19 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
-                                <div><p>{'Under 0.0'}</p></div>
+                                <div><p>{'Low'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
-                                <div><p>{'0.0 - 0.01'}</p></div>
+                                <div><p>{'Med. Low'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
-                                <div><p>{'0.01 - 0.2'}</p></div>
+                                <div><p>{'Med. High'}</p></div>
                               </Row>
                               <Row>
                                 <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
-                                <div><p>{'Above 0.2'}</p></div>
+                                <div><p>{'High'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -717,6 +729,8 @@ export default class GlobalFilterNav extends React.Component {
                                 cols={4}
                                 selectedDrug={dummyData.selectedDrug}
                                 testExample={true}
+                                scoreRange={this.props.scoreRange}
+                                dmeRange={this.props.dmeRange}
                               />
                             </Paper>
                             <Col style={{marginLeft: 20}}>
@@ -725,23 +739,23 @@ export default class GlobalFilterNav extends React.Component {
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[0], marginRight: 10}}/>
-                                <div><p>{'0'}</p></div>
+                                <div><p>{'None'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[1], marginRight: 10}}/>
-                                <div><p>{'1'}</p></div>
+                                <div><p>{'Low'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[2], marginRight: 10}}/>
-                                <div><p>{'2'}</p></div>
+                                <div><p>{'Med. Low'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[3], marginRight: 10}}/>
-                                <div><p>{'3'}</p></div>
+                                <div><p>{'Med. High'}</p></div>
                               </Row>
                               <Row style={{height: 35}}>
                                 <div style={{width: 34, background: dmeColors[4], marginRight: 10}}/>
-                                <div><p>{'Above 4'}</p></div>
+                                <div><p>{'High'}</p></div>
                               </Row>
                             </Col>
                           </Row>
@@ -755,7 +769,7 @@ export default class GlobalFilterNav extends React.Component {
                             <li>The <b>root node</b> is the <b>selected drug</b></li>
                             <li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
                             <li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
-                            <li><b>Severe ADRs</b> are <b>black</b>, while <b>other ADRs</b> are <b>white</b></li>
+                            <li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
                             <li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
                           </ul>
                         </Col>
@@ -764,14 +778,15 @@ export default class GlobalFilterNav extends React.Component {
                             <Paper zDepth={1} style={{height: 210, width: '100%', overflow: 'hidden',}}>
                               <InteractionProfile
                                 helpExample={true}
+                                scoreRange={this.props.scoreRange}
                               />
                               <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
                                 <Col style={{marginRight: 10}}>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'black', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#6A51A3', border: '#A9B0B7', borderStyle: 'solid'}}/>
                                   <div>Severe ADR</div>
                                 </Col>
                                 <Col>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: 'white', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#A9B0B7', border: '#A9B0B7', borderStyle: 'solid'}}/>
                                   <div>Normal ADR</div>
                                 </Col>
                               </Row>
@@ -805,7 +820,7 @@ export default class GlobalFilterNav extends React.Component {
                               className="knownUnknown"
                               value={this.state.value}
                               onChange={() => {}} 
-                              style={styles.customWidth}
+                              style={styles.dropDown}
                               autoWidth={false} 
                               labelStyle={{ color: 'white' }}
                               targetOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -862,7 +877,9 @@ export default class GlobalFilterNav extends React.Component {
                         </Col>
                         <Col sm={6}>
                           <BarChart style={{margin: '0 auto'}} width={400} height={100} data={dummyDrugFreqs}>
-                            <XAxis hide={true} dataKey="name" />
+                            <XAxis tick={false} hide={false} dataKey="name">
+                              <Label value="Drug Co-occurrences" offset={10} position="insideBottom" />
+                            </XAxis>
                             <YAxis />
                             <Tooltip />
                             <Bar dataKey="freq" onClick={(data, index) => {this.setState({helpBarSelectedIndex: index})}}>

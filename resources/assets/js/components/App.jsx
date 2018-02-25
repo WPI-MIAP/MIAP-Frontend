@@ -27,6 +27,7 @@ export default class App extends Component {
 			stepIndex: 0,
 			steps: [],
 			selector: '',
+			tooltipOffset: 10,
 		};
 
 		this.startTour = this.startTour.bind(this);
@@ -47,10 +48,26 @@ export default class App extends Component {
 				text: 'This tab shows the network of all drugs (nodes) and their possible interactions (links between nodes).',
 			},
 			{
-				title: "Overview",
+				title: "Overview - Edges",
 				//note, this element was given a second classname as a workaround to force joyride to rerender the step (as the selector changed)
 				selector: '.overview2',
-				text: 'Click on a node to view more information about that drug. Try it now!',
+				text: 'Clicking on an edge (or a node) will produce a "chip" that you can click on to access reports related to that interaction (or drug). Try clicking on an edge!',
+				style: {
+					footer: {
+						display: 'none',
+					}
+				}
+			},
+			{
+				title: "Report Chips",
+				selector: '.chipContainer',
+				text: 'This is where you can find any chips that you generate. You can click on them to access report information.',
+			},
+			{
+				title: "Overview - Nodes",
+				//note, this element was given a third classname as a workaround to force joyride to rerender the step (as the selector changed)
+				selector: '.overview3',
+				text: 'Clicking on a node will allow you to view more information about that drug. Try it now!',
 				style: {
 					footer: {
 						display: 'none',
@@ -63,9 +80,8 @@ export default class App extends Component {
 				text: 'The Galaxy View offers an overview of a specific drug, showing each of the drug\'s interactions.',
 			},
 			{
-				title: "Galaxy View",
-				//note, this element was given a second classname as a workaround to force joyride to rerender the step (as the selector changed)
-				selector: '.galaxy2',
+				title: "Galaxy View - Reports",
+				selector: '.galaxyReports',
 				text: 'To view details about the reports behind the visualization, click on the reports icon.',
 				style: {
 					footer: {
@@ -80,8 +96,11 @@ export default class App extends Component {
 				style: {
 					footer: {
 						display: 'none',
-					}
-				}
+					},
+					arrow: {
+						display: 'none'
+					},
+				},
 			},
 			{
 				title: "Interaction Profile",
@@ -106,7 +125,7 @@ export default class App extends Component {
 			},
 			{
 				title: "Thanks!",
-				text: 'This concludes the tour! If you have more questions, our contact information is in the About Us section of the Help menu.',
+				text: 'This concludes the tour! If you have more questions, our contact information is in the About Us section.',
 				selector: '.mainContainer',
 			},
 		];
@@ -133,6 +152,13 @@ export default class App extends Component {
 			}else if(!this.state.joyrideOverlay){
 				this.setState({joyrideOverlay: true});
 			}
+			if(data.step.selector === '.galaxyReports') {
+				//set offset on step before it is needed, so it is updated by the time it gets to .report step
+				this.setState({tooltipOffset: -150});
+			}
+			else {
+				this.setState({tooltipOffset: 10});
+			}
 		}
 	}
 
@@ -149,6 +175,7 @@ export default class App extends Component {
 			joyrideType,
 			stepIndex,
 			steps,
+			tooltipOffset
 		  } = this.state;
 
 		return (
@@ -177,6 +204,7 @@ export default class App extends Component {
 					keyboardNavigation={false}
 					disableOverlay={false}
 					scrollToSteps={true}
+					tooltipOffset={tooltipOffset}
 				/>
 				{/* <Navigation /> */}
 				<GlobalFilterNavContainer startTour={this.startTour}/>
