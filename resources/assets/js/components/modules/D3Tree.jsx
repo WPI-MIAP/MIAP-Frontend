@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 import ReactDOM from 'react-dom';
 import * as _ from 'lodash'
+import { generateColor, generateScoreBorderColor } from '../../utilities/functions';
+import { baseNodeColor, baseNodeBorderColor, adrBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
 
 
 export default class D3Tree extends Component {
@@ -58,7 +60,6 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
   console.log(svgDomNode.parentNode.parentNode.parentNode);
   const width = '100%';
   const duration = 750;
-  const low_color="#fecc5c", low_med_color="#fd8d3c",  med_color="#f03b20", high_color= "hsl(0, 100%, 25%)"
 
   let svg = d3.select(svgDomNode)
     .attr("width", width)
@@ -216,27 +217,15 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       .style("stroke", d => {
         if(d.data.Score) {
           //border for ADR
-          return "#A9B0B7";
+          return adrBorderColor;
         }
         else if(d.data.name === root.data.name) {
           //border for base node
-          return "#0069C0";
+          return baseNodeBorderColor;
         }
         else if(d.data.maxScore) {
           //border for interior nodes
-          const score = d.data.maxScore;
-          if (score <= scoreRange[0]) {
-            return "#E8BA54";
-          }
-          else if (score > scoreRange[0] && score <= scoreRange[1]) {
-            return "#E37E36";
-          }
-          else if (score > scoreRange[1] && score <= scoreRange[2]) {
-            return "#C2230C";
-          }
-          else if (score > scoreRange[2]) {
-            return "#610000";
-          }
+          return generateScoreBorderColor(d.data.maxScore, scoreRange);
         }
         else{
           return 'none';
@@ -246,33 +235,21 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       .style("fill", d => {
         if (d.data.name === root.data.name) {
           //fill for base node
-          return '#2C98F0';
+          return baseNodeColor;
         }
 
         if (d.data.maxScore) {
           //fill for interior nodes
-          const score = d.data.maxScore;
-          if (score <= scoreRange[0]) {
-            return low_color;
-          }
-          else if (score > scoreRange[0] && score <= scoreRange[1]) {
-            return low_med_color;
-          }
-          else if (score > scoreRange[1] && score <= scoreRange[2]) {
-            return med_color;
-          }
-          else if (score > scoreRange[2]) {
-            return high_color;
-          }
+          return generateColor(d.data.maxScore, scoreRange);
         }
 
         if (d.data.critical) {
           //fill for severe ADRs
-          return '#6A51A3';
+          return severeADRColor;
         }
 
         //fill for regular ADRs
-        return "#A9B0B7";
+        return regularADRColor;
       })
 
       .attr('cursor', 'pointer');
@@ -307,35 +284,11 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       })
       .style("stroke", d => {
         if (d.data.maxScore) {
-          const score = d.data.maxScore;
-          if (score <= scoreRange[0]) {
-            return low_color;
-          }
-          else if (score > scoreRange[0] && score <= scoreRange[1]) {
-            return low_med_color;
-          }
-          else if (score > scoreRange[1] && score <= scoreRange[2]) {
-            return med_color;
-          }
-          else if (score > scoreRange[2]) {
-            return high_color;
-          }
+          return generateColor(d.data.maxScore, scoreRange);
         }
 
         if (d.data.Score) {
-          const score = d.data.Score;
-          if (score <= scoreRange[0]) {
-            return low_color;
-          }
-          else if (score > scoreRange[0] && score <= scoreRange[1]) {
-            return low_med_color;
-          }
-          else if (score > scoreRange[1] && score <= scoreRange[2]) {
-            return med_color;
-          }
-          else if (score > scoreRange[2]) {
-            return high_color;
-          } 
+          return generateColor(d.data.Score, scoreRange);
         }
       })
       .style("stroke-width",
@@ -376,12 +329,3 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
   update(root);
   centerNode(root);
 }
-
-// var renderTree = function(treeData, svgDomNode) {
-//     // Add the javascript code that renders the tree from
-//     // http://bl.ocks.org/d3noob/8329404
-//     // And replace the line that reads
-//     // var svg = d3.select("body").append("svg")
-//     // with 
-//     // var svg = d3.select(svgDomNode)
-// }

@@ -13,6 +13,7 @@ import {
 } from 'material-ui/Table';
 import Dialog from 'material-ui/Dialog';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
+import {barColor, barSelectedColor} from '../../utilities/constants';
 
 
 export default class Report extends React.Component {
@@ -116,7 +117,7 @@ export default class Report extends React.Component {
                 <Bar dataKey="freq" onClick={this.handleBarClick}>
                   {
                     this.state.drugFreqs.map((entry, index) => (
-                      <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? '#2C98F0' : '#73B8F0'} key={`cell-${index}`}/>
+                      <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? barSelectedColor : barColor} key={`cell-${index}`}/>
                     ))
                   }
                 </Bar>
@@ -165,7 +166,7 @@ export default class Report extends React.Component {
                       return null;
                     }
                     return (
-                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: '#2C98F0', color: 'black'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
+                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: barSelectedColor, color: 'black'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
                       >
                         <TableRowColumn>{data.primaryId}</TableRowColumn>
                         <TableRowColumn>{data.event_dt}</TableRowColumn>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
+import {baseNodeColor} from '../../utilities/constants';
+import {generateColor} from '../../utilities/functions';
 
 
 const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
@@ -43,28 +45,12 @@ export default class DndTree extends Component {
 		}
 
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
-		this.generateColor = this.generateColor.bind(this);
 	}
 
 	componentDidUpdate() {
 		if (this.state.network != null) {
 			this.state.network.redraw();
 			this.state.network.fit();
-		}
-	}
-
-	generateColor(score){
-		if (score <= this.props.scoreRange[0]) {
-			return '#fecc5c'
-		} 
-		else if (score > this.props.scoreRange[0] && score <= this.props.scoreRange[1]) {
-			return '#fd8d3c'
-		}
-		else if (score > this.props.scoreRange[1] && score <= this.props.scoreRange[2]) {
-			return '#f03b20'
-		}
-		else if (score > this.props.scoreRange[2]) {
-			return 'hsl(0, 100%, 25%)'
 		}
 	}
 
@@ -99,9 +85,9 @@ export default class DndTree extends Component {
 				(el.Drug1.name == node || el.Drug2.name == node)
 			).status == 'known' && node != this.props.currentDrug) ? 5 : 10,
 			hidden: isNodeHidden(this.props.filter, this.props.data.rules, node, this.props.currentDrug, this.props.minScore, this.props.maxScore),
-			color: node != this.props.currentDrug ? this.generateColor(this.props.data.rules.find(el => 
+			color: node != this.props.currentDrug ? generateColor(this.props.data.rules.find(el => 
 				(el.Drug1.name == node || el.Drug2.name == node)
-			).Score) : '#349AED'
+			).Score, this.props.scoreRange) : baseNodeColor
 		}))
 
 		const graph = {

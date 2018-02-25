@@ -20,9 +20,10 @@ import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import { dmeColors, scoreColors } from '../../utilities/constants';
+import { dmeColors, scoreColors, regularADRColor, adrBorderColor, complementaryColor, selectedColor, baseNodeColor, secondaryColor } from '../../utilities/constants';
 import { generateColor } from '../../utilities/functions';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
+import Footer from '../modules/Footer';
 
 const styles = {
 	root: {
@@ -44,16 +45,16 @@ const styles = {
 		zIndex: 100
 	},
 	legendSevere: {
-		backgroundColor: '#6A51A3',
-		border: '3px solid #A9B0B7',
+		backgroundColor: dmeColors[3].color,
+		border: '3px solid ' + adrBorderColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
 		textAlign: 'center'
 	},
 	legendNormal: {
-		backgroundColor: '#A9B0B7',
-		border: '3px solid #A9B0B7',
+		backgroundColor: regularADRColor,
+		border: '3px solid ' + adrBorderColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
@@ -91,7 +92,6 @@ export default class MainView extends Component {
 		this.onClickNodeTour = this.onClickNodeTour.bind(this);
 		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-		this.generateColor = this.generateColor.bind(this);
 	}
 
 	componentDidMount() {
@@ -101,21 +101,6 @@ export default class MainView extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
-	}
-
-	generateColor(score){
-		if (score <= this.props.scoreRange[0]) {
-			return '#fecc5c'
-		} 
-		else if (score > this.props.scoreRange[0] && score <= this.props.scoreRange[1]) {
-			return '#fd8d3c'
-		}
-		else if (score > this.props.scoreRange[1] && score <= this.props.scoreRange[2]) {
-			return '#f03b20'
-		}
-		else if (score > this.props.scoreRange[2]) {
-			return 'hsl(0, 100%, 25%)'
-		}
 	}
 
 	updateWindowDimensions() {
@@ -146,11 +131,11 @@ export default class MainView extends Component {
 		const drug1 = report.drugs[0];
 		const drug2 = report.drugs[1];
 
-		const avatarColor = report.type === 'drug' ? "#2C98F0" : this.generateColor(this.props.links.filter((link) => {
+		const avatarColor = report.type === 'drug' ? baseNodeColor : generateColor(this.props.links.filter((link) => {
 			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
 			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
 			return match;
-		})[0].Score);
+		})[0].Score, this.props.scoreRange);
 		return (
 			<Chip
 				key={title}
@@ -309,7 +294,7 @@ export default class MainView extends Component {
 				<Grid fluid style={{ marginTop: 10, height: '80vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
-						backgroundColor={'#2D3E46'}
+						backgroundColor={complementaryColor}
 						style={{
 							position: 'absolute',
 							right: 30,
@@ -321,7 +306,7 @@ export default class MainView extends Component {
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
 					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
-						<EditorInsertChart color="#2D3E46" style={{height: 54, width: 54}}/>
+						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54}}/>
 						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
 							{this.state.reportChips.map(this.renderChip, this)}
 						</div>
@@ -330,12 +315,12 @@ export default class MainView extends Component {
 						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
 								display: this.state.col === 4 ? 'none' : 'block'}}
-								inkBarStyle={{background: '#29ACBF', height: '4px', marginTop: '-4px'}}
+								inkBarStyle={{background: selectedColor, height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
-								<Tab label={'Overview'} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenOverview} value={0}/>
-								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenGalaxy} value={1}/>
-								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: "#2D3E46"}} onActive={this.toggleFullscreenProfile} value={2}/>
+								<Tab label={'Overview'} style={{background: complementaryColor}} onActive={this.toggleFullscreenOverview} value={0}/>
+								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: complementaryColor}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+								<Tab label={'Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")} style={{background: complementaryColor}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -348,7 +333,7 @@ export default class MainView extends Component {
 									title={this.state.col != 12 ? "Overview" : ""}
 									titlePosition="top"
 									className="overview overview2 overview3"
-									titleBackground="#2D3E46"
+									titleBackground={complementaryColor}
 									style={{
 										boxSizing: 'border-box',
 										background: 'white',
@@ -381,7 +366,7 @@ export default class MainView extends Component {
 									/>
 								</GridTile>
 									<Col>
-										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 											{scoreColors.map(scoreColor => (
 												<Col xs={3} md={3}>
@@ -418,7 +403,7 @@ export default class MainView extends Component {
 											<TreeViewFilterContainer /> 
 										</div>
 									}
-									titleBackground="#2D3E46"
+									titleBackground={complementaryColor}
 									style={{
 										boxSizing: 'border-box',
 										background: 'white',
@@ -443,7 +428,7 @@ export default class MainView extends Component {
 									/>
 								</GridTile>
 									<Col>
-										<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 										{dmeColors.map(dmeColor => (
 											<Col xs={2.4} md={2.4}>
@@ -465,9 +450,8 @@ export default class MainView extends Component {
 									title={this.state.col != 12 ? ('Interaction Profile ' + (this.props.selectedDrug != "" ? '- ' + _.capitalize(this.props.selectedDrug) : "")) : ""}
 									titlePosition="top"
 									className="profile"
-									titleBackground="#2D3E46"
+									titleBackground={complementaryColor}
 									style={{
-										// border: '1px solid #F0F0F0', 
 										boxSizing: 'border-box',
 										background: 'white',
 									}}
@@ -489,7 +473,7 @@ export default class MainView extends Component {
 									/>
 								</GridTile>
 								<Col>
-									<hr style={{borderTop: '1px solid #E9EBEE', width: '90%', padding: 0, margin: '0 auto'}}/>
+									<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
 										<Col xs={4} md={4}>
 											<div style={styles.legendSevere}>
@@ -507,63 +491,8 @@ export default class MainView extends Component {
 							</Paper>
 						</Col>
 					</Row>
-					<Row style={{background: '#2D3E46', color: 'white', marginTop: 10, paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
-						<Col sm={6}>
-							<p style={{textAlign: 'left'}}>
-								© 2018. Worcester Polytechnic Institute. All Rights Reserved.
-							</p>
-						</Col>
-						<Col sm={6} style={{textAlign: 'right'}}>
-							<a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
-						</Col>
-					</Row>
+					<Footer />
 			</Grid>
-			<Dialog
-              title="About Us"
-              contentStyle={{width: "60%", maxWidth: "none"}}
-              actions={actions}
-              modal={false}
-              open={this.state.aboutUs}
-              onRequestClose={() => {this.setState({aboutUs: false})}}
-              autoScrollBodyContent={true}
-			>
-				<br/>
-				This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
-				was composed of: <br/><br/>
-				<b>Undergraduate Students:</b> 
-				<ul>
-					<li><b>Brian McCarthy</b>, Senior, CS '18</li>
-					<li><b>Andrew Schade</b>, Senior, CS '18</li>
-					<li><b>Huy Tran</b>, Senior, CS '18</li>
-					<li><b>Brian Zylich</b>, BS/MS Candidate, CS '19</li>
-				</ul>
-				<b>Graduate Student Mentors:</b>
-				<ul>
-					<li><b>Xiao Qin</b>, PhD Candidate</li>
-					<li><b>Tabassum Kakar</b>, PhD Candidate</li>
-				</ul>
-				<b>Faculty:</b> <b>Prof. Rundensteiner</b> and <b>Prof. Harrison</b><br/>
-				<b>FDA:</b>
-				<ul>
-					<li><b>Suranjan De</b>, MS, MBA.<br/>{'Deputy Director, Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
-					<li><b>Sanjay K. Sahoo</b>, MS, MBA<br/>{'Team Lead (Acting) Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
-					<li><b>FDA Safety Evaluators:</b></li>
-					<ul>
-						<li><b>Christian Cao</b></li>
-						<li><b>Monica Munoz</b></li>
-						<li><b>Tingting Gao</b></li>
-						<li><b>Jo Wyeth</b></li>
-						<li><b>Oanh Dang</b></li>
-						<li><b>Cathy Miller</b></li>
-						<li><b>Madhuri Patel</b></li>
-					</ul>
-				</ul>
-				
-				Tabassum and Xiao are thankful to Oak Ridge Institute for Science and Education (ORISE) managed for the U.S. Department of Energy (DOE) by Oak Ridge Associated Universities (ORAU) for supporting this work.
-				<br/>
-				<br/>
-				To contact us, email the team at <a href="mailto:diva-support@wpi.edu">diva-support@wpi.edu</a> or Prof. Rundensteiner at <a href="mailto:rundenst@cs.wpi.edu">rundenst@cs.wpi.edu</a>.
-			</Dialog>
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}

@@ -11,39 +11,13 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import * as _ from 'lodash';
-import Report from '../modules/Report'
+import Report from '../modules/Report';
+import {getStyleByDMECount} from '../../utilities/functions';
+import {selectedColor} from '../../utilities/constants';
 
 export default class DndTreeContainer extends Component {
 	constructor(props) {
 		super(props);
-
-		this.getStyleByDMECount = this.getStyleByDMECount.bind(this);
-	}
-
-	getStyleByDMECount(numDMEs) {
-		var colors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
-		var style = {
-			padding: '20px 0',
-			margin: 0,
-			color: 'white'
-		};
-		
-		if(numDMEs === 0) {
-			style['background'] = colors[0];
-		}else if(numDMEs <= this.props.dmeRange[0]) {
-			style['background'] = colors[1];
-		}
-		else if(numDMEs <= this.props.dmeRange[1]) {
-			style['background'] = colors[2];
-		}
-		else if(numDMEs <= this.props.dmeRange[2]) {
-			style['background'] = colors[3];
-		}
-		else {
-			style['background'] = colors[4];
-		}
-
-		return style;
 	}
 
 	render() {
@@ -86,12 +60,12 @@ export default class DndTreeContainer extends Component {
 								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
 									<div className="card" key={drug[0]} style={{
 											height: 200,
-											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey',
+											border: this.props.selectedDrug == drug[0] ? '3px solid ' + selectedColor : '3px solid grey',
 											marginTop: 5,
 											marginBottom: 5
 										}}
 									>
-										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : this.getStyleByDMECount(drug[1].drugDMEs.length)}>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}>
 											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
@@ -136,8 +110,8 @@ export default class DndTreeContainer extends Component {
 											border: this.props.selectedDrug == drug[0] ? '3px solid #29ACBF' : '3px solid grey'
 										}}
 									>
-										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : this.getStyleByDMECount(drug[1].drugDMEs.length)}>
-											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}>
+											<span style={styles.titleText}>{(drug[0].length <= 20) ? _.capitalize(drug[0]) : _.capitalize(_.trim(drug[0].substring(0, 17)) + '...')}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
 												<IconButton tooltip="Show Profile"

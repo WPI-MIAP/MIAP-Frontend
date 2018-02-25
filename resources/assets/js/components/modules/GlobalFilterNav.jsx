@@ -37,6 +37,7 @@ import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
+import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor } from '../../utilities/constants';
 
 
 const Slider = require('rc-slider');
@@ -51,7 +52,7 @@ const wpiLogo = <img style={{
 
 const styles = {
   root: {
-    background: '#AA2C3B'
+    background: primaryColor
   },
   dropDown: {
     width: 165,
@@ -88,9 +89,6 @@ const styles = {
     background: 'black'
   }
 };
-
-const dmeColors = ['#A9A9A9','#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'];
-const scoreColors = ['#fecc5c', '#fd8d3c', '#f03b20', 'hsl(0, 100%, 25%)'];
 
 const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
 
@@ -511,7 +509,7 @@ export default class GlobalFilterNav extends React.Component {
 
     const data = [
       {									
-        color: "#A9B0B7", 
+        color: secondaryColor, 
         points: points
       }
     ];
@@ -529,7 +527,7 @@ export default class GlobalFilterNav extends React.Component {
               labelStyle={{ color: 'white' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-              selectedMenuItemStyle={{ color: '#AA2C3B' }}
+              selectedMenuItemStyle={{ color: primaryColor }}
             >
               <MenuItem value='all' primaryText="All DIARs" />
               <MenuItem value='known' primaryText="Known DIARs" />
@@ -554,7 +552,7 @@ export default class GlobalFilterNav extends React.Component {
                   margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
                 <Range className='scoreMinMax scoreMinMax2'
                   defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-                  style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                  style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
                   dotStyle={{display: 'none'}}/>
               </div>
             </div>
@@ -682,22 +680,12 @@ export default class GlobalFilterNav extends React.Component {
                               <Row style={{height: 34}}>
                                 {'Interaction Score'}
                               </Row>
-                              <Row>
-                                <div style={{width: 34, height: 34, background: scoreColors[0], marginRight: 10}}/>
-                                <div><p>{'Low'}</p></div>
-                              </Row>
-                              <Row>
-                                <div style={{width: 34, height: 34, background: scoreColors[1], marginRight: 10}}/>
-                                <div><p>{'Med. Low'}</p></div>
-                              </Row>
-                              <Row>
-                                <div style={{width: 34, height: 34, background: scoreColors[2], marginRight: 10}}/>
-                                <div><p>{'Med. High'}</p></div>
-                              </Row>
-                              <Row>
-                                <div style={{width: 34, height: 34, background: scoreColors[3], marginRight: 10}}/>
-                                <div><p>{'High'}</p></div>
-                              </Row>
+                              {scoreColors.map(scoreColor => (
+                                <Row>
+                                  <div style={{width: 34, height: 34, background: scoreColor.color, marginRight: 10}}/>
+                                  <div><p>{scoreColor.text}</p></div>
+                                </Row>
+                              ))}
                             </Col>
                           </Row>
                         </Col>
@@ -737,26 +725,12 @@ export default class GlobalFilterNav extends React.Component {
                               <Row style={{height: 35}}>
                                 {'Severe ADR Count'}
                               </Row>
-                              <Row style={{height: 35}}>
-                                <div style={{width: 34, background: dmeColors[0], marginRight: 10}}/>
-                                <div><p>{'None'}</p></div>
-                              </Row>
-                              <Row style={{height: 35}}>
-                                <div style={{width: 34, background: dmeColors[1], marginRight: 10}}/>
-                                <div><p>{'Low'}</p></div>
-                              </Row>
-                              <Row style={{height: 35}}>
-                                <div style={{width: 34, background: dmeColors[2], marginRight: 10}}/>
-                                <div><p>{'Med. Low'}</p></div>
-                              </Row>
-                              <Row style={{height: 35}}>
-                                <div style={{width: 34, background: dmeColors[3], marginRight: 10}}/>
-                                <div><p>{'Med. High'}</p></div>
-                              </Row>
-                              <Row style={{height: 35}}>
-                                <div style={{width: 34, background: dmeColors[4], marginRight: 10}}/>
-                                <div><p>{'High'}</p></div>
-                              </Row>
+                              {dmeColors.map(dmeColor => (
+                                <Row style={{height: 35}}>
+                                  <div style={{width: 34, background: dmeColor.color, marginRight: 10}}/>
+                                  <div><p>{dmeColor.text}</p></div>
+                                </Row>
+                              ))}
                             </Col>
                           </Row>
                         </Col>
@@ -782,11 +756,11 @@ export default class GlobalFilterNav extends React.Component {
                               />
                               <Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
                                 <Col style={{marginRight: 10}}>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#6A51A3', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
                                   <div>Severe ADR</div>
                                 </Col>
                                 <Col>
-                                  <div style={{height: 35, width: 34, margin: '0 auto', background: '#A9B0B7', border: '#A9B0B7', borderStyle: 'solid'}}/>
+                                  <div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
                                   <div>Normal ADR</div>
                                 </Col>
                               </Row>
@@ -815,7 +789,7 @@ export default class GlobalFilterNav extends React.Component {
                           </ul>
                         </Col>
                         <Col sm={12} md={5}>
-                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 200, height: 64}}>
+                          <Paper zDepth={1} style={{background: primaryColor, width: 200, height: 64}}>
                             <DropDownMenu 
                               className="knownUnknown"
                               value={this.state.value}
@@ -825,14 +799,14 @@ export default class GlobalFilterNav extends React.Component {
                               labelStyle={{ color: 'white' }}
                               targetOrigin={{horizontal: 'right', vertical: 'top'}}
                               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-                              selectedMenuItemStyle={{ color: '#AA2C3B' }}
+                              selectedMenuItemStyle={{ color: primaryColor }}
                             >
                               <MenuItem value='all' primaryText="All DIARs" />
                               <MenuItem value='known' primaryText="Known DIARs" />
                               <MenuItem value='unknown' primaryText="Unknown DIARs" />
                             </DropDownMenu> 
                           </Paper>
-                          <Paper zDepth={1} style={{background: "#AA2C3B", width: 310, height: 64, marginTop: 10}}>
+                          <Paper zDepth={1} style={{background: primaryColor, width: 310, height: 64, marginTop: 10}}>
                             <div 
                               style={{position: 'relative', top: -25, marginLeft: 0}}>
                               <LineChart
@@ -851,7 +825,7 @@ export default class GlobalFilterNav extends React.Component {
                                 margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
                               <Range className='scoreMinMax scoreMinMax2'
                                 defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={() => {}} 
-                                style={styles.slider} tipProps={styles.sliderTip} marks={dummyMarks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: '#A9B0B7'}}
+                                style={styles.slider} tipProps={styles.sliderTip} marks={dummyMarks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
                                 dotStyle={{display: 'none'}}/>
                             </div>
                           </Paper>
@@ -885,7 +859,7 @@ export default class GlobalFilterNav extends React.Component {
                             <Bar dataKey="freq" onClick={(data, index) => {this.setState({helpBarSelectedIndex: index})}}>
                               {
                                 dummyDrugFreqs.map((entry, index) => (
-                                  <Cell cursor="pointer" fill={index === this.state.helpBarSelectedIndex ? '#2C98F0' : '#73B8F0'} key={`cell-${index}`}/>
+                                  <Cell cursor="pointer" fill={index === this.state.helpBarSelectedIndex ? barSelectedColor : barColor} key={`cell-${index}`}/>
                                 ))
                               }
                             </Bar>
