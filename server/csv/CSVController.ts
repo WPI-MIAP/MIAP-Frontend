@@ -99,7 +99,6 @@ var exec = require('child_process').exec;
 				}
 			}
 
-			// console.log("Min: " + minScore + " Max: " + maxScore);
 			if (req.query.status === 'known') {
 	 			rules = rules.filter(rule => rule.status === 'known');
 	 		} else if (req.query.status === 'unknown') {
