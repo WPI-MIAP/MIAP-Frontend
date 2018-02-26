@@ -12,7 +12,7 @@ export default class D3Tree extends Component {
 
     this.state = {
       previousDrug: '',
-      previousData: []
+      previousData: ''
     }
   }
   componentDidMount() {
@@ -27,17 +27,17 @@ export default class D3Tree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.treeData[0].children.length > 0) {
+    // if (nextProps.treeData[0].children.length > 0) {
       if (this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
         (this.state.previousDrug.toLowerCase() === nextProps.treeData[0].name.toLowerCase() && 
-        ! _.isEqual(this.state.previousData, nextProps.treeData[0])
-        )
+        ! _.isEqual(this.state.previousData.children, nextProps.treeData[0].children)
+        ) 
       ) {
         this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
         removeTree(ReactDOM.findDOMNode(this));
         renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
       }
-    }
+    // }
   }
 
   render() {
@@ -162,6 +162,10 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       return path
     }
 
+    let div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("display", "none")
+
     nodes.forEach(d => d.y = d.depth * 180);
 
     // Update the nodes...
@@ -230,6 +234,17 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
           return 'none';
         }
       })
+      .on("mouseover", function (d) {
+        if (d.depth === 0) return;
+        div.style("left", (d3.event.pageX - 30) + "px")
+          .style("top", (d3.event.pageY - 40) + "px")
+          .style('display', 'block')
+          .html(`Report count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
+      })
+      .on("mouseout", function (d) {
+        console.log('mouseout')
+        div.style("display", 'none');
+      })
 
       .style("fill", d => {
         if (d.data.name === root.data.name) {
@@ -281,6 +296,7 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
         const o = { x: source.x0, y: source.y0 }
         return diagonal(o, o)
       })
+      
       .style("stroke", d => {
         if (d.data.maxScore) {
           return generateColor(d.data.maxScore, scoreRange);

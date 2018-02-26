@@ -63,6 +63,12 @@ export class InteractionProfile extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      myTreeData: [{ name: '', children: [] }]
+    }
+  }
+
+  componentDidMount() {
     if(this.props.helpExample) {
       //use dummy data if it is the help example
       let mainDrug, myTreeData, rules, drugs;
@@ -85,24 +91,26 @@ export class InteractionProfile extends Component {
         child.maxScoreStatus = _.maxBy(interactions, o => o.Score).status;
       }
 
-      this.state = {
+      this.setState = {
         myTreeData
       };
     }
-    else {
-      this.state = {
-        myTreeData: [{name: '', children: []}]
-      };
-    }
+
   }
 
   componentWillReceiveProps(nextProps) {
+
     
     if(!nextProps.helpExample) {
       let mainDrug, myTreeData, rules, drugs, drugDMEs;
-      if (nextProps.mainDrug != '') {
+      if (nextProps.mainDrug != '' || 
+        this.props.filter !== nextProps.filter || 
+        this.props.maxScore !== nextProps.maxScore || 
+        this.props.minScore !== nextProps.minScore
+      ) {
+        console.log('change');
         mainDrug = nextProps.mainDrug
-        axios.get('/csv/rules?drug=' + mainDrug).then(res => {
+        axios.get('/csv/rules?drug=' + mainDrug + '&status=' + nextProps.filter).then(res => {
           rules = res.data.rules;
           drugs = res.data.drugs;
           drugDMEs = res.data.drugDMEs;
@@ -115,14 +123,25 @@ export class InteractionProfile extends Component {
             let child = myTreeData[0].children[i]
   
             const interactions = rules
-            .filter(rule => _.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name)
-            .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status }))
+              .filter(rule => (_.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name) &&
+                rule.Score >= nextProps.minScore && rule.Score <= nextProps.maxScore
+              )
+              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, count: rule.id.split(',').length }))
 
-            child.children = interactions; 
-            let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
-            child.maxScore = sortedInteractions[0].Score;
-            child.maxScoreStatus = sortedInteractions[0].status;
+            if (interactions.length === 0) {
+              myTreeData[0].children[i] = {}
+            } else {
+              child.children = interactions; 
+              let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
+              child.maxScore = sortedInteractions[0] ? sortedInteractions[0].Score : -2;
+              child.maxScoreStatus = sortedInteractions[0] ? sortedInteractions[0].status : -2;
+              child.totalCount = _.sumBy(interactions, i => i.count);
+            }
           }
+
+          myTreeData[0].children = myTreeData[0].children.filter(c => ! _.isEmpty(c));
+
+          console.log(myTreeData[0].children);
   
           this.setState({
             myTreeData
@@ -130,10 +149,15 @@ export class InteractionProfile extends Component {
         });
       } 
   
-      else if (nextProps.mainRule != '') {
+      else if(nextProps.mainRule != '' ||
+        this.props.filter !== nextProps.filter ||
+        this.props.maxScore !== nextProps.maxScore ||
+        this.props.minScore !== nextProps.minScore
+      ) {        
+        console.log('change rule');
         const drugNames = nextProps.mainRule.split(' --- ');
         mainDrug = drugNames[0];
-        axios.get('/csv/rules?drug=' + drugNames[0] + '&drug=' + drugNames[1]).then(res => {
+        axios.get('/csv/rules?drug=' + drugNames[0] + '&drug=' + drugNames[1] + '&status=' + nextProps.filter).then(res => {
           rules = res.data.rules;
           drugDMEs = res.data.drugDMEs;
           drugs = res.data.drugs;
@@ -146,14 +170,21 @@ export class InteractionProfile extends Component {
             let child = myTreeData[0].children[i]
   
             const interactions = rules
-            .filter(rule => _.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name)
-            .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status }))
+              .filter(rule => (_.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name) &&
+                rule.Score >= nextProps.minScore && rule.Score <= nextProps.maxScore
+              )
+              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, count: rule.id.split(',').length }))
 
-            child.children = interactions;
-            let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['asc', 'desc']);
-            console.log('hi' + sortedInteractions);
-            child.maxScore = sortedInteractions[0].Score;
-            child.maxScoreStatus = sortedInteractions[0].status;
+
+            if (interactions.length === 0) {
+              myTreeData[0].children[i] = {}
+            } else {
+              child.children = interactions;
+              let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
+              child.maxScore = sortedInteractions[0] ? sortedInteractions[0].Score : -2;
+              child.maxScoreStatus = sortedInteractions[0] ? sortedInteractions[0].status : -2;
+              child.totalCount = _.sumBy(interactions, i => i.count);
+            }
           }
   
           this.setState({
@@ -169,7 +200,12 @@ export class InteractionProfile extends Component {
     return (
       <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         {(this.props.mainDrug != '' || this.props.mainRule != '') ?
-          <D3Tree scoreRange={this.props.scoreRange} treeData={this.state.myTreeData}/> :
+          <D3Tree scoreRange={this.props.scoreRange} 
+            treeData={this.state.myTreeData}
+            filter={this.props.filter}
+            minScore={this.props.minScore}
+            maxScore={this.props.maxScore}
+          /> :
           <h4 style={{color: 'grey'}}>No interaction profiles are being selected</h4>
         }
       </div>

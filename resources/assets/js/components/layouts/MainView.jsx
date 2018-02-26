@@ -542,6 +542,9 @@ export default class MainView extends Component {
 										mainDrug={this.props.selectedDrug} 
 										mainRule={this.props.selectedRule}
 										scoreRange={this.props.scoreRange}
+										filter={this.props.filter}
+										minScore={this.props.minScore}
+										maxScore={this.props.maxScore}
 									/>
 								</GridTile>
 								<Col>

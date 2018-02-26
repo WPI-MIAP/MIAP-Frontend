@@ -193,7 +193,7 @@ export default class Help extends Component {
 					onRequestClose={() => {this.setState({dialogOpen: false})}}
 					autoScrollBodyContent={true}>
 					<Grid>
-						<Row>
+						<Row style={{ marginTop: 20 }}>
 							<Card initiallyExpanded={true} style={{width: '100%'}}>
 							<CardHeader
 								title="Views"
