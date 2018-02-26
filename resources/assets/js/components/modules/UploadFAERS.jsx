@@ -163,20 +163,38 @@ export default class UploadFAERS extends Component {
 						minFileSize={0}
 						clickable
 						>
-						<Paper zDepth={1} style={{height: 76, lineHeight: '38px', textAlign: 'center'}}>
-						<div>Drop files here or click to upload<br/>(File format must be .zip)</div>
+						<Paper zDepth={1} style={{height: 114, lineHeight: '38px', textAlign: 'center'}}>
+						<div>
+							Drop files here or click to upload (File format must be .zip)<br/>
+							Zip files can be downloaded from&nbsp;
+							<a target="_blank" onClick={(event) => {event=event || window.event; event.stopPropagation();}} href="https://www.fda.gov/Drugs/GuidanceComplianceRegulatoryInformation/Surveillance/AdverseDrugEffects/ucm082193.htm">
+								this link
+							</a>. <br/>
+							Note: Please upload the ASCII version.
+						</div>
 						</Paper>
 					</Files>
 					<List>
-						{
-						this.state.uploadFiles.map((file) => (
-							<ListItem
-							key={file.name}
+						<ListItem primaryText={'Example:'} disabled={true}/>
+						<ListItem
 							leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
-							rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
-							primaryText={file.name}
+							rightIconButton={<IconButton onClick={() => {}}><NavigationClose/></IconButton>}
+							primaryText={'faers_ascii_2013q1.zip'}
+							disabled={true}
 							/>
-						))
+						<ListItem primaryText={'Files to Upload:'} disabled={true}/>
+						{
+							(this.state.uploadFiles.length == 0) ? (
+								<ListItem primaryText={'No files have been added.'} disabled={true}/>
+							) :
+							(this.state.uploadFiles.map((file) => (
+								<ListItem
+									key={file.name}
+									leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
+									rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
+									primaryText={file.name}
+									/>
+							)))
 						}
 					</List>
 				</Dialog>

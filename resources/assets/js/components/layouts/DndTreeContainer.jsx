@@ -117,7 +117,7 @@ export default class DndTreeContainer extends Component {
 								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
 									<div className="card" key={drug[0]} style={{
 											height: 300,
-											border: this.props.selectedDrug == drug[0] ? '3px solid #F44336' : '3px solid grey'
+											border: this.props.selectedDrug == drug[0] ? '3px solid ' + selectedColor : '3px solid grey'
 										}}
 									>
 										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}>
