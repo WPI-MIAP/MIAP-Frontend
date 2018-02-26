@@ -25,6 +25,8 @@ import { generateColor } from '../../utilities/functions';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import Footer from '../modules/Footer';
 import Slider from 'react-slick';
+import SwipeableViews from 'react-swipeable-views';
+
 
 const styles = {
 	root: {
@@ -80,8 +82,10 @@ export default class MainView extends Component {
 			width: 0,
 			height: 0,
 			aboutUs: false,
+			hover: false
 		}
 
+		this.toggleHover = this.toggleHover.bind(this);
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
 		this.toggleFullscreenGalaxy = this.toggleFullscreenGalaxy.bind(this);
 		this.toggleFullscreenProfile = this.toggleFullscreenProfile.bind(this);
@@ -261,6 +265,10 @@ export default class MainView extends Component {
 		})
 	}
 
+	toggleHover() {
+		this.setState({ hover: !this.state.hover });
+	}
+
 	getTabsIndex() {
 		if (this.state.isOverviewFullscreen) {
 			return 0;
@@ -294,37 +302,6 @@ export default class MainView extends Component {
 	}
 
 	render() {
-		const settings = {
-			dots: true,
-			infinite: false,
-			speed: 500,
-			slidesToShow: 4,
-			slidesToScroll: 4,
-			initialSlide: 0,
-			responsive: [{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 3,
-					infinite: true,
-					dots: true
-				}
-			}, {
-				breakpoint: 600,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 2,
-					initialSlide: 2
-				}
-			}, {
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1
-				}
-			}]
-		};
-
 		const actions = [
 			<FlatButton
 				label="Close"
@@ -369,11 +346,21 @@ export default class MainView extends Component {
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
 					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
-						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54}}/>
-						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
+						<EditorInsertChart color={complementaryColor} style={{height: 40, width: 40}}/>
+						<div style={{ 
+							height: 54, 
+							width: '100%', 
+							overflowX: 'auto',
+							overflowY: 'hidden', 
+							whiteSpace: 'nowrap', 
+							display: 'flex', 
+						}}
+							onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}
+						>
 							{this.state.reportChips.map(this.renderChip, this)}
 						</div>
 					</Paper>
+
 					<Row>
 						<Col xs={12} md={12}> 
 							<Tabs style={{marginBottom: 15,
