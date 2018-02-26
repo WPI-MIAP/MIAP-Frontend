@@ -111,7 +111,7 @@ export default class DndTree extends Component {
 				font: {
 					color: '#343434',
 						size: 11, // px
-						face: 'arial',
+						face: 'Roboto',
 				},
 			},
 			interaction:{

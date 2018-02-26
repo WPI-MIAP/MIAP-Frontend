@@ -74,6 +74,7 @@ class ModifiedSearchBar extends SearchBar {
               ...styles.root,
               ...style
             }}
+            zDepth={2}
           >
             <div style={styles.searchContainer}>
               <AutoComplete

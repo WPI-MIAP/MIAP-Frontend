@@ -82,7 +82,8 @@ export default class MainView extends Component {
 			width: 0,
 			height: 0,
 			aboutUs: false,
-			hover: false
+			hover: false,
+			currentReport: ''
 		}
 
 		this.toggleHover = this.toggleHover.bind(this);
@@ -167,28 +168,38 @@ export default class MainView extends Component {
 	}
 
 	handleOpen(report) {
-		if (report.type === 'drug') {
-			axios.get('/csv/reports?drug=' + report.drugs[0])
-				.then(response => {
-					this.setState({ 
-						tableData: response.data,
-						tableDrugs: [report.drugs[0]],
+		if (this.state.currentReport !== '' && this.state.currentReport.type === report.type &&
+			_.isEqual(this.state.currentReport.drugs, report.drugs)
+		) {
+			console.log('here handle open');
+			this.setState({
+				open: true,
+				tableTitle: 'Reports for ' + title,
+			});		
+		} else {
+			this.setState({ currentReport: report })
+			if (report.type === 'drug') {
+				axios.get('/csv/reports?drug=' + report.drugs[0])
+					.then(response => {
+						this.setState({ 
+							tableData: response.data,
+							tableDrugs: [report.drugs[0]],
+						});
+						if(this.props.currentSelector === '.galaxyReports') {
+							this.props.nextTourStep();
+						}	
 					});
-					if(this.props.currentSelector === '.galaxyReports') {
-						this.props.nextTourStep();
-					}	
-				});
-		}
+			}
 
-		if (report.type === 'adr') {
-			axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
-				.then(response => {
-					this.setState({ 
-						tableData: response.data,
-						tableDrugs: report.drugs, 
-					});	
-				});
-
+			if (report.type === 'adr') {
+				axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
+					.then(response => {
+						this.setState({ 
+							tableData: response.data,
+							tableDrugs: report.drugs, 
+						});	
+					});
+			}
 		}
 
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
@@ -413,6 +424,7 @@ export default class MainView extends Component {
 										maxScore={this.props.maxScore}
 										isUpdating={this.props.isUpdating}
 										scoreRange={this.props.scoreRange}
+										open={this.state.open}
 									/>
 								</GridTile>
 									<Col>
