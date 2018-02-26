@@ -162,9 +162,13 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       return path
     }
 
+    d3.select('body').selectAll(".tooltip").remove();
+
     let div = d3.select("body").append("div")
       .attr("class", "tooltip")
       .style("display", "none")
+
+    
 
     nodes.forEach(d => d.y = d.depth * 180);
 
@@ -236,10 +240,11 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       })
       .on("mouseover", function (d) {
         if (d.depth === 0) return;
+        div.transition().duration(500)
         div.style("left", (d3.event.pageX - 30) + "px")
           .style("top", (d3.event.pageY - 40) + "px")
           .style('display', 'block')
-          .html(`Report count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
+          .html(`Reports count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
       })
       .on("mouseout", function (d) {
         console.log('mouseout')
