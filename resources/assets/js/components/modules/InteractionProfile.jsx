@@ -84,16 +84,22 @@ export class InteractionProfile extends Component {
 
         const interactions = rules
         .filter(rule => _.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name)
-        .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(dummyData.currentDrugs[0][1].drugDMEs, rule.ADR), status: rule.status }))
+        .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(dummyData.currentDrugs[0][1].drugDMEs, rule.ADR), status: rule.status, count: rule.id.split(',').length }))
 
-        child.children = interactions;
-        child.maxScore = _.maxBy(interactions, o => o.Score).Score;
-        child.maxScoreStatus = _.maxBy(interactions, o => o.Score).status;
+        if (interactions.length === 0) {
+          myTreeData[0].children[i] = {}
+        } else {
+          child.children = interactions; 
+          let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
+          child.maxScore = sortedInteractions[0] ? sortedInteractions[0].Score : -2;
+          child.maxScoreStatus = sortedInteractions[0] ? sortedInteractions[0].status : -2;
+          child.totalCount = _.sumBy(interactions, i => i.count);
+        }
       }
 
-      this.setState = {
+      this.setState({
         myTreeData
-      };
+      });
     }
 
   }

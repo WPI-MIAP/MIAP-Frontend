@@ -11,6 +11,8 @@ const filterTreeView = (currentDrugs, sortByTerm) => {
 		return [key, currentDrugs[key]];
 	});
 
+	console.log(currentDrugsArray);
+
 	switch (sortByTerm) {
 		case 'latest':
 			return currentDrugsArray.reverse()
@@ -19,7 +21,7 @@ const filterTreeView = (currentDrugs, sortByTerm) => {
 		case 'count':
 			return _.sortBy(currentDrugsArray, [function(o) { return o[1].rules.length; }]).reverse();
 		case 'severity':
-			return _.sortBy(currentDrugsArray, [function(o) { return o[1].drugDMEs ? 0 : o[1].drugDMEs.length; }]).reverse();
+			return _.sortBy(currentDrugsArray, [function(o) { return o[1].drugDMEs ? o[1].drugDMEs.length : 0; }]).reverse();
 	}
 }
 

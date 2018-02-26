@@ -186,7 +186,10 @@ export default class DndGraph extends Component {
 			// style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
 			>
 			{ ! this.props.isFetching ?
-				<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/> :
+				(
+					
+					<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/>
+				) :
 				(<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
 			}
 			</div>

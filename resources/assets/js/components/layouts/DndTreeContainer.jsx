@@ -117,30 +117,31 @@ export default class DndTreeContainer extends Component {
 								<Col lg={colsWidth} md={colsWidth} style={styles.cols} key={drug[0]}>
 									<div className="card" key={drug[0]} style={{
 											height: 300,
-											border: this.props.selectedDrug == drug[0] ? '3px solid #F44336' : '3px solid grey'
+											border: this.props.selectedDrug == drug[0] ? '3px solid ' + selectedColor : '3px solid grey'
 										}}
 									>
-										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}>
+										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}
+											onClick={() => this.props.onClickNode(drug[0])}>
 											<span style={styles.titleText}>{(drug[0].length <= 20) ? _.capitalize(drug[0]) : _.capitalize(_.trim(drug[0].substring(0, 17)) + '...')}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
 												<IconButton tooltip="Show Profile"
 													iconStyle={{ color: 'white' }}
-													onClick={() => this.props.onClickNode(drug[0])}	
+													onClick={(event) => {event=event || window.event; event.stopPropagation(); this.props.onClickNode(drug[0]);}}	
 												>
 													<ActionOpenInNew />
 												</IconButton>
 
 												<IconButton className="galaxyReports" tooltip="Show Reports"
 													iconStyle={{ color: 'white' }}
-													onClick={() => {this.props.handleOpen({type: 'drug', drugs: [drug[0]]})}}
+													onClick={(event) => {event=event || window.event; event.stopPropagation(); this.props.handleOpen({type: 'drug', drugs: [drug[0]]});}}
 												>
 													<EditorInsertChart />
 												</IconButton>
 
 												<IconButton tooltip="Close Window"
 													iconStyle={{ color: 'white' }}
-													onClick={() => this.onDeleteNode(drug[0])}	
+													onClick={(event) => {event=event || window.event; event.stopPropagation(); this.onDeleteNode(drug[0]);}}	
 												>
 													<NavigationClose />
 												</IconButton>
