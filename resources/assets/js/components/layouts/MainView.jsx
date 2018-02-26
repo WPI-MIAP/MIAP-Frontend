@@ -331,7 +331,7 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 10, height: '70vh'}}>
+				<Grid fluid style={{ marginTop: 15, height: '70vh'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={complementaryColor}
@@ -345,8 +345,8 @@ export default class MainView extends Component {
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
-					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
-						<EditorInsertChart color={complementaryColor} style={{height: 40, width: 40}}/>
+					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 15, display: 'flex'}}>
+						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54}}/>
 						<div style={{ 
 							height: 54, 
 							width: '100%', 

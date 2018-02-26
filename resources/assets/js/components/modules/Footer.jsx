@@ -31,7 +31,7 @@ export default class Footer extends Component {
     ];
 
     return (
-      <Row style={{background: '#2D3E46', color: 'white', marginTop: 10, paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
+      <Row style={{background: '#2D3E46', color: 'white', marginTop: 15, paddingLeft: 50, paddingRight: 50, paddingTop: 18, height: 60, marginLeft: -16, marginRight: -16}}>
         <Col sm={6}>
           <p style={{textAlign: 'left'}}>
             © 2018. Worcester Polytechnic Institute. All Rights Reserved.

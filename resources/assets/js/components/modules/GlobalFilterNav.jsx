@@ -4,6 +4,7 @@ import SearchBarContainer from '../../containers/SearchBarContainer';
 import { Row, Col } from 'react-flexbox-grid';
 import { primaryColor, wpiLogo } from '../../utilities/constants';
 import Help from './Help';
+import Filters from './Filters';
 import DistributionRangeSlider from './DistributionRangeSlider';
 import UploadFAERS from './UploadFAERS';
 import KnownUnknownDropDown from './KnownUnknownDropDown';
@@ -32,23 +33,23 @@ export default class GlobalFilterNav extends React.Component {
     return (
       <AppBar style={styles.root}
         zDepth={2}
-        title={
-          <div>
-            <KnownUnknownDropDown 
-              isUpdating={this.props.isUpdating}
-              onClick={this.props.onClick}/> 
-            <DistributionRangeSlider 
-              rules={this.props.rules} 
-              updateMinScore={this.props.updateMinScore} 
-              updateMaxScore={this.props.updateMaxScore}
-              isUpdating={this.props.isUpdating}/>
-            {updating}
-        </div>
-        }
+        // title={
+        //   <div>
+        //     <KnownUnknownDropDown 
+        //       isUpdating={this.props.isUpdating}
+        //       onClick={this.props.onClick}/> 
+        //     <DistributionRangeSlider 
+        //       rules={this.props.rules} 
+        //       updateMinScore={this.props.updateMinScore} 
+        //       updateMaxScore={this.props.updateMaxScore}
+        //       isUpdating={this.props.isUpdating}/>
+        //     {updating}
+        // </div>
+        // }
         iconElementLeft={wpiLogo}
         iconElementRight={ 
           <div style={styles.elementRight}>
-            <Col>
+            {/* <Col>
               <div style={{marginTop: 5}}>
                 <div style={{color: 'white', fontSize: '0.91em'}}>
                   {this.props.numDrugs + ' Drugs'}
@@ -58,7 +59,8 @@ export default class GlobalFilterNav extends React.Component {
                   {this.props.rules.length + ' Interactions'}
                 </div>
               </div>
-            </Col>
+            </Col> */}
+            <Filters />
             <UploadFAERS />
             <Help 
               scoreRange={this.props.scoreRange}
