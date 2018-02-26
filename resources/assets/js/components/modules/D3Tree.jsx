@@ -33,7 +33,6 @@ export default class D3Tree extends Component {
         ! _.isEqual(this.state.previousData, nextProps.treeData[0])
         )
       ) {
-        console.log("state changed");
         this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
         removeTree(ReactDOM.findDOMNode(this));
         renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
@@ -57,7 +56,7 @@ const removeTree = (svgDomNode) => {
 const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
   const height = svgDomNode.parentNode.parentNode.parentNode.parentNode.parentNode.clientHeight
-  console.log(svgDomNode.parentNode.parentNode.parentNode);
+  // console.log(treeData);
   const width = '100%';
   const duration = 750;
 

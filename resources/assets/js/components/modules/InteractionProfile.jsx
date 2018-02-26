@@ -117,10 +117,11 @@ export class InteractionProfile extends Component {
             const interactions = rules
             .filter(rule => _.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name)
             .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status }))
-  
-            child.children = interactions;
-            child.maxScore = _.maxBy(interactions, o => o.Score).Score;
-            child.maxScoreStatus = _.maxBy(interactions, o => o.Score).status;
+
+            child.children = interactions; 
+            let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
+            child.maxScore = sortedInteractions[0].Score;
+            child.maxScoreStatus = sortedInteractions[0].status;
           }
   
           this.setState({
@@ -149,8 +150,10 @@ export class InteractionProfile extends Component {
             .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status }))
 
             child.children = interactions;
-            child.maxScore = _.maxBy(interactions, o => o.Score).Score;
-            child.maxScoreStatus = _.maxBy(interactions, o => o.Score).status;
+            let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['asc', 'desc']);
+            console.log('hi' + sortedInteractions);
+            child.maxScore = sortedInteractions[0].Score;
+            child.maxScoreStatus = sortedInteractions[0].status;
           }
   
           this.setState({
@@ -172,18 +175,5 @@ export class InteractionProfile extends Component {
       </div>
     )
   }
-  // let myTreeData = [
-  //   {
-  //     name: _.capitalize(mainDrug),
-  //     children: rules[1].drugs.filter(el => el != mainDrug).map(el => ({ name: _.capitalize(el)}))
-  //   }
-  // ]
-
-
-  // return (
-  //   <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%'}}>
-  //     <D3Tree treeData={myTreeData} mainDrug={mainDrug} fullscreen={fullscreen}/>
-  //   </div>
-  // )
 }
 export default InteractionProfile;
