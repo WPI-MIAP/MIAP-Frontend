@@ -183,7 +183,7 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       .attr("transform", function(d) {
         return "translate(" + source.y0 + "," + source.x0 + ")";
     })
-    .on('click', click);
+    .on('click', (d) => {div.style("display", 'none'); click(d); });
 
     nodeEnter.append('circle')
       .attr('class', 'node')
@@ -244,7 +244,10 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
         div.style("left", (d3.event.pageX - 30) + "px")
           .style("top", (d3.event.pageY - 40) + "px")
           .style('display', 'block')
-          .html(`Reports count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
+          // .html(`Reports count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
+          .style('z-index', 1600)
+          .style('position', 'absolute')
+          .html(`Report count: ${d.depth === 1 ? d.data.totalCount : d.data.count}`)
       })
       .on("mouseout", function (d) {
         console.log('mouseout')

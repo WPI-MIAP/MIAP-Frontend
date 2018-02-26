@@ -205,33 +205,33 @@ export default class Help extends Component {
 								<Col sm={12} md={7}>
 									<h5>Overview</h5>
 									<ul>
-									<li>Each <b>node</b> is a <b>drug</b></li>
-									<li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
-									<li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
-									<li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
-									<li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
-									<li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
-									<li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
-									<li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
+										<li>Each <b>node</b> is a <b>drug</b></li>
+										<li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
+										<li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
+										<li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
+										<li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
+										<li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
+										<li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
+										<li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
 									<Row>
 									<Paper zDepth={1} style={{height: 170, width: 230}}>
 										<DndGraph 
-										nodes={dummyData.nodes}
-										links={dummyData.edges}
-										width={100}
-										height={100} 
-										selectedDrug=''
-										onClickNode={() => {}}
-										onClickEdge={() => {}}
-										isFetching={false}
-										filter='all'
-										minScore={-50}
-										maxScore={50}
-										scoreRange={this.props.scoreRange}
-										/>
+											nodes={dummyData.nodes}
+											links={dummyData.edges}
+											width={100}
+											height={100} 
+											selectedDrug=''
+											onClickNode={() => {}}
+											onClickEdge={() => {}}
+											isFetching={false}
+											filter='all'
+											minScore={-50}
+											maxScore={50}
+											scoreRange={this.props.scoreRange}
+											/>
 									</Paper>
 									<Col style={{marginLeft: 20}}>
 										<Row style={{height: 34}}>
@@ -251,14 +251,14 @@ export default class Help extends Component {
 								<Col sm={12} md={7}>
 									<h5>Galaxy View</h5>
 									<ul>
-									<li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
-									<li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
-									<li><b>Surrounding nodes</b> are <b>colored</b> according to the <b>highest score</b> of all <b>interactions between that drug and the drug of interest</b></li>
-									<li>The <b>color</b> of a window's header indicates the <b>severe ADR count</b> associated with the drug of interest</li>
-									<li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
-									<li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
-									<li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
-									<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
+										<li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
+										<li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
+										<li><b>Surrounding nodes</b> are <b>colored</b> according to the <b>highest score</b> of all <b>interactions between that drug and the drug of interest</b></li>
+										<li>The <b>color</b> of a window's header indicates the <b>severe ADR count</b> associated with the drug of interest</li>
+										<li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
+										<li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
+										<li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
+										<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
@@ -296,12 +296,12 @@ export default class Help extends Component {
 								<Col sm={12} md={7}>
 									<h5>Interaction Profile</h5>
 									<ul>
-									<li>Provides a detailed look at an <b>individual drug</b> using a <b>tree layout</b> with three levels</li>
-									<li>The <b>root node</b> is the <b>selected drug</b></li>
-									<li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
-									<li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
-									<li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
-									<li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
+										<li>Provides a detailed look at an <b>individual drug</b> using a <b>tree layout</b> with three levels</li>
+										<li>The <b>root node</b> is the <b>selected drug</b></li>
+										<li>The <b>second level</b> shows all drugs that may <b>interact with the selected drug</b></li>
+										<li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
+										<li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
+										<li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
@@ -337,10 +337,10 @@ export default class Help extends Component {
 								<Row>
 								<Col sm={12} md={7}>
 									<ul>
-									<li><b>Filters</b> are located in the <b>top bar</b></li>
-									<li>A <b>dropdown menu</b> enables filtering interactions by <b>known or unknown</b></li>
-									<li>A <b>slider</b> enables selection of a <b>minimum and maximum score</b> for interactions</li>
-									<li>A <b>search bar</b> allows users to search for and <b>select a specific drug</b></li>
+										<li><b>Filters</b> are located in the <b>top bar</b></li>
+										<li>A <b>dropdown menu</b> enables filtering interactions by <b>known or unknown</b></li>
+										<li>A <b>slider</b> enables selection of a <b>minimum and maximum score</b> for interactions</li>
+										<li>A <b>search bar</b> allows users to search for and <b>select a specific drug</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
@@ -373,10 +373,10 @@ export default class Help extends Component {
 								<Row>
 								<Col sm={6}>
 									<ul>
-									<li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
-									<li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
-									<li>A <b>bar graph</b> shows (up to) the <b>top 10 drugs</b> also found in reports containing the chosen drug or drug interaction</li>
-									<li><b>Selecting a drug name</b> or the <b>corresponding bar on the graph</b> will <b>highlight</b> all <b>reports containing that drug</b></li>
+										<li>This view allows <b>direct access</b> to the <b>FDA's Adverse Event Reporting System (FAERS) data</b></li>
+										<li>All <b>reports</b> linked to the chosen <b>drug</b> or <b>drug interaction</b> are shown</li>
+										<li>A <b>bar graph</b> shows (up to) the <b>top 30 drugs</b> also found in reports containing the chosen drug or drug interaction</li>
+										<li><b>Selecting a drug name</b> or the <b>corresponding bar on the graph</b> will <b>highlight</b> all <b>reports containing that drug</b></li>
 									</ul>
 								</Col>
 								<Col sm={6}>
@@ -388,9 +388,9 @@ export default class Help extends Component {
 									<Tooltip />
 									<Bar dataKey="freq" onClick={(data, index) => {this.setState({barSelectedIndex: index})}}>
 										{
-										dummyDrugFreqs.map((entry, index) => (
-											<Cell cursor="pointer" fill={index === this.state.barSelectedIndex ? barSelectedColor : barColor} key={`cell-${index}`}/>
-										))
+											dummyDrugFreqs.map((entry, index) => (
+												<Cell cursor="pointer" fill={index === this.state.barSelectedIndex ? barSelectedColor : barColor} key={`cell-${index}`}/>
+											))
 										}
 									</Bar>
 									</BarChart>
