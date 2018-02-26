@@ -370,6 +370,7 @@ export default class MainView extends Component {
 					</FloatingActionButton>
 					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
 						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54}}/>
+						<h4 style={{margin: 'auto', marginRight: 10}}>Reports</h4>
 						<div style={{height: 54, width: '100%', overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', display: 'flex'}}>
 							{this.state.reportChips.map(this.renderChip, this)}
 						</div>
@@ -499,7 +500,24 @@ export default class MainView extends Component {
 										/>
 									}
 								</GridTile>
-									<Col>
+								<Row>
+									{
+										this.state.isGalaxyFullscreen ? (
+											<Col sm={12} md={6}>
+												<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
+												<Row style={{marginTop: 10, paddingBottom: 10}}>
+													{scoreColors.map(scoreColor => (
+														<Col xs={3} md={3}>
+															<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
+															<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
+														</Col>
+													))}
+												</Row>
+												<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
+											</Col>
+										) : ([])
+									}
+									<Col sm={12} md={this.state.isGalaxyFullscreen ? 6 : 12}>
 										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
 										<Row style={{marginTop: 10, paddingBottom: 10}}>
 										{dmeColors.map(dmeColor => (
@@ -511,6 +529,7 @@ export default class MainView extends Component {
 										</Row>
 										<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>
 									</Col>
+								</Row>
 							</Paper>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
@@ -544,22 +563,40 @@ export default class MainView extends Component {
 										scoreRange={this.props.scoreRange}
 									/>
 								</GridTile>
-								<Col>
-									<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-									<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
-										<Col xs={4} md={4}>
-											<div style={styles.legendSevere}>
-												<span style={{ marginLeft: 30 }}>Severe</span>
-											</div>
-										</Col>
-										<Col xs={4} md={4}>
-											<div style={styles.legendNormal}>
-												<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
-											</div>
-										</Col>
-									</Row>
-									<Row style={{paddingBottom: 10}}><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
-								</Col>
+								<Row>
+									{
+										this.state.isProfileFullscreen ? (
+											<Col sm={12} md={6}>
+												<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
+												<Row style={{marginTop: 10, paddingBottom: 10}}>
+													{scoreColors.map(scoreColor => (
+														<Col xs={3} md={3}>
+															<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
+															<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
+														</Col>
+													))}
+												</Row>
+												<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
+											</Col>
+										) : ([])
+									}
+									<Col sm={12} md={this.state.isProfileFullscreen ? 6 : 12}>
+										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
+										<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
+											<Col xs={4} md={4}>
+												<div style={styles.legendSevere}>
+													<span style={{ marginLeft: 30 }}>Severe</span>
+												</div>
+											</Col>
+											<Col xs={4} md={4}>
+												<div style={styles.legendNormal}>
+													<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
+												</div>
+											</Col>
+										</Row>
+										<Row style={{paddingBottom: 10}}><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
+									</Col>
+								</Row>
 							</Paper>
 						</Col>
 					</Row>
