@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
-import InteractionProfile from '../modules/InteractionProfile';
-import DndTreeContainer from './DndTreeContainer';
-import {GridTile} from 'material-ui/GridList';
-import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
+import ReactDOM from 'react-dom';
+import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer';
 import Paper from 'material-ui/Paper';
-import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
 import Share from 'material-ui/svg-icons/social/share';
-import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Chip from 'material-ui/Chip';
@@ -16,15 +11,14 @@ import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscree
 import Report from '../modules/Report'
 import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
-import Dialog from 'material-ui/Dialog';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import { dmeColors, scoreColors, regularADRColor, adrBorderColor, complementaryColor, selectedColor, baseNodeColor, secondaryColor } from '../../utilities/constants';
+import { complementaryColor, selectedColor, baseNodeColor } from '../../utilities/constants';
 import { generateColor } from '../../utilities/functions';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
-import Footer from '../modules/Footer';
 import Slider from 'react-slick';
 import SwipeableViews from 'react-swipeable-views';
 import Overview from '../modules/Overview';
+import GalaxyView from '../modules/GalaxyView';
+import ProfileView from '../modules/ProfileView';
 
 
 const styles = {
@@ -42,22 +36,6 @@ const styles = {
 		right: 30,
 		bottom: 30,
 		zIndex: 100
-	},
-	legendSevere: {
-		backgroundColor: dmeColors[3].color,
-		border: '3px solid ' + adrBorderColor,
-		borderRadius: '50%',
-		height: 25,
-		width: 25,
-		textAlign: 'center'
-	},
-	legendNormal: {
-		backgroundColor: regularADRColor,
-		border: '3px solid ' + adrBorderColor,
-		borderRadius: '50%',
-		height: 25,
-		width: 25,
-		textAlign: 'center'
 	}
 };
 
@@ -77,7 +55,8 @@ export default class MainView extends Component {
 			open: false,
 			width: 0,
 			height: 0,
-			hover: false
+			hover: false,
+			currentReport: ''
 		}
 
 		this.toggleHover = this.toggleHover.bind(this);
@@ -160,28 +139,38 @@ export default class MainView extends Component {
 	}
 
 	handleOpen(report) {
-		if (report.type === 'drug') {
-			axios.get('/csv/reports?drug=' + report.drugs[0])
-				.then(response => {
-					this.setState({ 
-						tableData: response.data,
-						tableDrugs: [report.drugs[0]],
+		if (this.state.currentReport !== '' && this.state.currentReport.type === report.type &&
+			_.isEqual(this.state.currentReport.drugs, report.drugs)
+		) {
+			console.log('here handle open');
+			this.setState({
+				open: true,
+				tableTitle: 'Reports for ' + title,
+			});		
+		} else {
+			this.setState({ currentReport: report })
+			if (report.type === 'drug') {
+				axios.get('/csv/reports?drug=' + report.drugs[0])
+					.then(response => {
+						this.setState({ 
+							tableData: response.data,
+							tableDrugs: [report.drugs[0]],
+						});
+						if(this.props.currentSelector === '.galaxyReports') {
+							this.props.nextTourStep();
+						}	
 					});
-					if(this.props.currentSelector === '.galaxyReports') {
-						this.props.nextTourStep();
-					}	
-				});
-		}
+			}
 
-		if (report.type === 'adr') {
-			axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
-				.then(response => {
-					this.setState({ 
-						tableData: response.data,
-						tableDrugs: report.drugs, 
-					});	
-				});
-
+			if (report.type === 'adr') {
+				axios.get('/csv/reports?drug1=' + report.drugs[0] + '&drug2=' + report.drugs[1])
+					.then(response => {
+						this.setState({ 
+							tableData: response.data,
+							tableDrugs: report.drugs, 
+						});	
+					});
+			}
 		}
 
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
@@ -280,16 +269,6 @@ export default class MainView extends Component {
 	}
 
 	render() {
-		let topPosition;
-
-		if (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) {
-			topPosition = -1000;
-		} else if (this.state.col === 12) {
-			topPosition = -14;
-		} else {
-			topPosition = 0;
-		}
-
 		let profileTitle = 'Interaction Profile';
 		if (this.props.selectedDrug != '') {
 			profileTitle += `: ${_.capitalize(this.props.selectedDrug)}`;
@@ -301,25 +280,24 @@ export default class MainView extends Component {
 
 		return (
 			<div>
-				<Grid fluid style={{ marginTop: 10, height: '70vh'}}>
+				<Grid fluid style={{ marginTop: 10, height: this.state.col === 12 ? 'calc(100% - 70px - 72px - 48px - 50px)' : 'calc(100% - 70px - 72px - 50px)'}}>
 					<FloatingActionButton
 						onClick={() => {this.setState({ col: 4, isOverviewFullscreen: false, isGalaxyFullscreen: false, isProfileFullscreen: false })}}
 						backgroundColor={complementaryColor}
 						style={{
 							position: 'absolute',
-							right: 30,
-							bottom: 30,
+							right: 20,
+							bottom: 70,
 							zIndex: 100,
 							display: this.state.col === 12 ? 'block' : 'none'
 						}}
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
-					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 8, display: 'flex'}}>
-						<EditorInsertChart color={complementaryColor} style={{height: 54, width: 54, margin: 'auto'}}/>
-						<h4 style={{margin: 'auto', marginRight: 10}}>Reports</h4>
+					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 10, display: 'flex'}}>
+						<EditorInsertChart color={complementaryColor} style={{height: 52, width: 52}}/>
 						<div style={{ 
-							height: 54, 
+							height: 52, 
 							width: '100%', 
 							overflowX: 'auto',
 							overflowY: 'hidden', 
@@ -334,7 +312,7 @@ export default class MainView extends Component {
 
 					<Row>
 						<Col xs={12} md={12}> 
-							<Tabs style={{marginBottom: 15,
+							<Tabs style={{marginBottom: 0,
 								display: this.state.col === 4 ? 'none' : 'block'}}
 								inkBarStyle={{background: selectedColor, height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
@@ -344,9 +322,8 @@ export default class MainView extends Component {
 								<Tab label={profileTitle} style={{background: complementaryColor}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>
-						<Col xs={12} md={this.state.col} style={{ 
-								position: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) ? 'absolute' : 'relative',
-								top: topPosition
+						<Col xs={12} md={this.state.col} style={{
+								display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) ? 'none' : 'block',
 							}}
 						>
 							<Overview 
@@ -370,164 +347,42 @@ export default class MainView extends Component {
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
-							top: this.state.col == 12 ? -14 : 0
-						}}
-						>
-							<Paper zDepth={1}>
-								<GridTile
-									title={this.state.col != 12 ? "Galaxy View" : ""}
-									titlePosition="top"
-									className="galaxy"
-									actionIcon={ 
-										<div>
-											<IconButton 
-												tooltip="Go Fullscreen"
-												iconStyle={{ color: 'white' }}
-												tooltipPosition='bottom-left'
-												onClick={this.toggleFullscreenGalaxy}
-											>
-											<IconFullscreen />	
-										</IconButton>
-											<TreeViewFilterContainer /> 
-										</div>
-									}
-									titleBackground={complementaryColor}
-									style={{
-										boxSizing: 'border-box',
-										background: 'white',
-									}}
-									cols={this.state.colGalaxy}
-								>
-									{
-										_.isEmpty(this.props.currentDrugs) ? 
-										<div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-											<h4 style={{ color: 'grey' }}>
-												No drugs are being selected
-											</h4>
-										</div> :
-										<DndTreeContainer 
-											currentDrugs={this.props.currentDrugs}
-											filter={this.props.filter}
-											minScore={this.props.minScore}
-											maxScore={this.props.maxScore}
-											width={this.props.width}
-											height={this.props.height} 
-											onClickNode={this.props.showDetailNode}
-											onClickEdge={this.props.onClickEdge}
-											onDeleteNode={this.props.deleteNode}
-											onClearDrug={this.props.clearSearchTerm}
-											cols={this.state.col}
-											selectedDrug={this.props.selectedDrug}
-											handleOpen={this.handleOpen}
-											scoreRange={this.props.scoreRange}
-											dmeRange={this.props.dmeRange}
-										/>
-									}
-								</GridTile>
-								<Row>
-									{
-										this.state.isGalaxyFullscreen ? (
-											<Col sm={12} md={6}>
-												<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-												<Row style={{marginTop: 10, paddingBottom: 10}}>
-													{scoreColors.map(scoreColor => (
-														<Col xs={3} md={3}>
-															<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
-															<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
-														</Col>
-													))}
-												</Row>
-												<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
-											</Col>
-										) : ([])
-									}
-									<Col sm={12} md={this.state.isGalaxyFullscreen ? 6 : 12}>
-										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-										<Row style={{marginTop: 10, paddingBottom: 10}}>
-										{dmeColors.map(dmeColor => (
-											<Col xs={2.4} md={2.4}>
-												<div style={{height: 5, width: 50, background: dmeColor.color, margin: '0 auto'}}/>
-												<div style={{textAlign: 'center'}}>{dmeColor.text}</div>
-											</Col>
-										))}
-										</Row>
-										<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Severe ADR Count</Col></Row>
-									</Col>
-								</Row>
-							</Paper>
+						}}>
+							<GalaxyView 
+								col={this.state.col}
+								toggleFullscreenGalaxy={this.toggleFullscreenGalaxy}
+								currentDrugs={this.props.currentDrugs}
+								filter={this.props.filter}
+								minScore={this.props.minScore}
+								maxScore={this.props.maxScore}
+								width={this.props.width}
+								height={this.props.height}
+								onClickNode={this.props.showDetailNode}
+								onClickEdge={this.props.onClickEdge}
+								onDeleteNode={this.props.deleteNode}
+								onClearDrug={this.props.clearSearchTerm}
+								handleOpen={this.handleOpen}
+								scoreRange={this.props.scoreRange}
+								dmeRange={this.props.dmeRange}
+								isGalaxyFullscreen={this.state.isGalaxyFullscreen}/>	
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
 							display: (this.state.col === 12 && (this.state.isGalaxyFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
-							top: this.state.col == 12 ? -14 : 0
 						}}>
-							<Paper zDepth={1}>
-								<GridTile
-									title={this.state.col != 12 ? profileTitle : ''}
-									titlePosition="top"
-									className="profile"
-									titleBackground={complementaryColor}
-									style={{
-										boxSizing: 'border-box',
-										background: 'white',
-									}}
-									actionIcon={
-										<IconButton 
-											tooltip="Go Fullscreen"
-											iconStyle={{ color: 'white' }}
-											tooltipPosition='bottom-left'
-											onClick={this.toggleFullscreenProfile}
-										>
-											<IconFullscreen />	
-										</IconButton>
-									}
-								>
-									<InteractionProfile 
-										mainDrug={this.props.selectedDrug} 
-										mainRule={this.props.selectedRule}
-										scoreRange={this.props.scoreRange}
-										filter={this.props.filter}
-										minScore={this.props.minScore}
-										maxScore={this.props.maxScore}
-									/>
-								</GridTile>
-								<Row>
-									{
-										this.state.isProfileFullscreen ? (
-											<Col sm={12} md={6}>
-												<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-												<Row style={{marginTop: 10, paddingBottom: 10}}>
-													{scoreColors.map(scoreColor => (
-														<Col xs={3} md={3}>
-															<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
-															<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
-														</Col>
-													))}
-												</Row>
-												<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
-											</Col>
-										) : ([])
-									}
-									<Col sm={12} md={this.state.isProfileFullscreen ? 6 : 12}>
-										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-										<Row style={{marginTop: 10, paddingBottom: 10}} center="xs">
-											<Col xs={4} md={4}>
-												<div style={styles.legendSevere}>
-													<span style={{ marginLeft: 30 }}>Severe</span>
-												</div>
-											</Col>
-											<Col xs={4} md={4}>
-												<div style={styles.legendNormal}>
-													<span style={{ marginLeft: 30 }}>Not&nbsp;Severe</span>
-												</div>
-											</Col>
-										</Row>
-										<Row style={{paddingBottom: 10}}><Col sm={12} style={{textAlign: 'center'}}>Type of ADR</Col></Row>
-									</Col>
-								</Row>
-							</Paper>
+							<ProfileView
+								col={this.state.col}
+								toggleFullscreenProfile={this.toggleFullscreenProfile}
+								selectedDrug={this.props.selectedDrug}
+								selectedRule={this.props.selectedRule}
+								toggleFullscreenProfile={this.toggleFullscreenProfile}
+								scoreRange={this.props.scoreRange}
+								filter={this.props.filter}
+								minScore={this.props.minScore}
+								maxScore={this.props.maxScore}
+								isProfileFullscreen={this.state.isProfileFullscreen}
+								profileTitle={profileTitle}/>
 						</Col>
 					</Row>
-					<Footer />
 			</Grid>
 			<Report 
 				tableTitle={this.state.tableTitle}

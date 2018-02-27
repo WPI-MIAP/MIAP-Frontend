@@ -108,7 +108,7 @@ export default class DndGraph extends Component {
 
 		const options = {
 			// height: this.props.height + 'px',
-			// width: this.props.width + 'px',
+			width: '104%',
 			edges: {
 				arrows: {
 					to:     {enabled: false, scaleFactor:1, type:'arrow'},
@@ -127,7 +127,7 @@ export default class DndGraph extends Component {
 				font: {
 					color: '#343434',
 						size: 11, // px
-						face: 'arial',
+						face: 'Roboto',
 				},
 			},
 			interaction:{

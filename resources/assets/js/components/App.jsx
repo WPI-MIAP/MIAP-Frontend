@@ -5,6 +5,7 @@ import Navigation from './layouts/Navigation';
 import GlobalFilterNavContainer from '../containers/GlobalFilterNavContainer';
 import MainViewContainer from '../containers/MainViewContainer';
 import Joyride from 'react-joyride';
+import Footer from './modules/Footer';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -206,9 +207,9 @@ export default class App extends Component {
 					scrollToSteps={true}
 					tooltipOffset={tooltipOffset}
 				/>
-				{/* <Navigation /> */}
 				<GlobalFilterNavContainer startTour={this.startTour}/>
 				<MainViewContainer currentSelector={this.state.selector} nextTourStep={this.next}/>
+				<Footer/>
 			</div>
 		)
 	}

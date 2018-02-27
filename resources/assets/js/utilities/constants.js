@@ -43,7 +43,7 @@ import React from 'react';
 
 //images
 	export const wpiLogo = <img style={{
-		height: 45,
-		marginLeft: 10
+		height: 30,
+		marginLeft: 20,
 	}} 
 	src={require('../../../images/WPI_Inst_Prim_White_Rev.png')} />;

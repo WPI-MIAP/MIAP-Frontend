@@ -3,10 +3,13 @@ import 'rc-slider/assets/index.css';
 import LineChart from 'react-linechart';
 import 'react-linechart/dist/styles.css';
 import { secondaryColor } from '../../utilities/constants';
+import Paper from 'material-ui/Paper';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
+import { primaryColor } from '../../utilities/constants';
+
 
 const styles = {
 	slider: {
@@ -20,7 +23,7 @@ const styles = {
 	  position: 'relative',
 	  zIndex: 1200,
 	  placement: 'bottom',
-	  background: 'black'
+	  background: 'white'
 	}
   };
 
@@ -117,7 +120,7 @@ export default class DistributionRangeSlider extends Component {
 				  position: 'absolute',
 				  zIndex: 1100,
 				  color: 'white',
-				  top: (this.props.helpExample) ? -4 : -27,
+				  top: (this.props.helpExample) ? -4 : 0,
 				}, label: 'Min Score: ' + this.state.minScore.toFixed(2),
 			  },
 			[this.state.maxScore]: {
@@ -125,7 +128,7 @@ export default class DistributionRangeSlider extends Component {
 				position: 'absolute',
 				zIndex: 1100,
 				color: 'white',
-				top: (this.props.helpExample) ? -4 : -27,
+				top: (this.props.helpExample) ? -4 : 0,
 			  }, label: 'Max Score: ' + this.state.maxScore.toFixed(2),
 			}
 		};
@@ -143,8 +146,8 @@ export default class DistributionRangeSlider extends Component {
 		];
 	
 		return (
-			<div style={{height: 56, width: 312, position: 'relative', top: (this.props.helpExample) ? 4 : -56, marginLeft: (this.props.helpExample) ? 0 : 185, border: '1px white', borderStyle: 'solid', paddingBottom: 9, borderRadius: 5}}>
-				<div style={{position: 'absolute', bottom: 7}}>
+			<Paper style={{width: 310, height: 55, background: 'rgba(255,255,255,0.1)'}}>
+			<div style={{position: 'relative', top: -35, zIndex: 100}}>
 					<LineChart
 						width={274}
 						height={60}
@@ -161,10 +164,10 @@ export default class DistributionRangeSlider extends Component {
 						margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
 					<Range className='scoreMinMax scoreMinMax2'
 						defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-						style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'}, {border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
+						style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'},{border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
 						dotStyle={{display: 'none'}}/>
-				</div>
 		  	</div>
+				</Paper>
 		);
 	}
 }

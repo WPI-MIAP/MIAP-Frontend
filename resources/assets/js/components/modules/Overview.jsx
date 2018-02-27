@@ -49,7 +49,8 @@ export default class Overview extends Component {
 						style={{
 							boxSizing: 'border-box',
 							background: 'white',
-							height: this.state.legendShow ? 'calc(100% - 74px)' : '100%'
+							height: this.state.legendShow ? 'calc(100% - 79px)' : '100%',
+							marginBottom: this.state.legendShow ? 0 : -48
 						}}
 						actionIcon={
 							<IconButton 
@@ -82,8 +83,8 @@ export default class Overview extends Component {
 						this.state.legendShow ? (
 							<Row>
 								<Col sm={12}>
-									<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-									<Row style={{ padding: 0 }}>
+									<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', margin: '0 auto'}}/>
+									<Row>
 										<Col sm={3} style={{paddingLeft: '3%'}}>
 											<IconButton
 												tooltip="Hide Legend"
@@ -98,7 +99,7 @@ export default class Overview extends Component {
 										</Col>
 										<Col sm={3}></Col>
 									</Row>
-									<Row style={{marginTop: 0, paddingBottom: 0}}>
+									<Row style={{paddingBottom: 5}}>
 										{scoreColors.map(scoreColor => (
 											<Col xs={3} md={3}>
 												<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
@@ -114,7 +115,6 @@ export default class Overview extends Component {
 				{
 					!this.state.legendShow ? (
 						<IconButton
-							style={{top: -48, position: 'relative'}}
 							tooltip="Show Legend"
 							iconStyle={{ background: complementaryColor, color: 'white', border: '3px solid ' + complementaryColor, borderRadius: '5px', }}
 							tooltipPosition='top-right'

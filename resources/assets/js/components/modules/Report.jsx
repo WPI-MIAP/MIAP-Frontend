@@ -48,8 +48,7 @@ export default class Report extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-      
-      if(nextProps.tableData !== null && nextProps.tableData !== undefined && nextProps.tableData != this.props.tableData) {
+      if(nextProps.tableData !== null && !_.isEqual(this.props.tableData, nextProps.tableData)) {
         //calculate frequencies of each drug other than the drug(s) that the reports are focused on
         var drugFreqs = {};
         nextProps.tableData.forEach((row) => {
@@ -111,7 +110,7 @@ export default class Report extends React.Component {
           className="report"
         >
         {
-          (this.props.tableData === null || this.props.tableData === undefined || this.props.tableData.length == 0) ? (
+          (! this.props.tableData || this.props.tableData.length == 0) ? (
             <span>
               <i className="MainView__Loading fa fa-spinner fa-spin fa-3x fa-fw" style={{ marginTop: 100, marginBottom: 100, marginLeft: ((window.innerWidth * 0.2) / 2) - 25}}></i>
             </span>

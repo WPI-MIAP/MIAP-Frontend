@@ -11725,6 +11725,7 @@ button.close {
 
 body {
   background: #E9EBEE;
+  font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', sans-serif;
 }
 
 .MainView {
@@ -11769,7 +11770,7 @@ body {
 }
 
 .node text {
-  font: 12px sans-serif;
+  font: 12px Roboto;
 }
 
 div.tooltip {
