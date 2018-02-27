@@ -25,8 +25,7 @@ import drug from '../../../../images/drug.svg'
 import molecular from '../../../../images/molecular.svg'
 import SvgIcon from 'material-ui/SvgIcon';
 import SVG  from 'react-inlinesvg';
-
-
+import { countDrugInteraction } from '../../utilities/functions'; 
 
 const styles = {
   root: {
@@ -42,6 +41,25 @@ const styles = {
 export default class GlobalFilterNav extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      drugsCount: 0,
+      interactionsCount: 0
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      drugsCount: countDrugInteraction(this.props.rules, this.props.filter, this.props.minScore, this.props.maxScore)[0],
+      interactionsCount: countDrugInteraction(this.props.rules, this.props.filter, this.props.minScore, this.props.maxScore)[1],
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      drugsCount: countDrugInteraction(nextProps.rules, nextProps.filter, nextProps.minScore, nextProps.maxScore)[0],
+      interactionsCount: countDrugInteraction(nextProps.rules, nextProps.filter, nextProps.minScore, nextProps.maxScore)[1],
+    })
   }
 
   render() {
@@ -74,7 +92,7 @@ export default class GlobalFilterNav extends React.Component {
         </ToolbarGroup>
         <ToolbarGroup>
           <Badge
-            badgeContent={this.props.numDrugs}
+            badgeContent={this.state.drugsCount}
             primary={true}
             badgeStyle={{top: 20, right: 20}}
             style={{top: -5, left: 50}}
@@ -87,7 +105,7 @@ export default class GlobalFilterNav extends React.Component {
             </IconButton>
           </Badge>
           <Badge
-            badgeContent={this.props.rules.length}
+            badgeContent={this.state.interactionsCount}
             secondary={true}
             badgeStyle={{top: 20, right: 20}}
             style={{top: -5, left: 20}}
@@ -110,40 +128,6 @@ export default class GlobalFilterNav extends React.Component {
         </ToolbarGroup>
       </Toolbar>
       </Paper>
-      // <AppBar style={styles.root}
-      //   zDepth={2}
-      //   title={
-      //     <div>
-
-      //   </div>
-      //   }
-      //   iconElementLeft={wpiLogo}
-      //   iconElementRight={ 
-      //     <div style={styles.elementRight}>
-      //       <Col>
-      //         <div style={{marginTop: 5}}>
-      //           <div style={{color: 'white', fontSize: '0.91em'}}>
-      //             {this.props.numDrugs + ' Drugs'}
-      //           </div>
-
-      //           <div style={{color: 'white', fontSize: '0.91em'}}>
-      //             {this.props.rules.length + ' Interactions'}
-      //           </div>
-      //         </div>
-      //       </Col>
-      //       {/* <Filters /> */}
-      //       <UploadFAERS />
-      //       <Help 
-      //         scoreRange={this.props.scoreRange}
-      //         dmeRange={this.props.dmeRange}
-      //         startTour={this.props.startTour}
-      //         rules={this.props.rules}
-      //         />
-
-      //       <SearchBarContainer />
-      //     </div>
-      //   }
-      // />
     )
   }
 }

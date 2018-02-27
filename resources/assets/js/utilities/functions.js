@@ -1,4 +1,5 @@
 import {scoreColors, dmeColors, scoreBorderColors} from './constants';
+import * as _ from 'lodash';
 
 export const generateColor = (score, scoreRange) => {
 	if (score <= scoreRange[0]) {
@@ -53,4 +54,27 @@ export const getStyleByDMECount = (numDMEs, dmeRange) => {
 	}
 
 	return style;
+}
+
+/**
+ * Count number of drugs and interactions after applying filter
+ * @param {*} rulesData 
+ * @param {*} filter 
+ * @param {*} minScore 
+ * @param {*} maxScore 
+ */
+export const countDrugInteraction = (rules, filter, minScore, maxScore) => {
+	if (filter !== 'all') {
+		rules = rules.filter(rule => {
+			return rule.status === filter && rule.Score <= maxScore && rule.Score >= minScore
+		});
+	}
+
+	const ids = rules.map(rule => {
+		return [rule.Drug1.id, rule.Drug2.id];
+	});
+	const interactionsCount = rules.length;
+	const drugsCount = _.uniq(_.flattenDeep(ids)).length;
+
+	return [drugsCount, interactionsCount];
 }
