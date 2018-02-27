@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import DndGraph from '../modules/DndGraph';
 import InteractionProfile from '../modules/InteractionProfile';
 import DndTreeContainer from './DndTreeContainer';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {GridTile} from 'material-ui/GridList';
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer'
 import Paper from 'material-ui/Paper';
 import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
@@ -15,7 +14,6 @@ import Chip from 'material-ui/Chip';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
-import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
@@ -26,6 +24,7 @@ import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import Footer from '../modules/Footer';
 import Slider from 'react-slick';
 import SwipeableViews from 'react-swipeable-views';
+import Overview from '../modules/Overview';
 
 
 const styles = {
@@ -33,9 +32,6 @@ const styles = {
 		display: 'flex',
 		flexWrap: 'wrap',
 		justifyContent: 'space-around',
-	},
-	gridList: {
-		width: window.clientWidth,
 	},
 	chip: {
 		margin: 4,
@@ -81,7 +77,6 @@ export default class MainView extends Component {
 			open: false,
 			width: 0,
 			height: 0,
-			aboutUs: false,
 			hover: false
 		}
 
@@ -94,8 +89,6 @@ export default class MainView extends Component {
 		this.handleRequestDelete = this.handleRequestDelete.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
-		this.onClickNodeTour = this.onClickNodeTour.bind(this);
-		this.onClickEdgeTour = this.onClickEdgeTour.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
 
@@ -204,7 +197,6 @@ export default class MainView extends Component {
 			open: false,
 			tableTitle: '',
 			tableData: [],
-			aboutUs: false,
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();
@@ -287,29 +279,7 @@ export default class MainView extends Component {
 		});
 	}
 
-	onClickEdgeTour(interaction) {
-		this.props.onClickEdge(interaction);
-		if(this.props.currentSelector === '.overview2'){
-			this.props.nextTourStep();
-		}
-	}
-
-	onClickNodeTour(drug) {
-		this.props.onClickNode(drug);
-		if(this.props.currentSelector === '.overview3'){
-			this.props.nextTourStep();
-		}
-	}
-
 	render() {
-		const actions = [
-			<FlatButton
-				label="Close"
-				primary={true}
-				onClick={this.handleClose}
-			/>
-		];
-		
 		let topPosition;
 
 		if (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isGalaxyFullscreen)) {
@@ -379,64 +349,31 @@ export default class MainView extends Component {
 								top: topPosition
 							}}
 						>
-							<Paper zDepth={1}>
-								<GridTile
-									title={this.state.col != 12 ? "Overview" : ""}
-									titlePosition="top"
-									className="overview overview2 overview3"
-									titleBackground={complementaryColor}
-									style={{
-										boxSizing: 'border-box',
-										background: 'white',
-									}}
-									actionIcon={
-										<IconButton 
-											tooltip="Go Fullscreen"
-											iconStyle={{ color: 'white' }}
-											tooltipPosition='bottom-left'
-											onClick={this.toggleFullscreenOverview}
-										>
-											<IconFullscreen />	
-										</IconButton>
-									}
-								>
-									<DndGraph 
-										nodes={this.props.nodes}
-										links={this.props.links}
-										width={this.props.width}
-										height={this.props.height} 
-										selectedDrug={this.props.selectedDrug}
-										onClickNode={this.onClickNodeTour}
-										onClickEdge={this.onClickEdgeTour}
-										isFetching={this.props.isFetching}
-										filter={this.props.filter}
-										minScore={this.props.minScore}
-										maxScore={this.props.maxScore}
-										isUpdating={this.props.isUpdating}
-										scoreRange={this.props.scoreRange}
-									/>
-								</GridTile>
-									<Col>
-										<hr style={{borderTop: '1px solid ' + secondaryColor, width: '90%', padding: 0, margin: '0 auto'}}/>
-										<Row style={{marginTop: 10, paddingBottom: 10}}>
-											{scoreColors.map(scoreColor => (
-												<Col xs={3} md={3}>
-													<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
-													<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
-												</Col>
-											))}
-										</Row>
-										<Row style={{ paddingBottom: 10 }}><Col sm={12} style={{textAlign: 'center'}}>Interaction Score</Col></Row>
-									</Col>
-							</Paper>
+							<Overview 
+								col={this.state.col}
+								toggleFullscreenOverview={this.toggleFullscreenOverview}
+								onClickNode={this.props.onClickNode}
+								onClickEdge={this.props.onClickEdge}
+								currentSelector={this.props.currentSelector}
+								nodes={this.props.nodes}
+								links={this.props.links}
+								width={this.state.width}
+								height={this.state.height} 
+								selectedDrug={this.props.selectedDrug}
+								isFetching={this.props.isFetching}
+								filter={this.props.filter}
+								minScore={this.props.minScore}
+								maxScore={this.props.maxScore}
+								isUpdating={this.props.isUpdating}
+								scoreRange={this.props.scoreRange}
+								nextTourStep={this.props.nextTourStep}/>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',
 							top: this.state.col == 12 ? -14 : 0
 						}}
 						>
-							<Paper zDepth={1}
-							>
+							<Paper zDepth={1}>
 								<GridTile
 									title={this.state.col != 12 ? "Galaxy View" : ""}
 									titlePosition="top"
@@ -595,14 +532,12 @@ export default class MainView extends Component {
 			<Report 
 				tableTitle={this.state.tableTitle}
 				open={this.state.open}
-				handleClose={this.state.handleClose}
-				actions={actions}
+				handleClose={this.handleClose}
 				tableData={this.state.tableData}
 				drugs={this.state.tableDrugs}
 				currentSelector={this.props.currentSelector}
 				nextTourStep={this.props.nextTourStep}
-				windowWidth={this.state.width}
-			/>
+				windowWidth={this.state.width} />
 	 	</div>
 		)
 	}

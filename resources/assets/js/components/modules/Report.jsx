@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import FlatButton from 'material-ui/FlatButton';
 import { AutoComplete } from 'material-ui';
 import SearchBar from 'material-ui-search-bar';
 import * as _ from 'lodash';
@@ -48,7 +49,7 @@ export default class Report extends React.Component {
 
     componentWillReceiveProps(nextProps) {
       
-      if(nextProps.tableData !== null && nextProps.tableData !== undefined) {
+      if(nextProps.tableData !== null && nextProps.tableData !== undefined && nextProps.tableData != this.props.tableData) {
         //calculate frequencies of each drug other than the drug(s) that the reports are focused on
         var drugFreqs = {};
         nextProps.tableData.forEach((row) => {
@@ -90,10 +91,18 @@ export default class Report extends React.Component {
     }
 
     render() {
+      const actions = [
+        <FlatButton
+          label="Close"
+          primary={true}
+          onClick={this.props.handleClose}
+        />
+      ];
+
       return (
         <Dialog
           title={_.upperFirst(this.props.tableTitle) + ' (' + this.props.tableData.length + ' results)'}
-          actions={this.props.actions}
+          actions={actions}
           modal={false}
           open={this.props.open}
           onRequestClose={this.props.handleClose}
