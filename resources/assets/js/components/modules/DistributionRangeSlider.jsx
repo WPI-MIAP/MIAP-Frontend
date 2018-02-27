@@ -146,7 +146,7 @@ export default class DistributionRangeSlider extends Component {
 		];
 	
 		return (
-			<Paper style={{width: 310, height: 50, background: primaryColor}}>
+			<Paper style={{width: 310, height: 55, background: 'rgba(255,255,255,0.1)'}}>
 			<div style={{position: 'relative', top: -35, zIndex: 100}}>
 					<LineChart
 						width={274}
@@ -164,7 +164,7 @@ export default class DistributionRangeSlider extends Component {
 						margins={{top: 0, bottom: 0, left: 0, right: 0}}/>
 					<Range className='scoreMinMax scoreMinMax2'
 						defaultValue={[this.state.minScore, this.state.maxScore]} allowCross={false} min={this.state.minScore} max={this.state.maxScore} step={0.01} onAfterChange={this.updateMinAndMax} 
-						style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={{border: 'none'}} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
+						style={styles.slider} tipProps={styles.sliderTip} marks={marks} handleStyle={[{border: 'none'},{border: 'none'}]} trackStyle={[{background: 'white'}]} railStyle={{background: secondaryColor}}
 						dotStyle={{display: 'none'}}/>
 		  	</div>
 				</Paper>

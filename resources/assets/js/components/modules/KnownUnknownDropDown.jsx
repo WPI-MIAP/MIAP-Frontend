@@ -42,7 +42,7 @@ export default class KnownUnknownDropDown extends Component {
 	render() {
 
 		return (
-			<Paper style={{background: primaryColor}}>
+			<Paper style={{background: 'rgba(255,255,255,0.1)', height: 55}}>
 				<DropDownMenu 
 					// className="knownUnknown"
 					value={this.state.value}

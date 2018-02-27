@@ -72,9 +72,10 @@ class ModifiedSearchBar extends SearchBar {
           <Paper
             style={{
               ...styles.root,
-              ...style
+              ...style,
+              background: 'rgba(255,255,255,0.9)'
             }}
-            zDepth={2}
+            zDepth={1}
           >
             <div style={styles.searchContainer}>
               <AutoComplete

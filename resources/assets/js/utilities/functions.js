@@ -64,15 +64,14 @@ export const getStyleByDMECount = (numDMEs, dmeRange) => {
  * @param {*} maxScore 
  */
 export const countDrugInteraction = (rules, filter, minScore, maxScore) => {
-	if (filter !== 'all') {
-		rules = rules.filter(rule => {
-			return rule.status === filter && rule.Score <= maxScore && rule.Score >= minScore
-		});
-	}
+	rules = rules.filter(rule => {
+		return (filter === 'all' || rule.status === filter) && rule.Score <= maxScore && rule.Score >= minScore
+	})
 
 	const ids = rules.map(rule => {
 		return [rule.Drug1.id, rule.Drug2.id];
 	});
+
 	const interactionsCount = rules.length;
 	const drugsCount = _.uniq(_.flattenDeep(ids)).length;
 
