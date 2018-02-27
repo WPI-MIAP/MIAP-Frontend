@@ -77,7 +77,7 @@ export default class GlobalFilterNav extends React.Component {
             badgeContent={this.props.numDrugs}
             primary={true}
             badgeStyle={{top: 20, right: 20}}
-            style={{top: -5}}
+            style={{top: -5, left: 50}}
           >
             <IconButton tooltip="Number of Drugs" iconStyle={{color: 'white'}}>
             <SVG
@@ -90,7 +90,7 @@ export default class GlobalFilterNav extends React.Component {
             badgeContent={this.props.rules.length}
             secondary={true}
             badgeStyle={{top: 20, right: 20}}
-            style={{top: -5}}
+            style={{top: -5, left: 20}}
           >
             <IconButton tooltip="Number Of Interactions" iconStyle={{color: 'white'}}>
               <SVG
