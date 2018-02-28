@@ -21,8 +21,8 @@ import Badge from 'material-ui/Badge';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 import Share from 'material-ui/svg-icons/social/share';
 import Brightness1 from 'material-ui/svg-icons/image/brightness-1';
-import drug from '../../../../images/drug.svg'
-import molecular from '../../../../images/molecular.svg'
+import medicines from '../../../../images/medicines.svg'
+import connection from '../../../../images/connection.svg'
 import SvgIcon from 'material-ui/SvgIcon';
 import SVG  from 'react-inlinesvg';
 import { countDrugInteraction } from '../../utilities/functions'; 
@@ -99,7 +99,7 @@ export default class GlobalFilterNav extends React.Component {
           >
             <IconButton tooltip="Number of Drugs" iconStyle={{color: 'white'}}>
             <SVG
-              src={drug}
+              src={medicines}
             >
             </SVG>
             </IconButton>
@@ -112,7 +112,7 @@ export default class GlobalFilterNav extends React.Component {
           >
             <IconButton tooltip="Number Of Interactions" iconStyle={{color: 'white'}}>
               <SVG
-                src={molecular}
+                src={connection}
               >
               </SVG>
             </IconButton>

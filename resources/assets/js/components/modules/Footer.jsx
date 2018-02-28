@@ -21,7 +21,7 @@ export default class Footer extends Component {
     ];
 
     return (
-      <Row style={{background: '#2D3E46', color: 'white', position: 'absolute', bottom: 0, left: 0, width: '100%', paddingLeft: 50, paddingRight: 50, paddingTop: 8, height: 40}}>
+      <Row style={{background: '#2D3E46', color: 'white', position: 'absolute', bottom: 0, left: 0, width: '100%', paddingLeft: 50, paddingRight: 50, paddingTop: 8, height: 40, margin: '0 auto'}}>
         <Col sm={6}>
           <p style={{textAlign: 'left'}}>
             © 2018. Worcester Polytechnic Institute. All Rights Reserved.
