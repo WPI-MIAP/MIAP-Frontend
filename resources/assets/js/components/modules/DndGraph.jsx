@@ -37,9 +37,13 @@ export default class DndGraph extends Component {
 
 		this.state = {
 			network: null,
+			initialZoom: 1.0
 		}
 
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
+		this.home = this.home.bind(this);
+		this.zoomIn = this.zoomIn.bind(this);
+		this.zoomOut = this.zoomOut.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -63,9 +67,12 @@ export default class DndGraph extends Component {
 		}
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
 		if (this.state.network != null) {
 			this.state.network.redraw();
+			if (prevState.network == null) {
+				this.setState({initialZoom: this.state.network.getScale()});
+			}
 		}
 	}
 
@@ -73,8 +80,33 @@ export default class DndGraph extends Component {
 		this.setState({ network: nw });
 	}
 
-	render() {
+	home() {
+		this.state.network.fit({animation: true});
+	}
 
+	zoomIn(scale) {
+		if(scale !== undefined) {
+			var newZoom = this.state.network.getScale() + scale;
+			this.state.network.moveTo({scale: newZoom});
+		}
+	}
+
+	zoomOut(scale) {
+		if(scale !== undefined) {
+			const currentZoom = this.state.network.getScale();
+			var newZoom = currentZoom - scale;
+			if(newZoom < this.state.initialZoom){
+				newZoom = this.state.initialZoom;
+			}
+			if(currentZoom !== newZoom) {
+				this.state.network.moveTo({scale: newZoom});
+			}
+		}
+	}
+
+	render() {
+		if(this.state.network !== null)
+			console.log(this.state.network.getScale());
 		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 
@@ -107,8 +139,8 @@ export default class DndGraph extends Component {
 		};
 
 		const options = {
-			// height: this.props.height + 'px',
-			width: '104%',
+			height: '100%',
+			width: '100%',
 			edges: {
 				arrows: {
 					to:     {enabled: false, scaleFactor:1, type:'arrow'},
@@ -183,13 +215,17 @@ export default class DndGraph extends Component {
 
 		return (
 			<div className='DndGraph'
-			// style={{width: width + 'px', height: height + 'px', overflow: 'hidden'}}
-			>
+				// style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+				>
 			{ ! this.props.isFetching ?
 				(
-					<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance}/>
+					<Graph graph={graph} options={options} events={events} getNetwork={this.setNetworkInstance} />
 				) :
-				(<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>)
+				(
+					<div style={{position: 'absolute', left: 'calc(50% - 21px)', top: 'calc(50%)'}}>
+						<i className="MainView_	_Loading fa fa-spinner fa-spin fa-3x fa-fw"></i>
+					</div>
+				)
 			}
 			</div>
 		)

@@ -296,6 +296,7 @@ export default class MainView extends Component {
 					</FloatingActionButton>
 					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 10, display: 'flex'}}>
 						<EditorInsertChart color={complementaryColor} style={{height: 52, width: 52}}/>
+						<h4 style={{margin: 'auto', marginRight: 10}}>Reports</h4>
 						<div style={{ 
 							height: 52, 
 							width: '100%', 
@@ -343,7 +344,8 @@ export default class MainView extends Component {
 								maxScore={this.props.maxScore}
 								isUpdating={this.props.isUpdating}
 								scoreRange={this.props.scoreRange}
-								nextTourStep={this.props.nextTourStep}/>
+								nextTourStep={this.props.nextTourStep}
+								isOverviewFullscreen={this.state.isOverviewFullscreen}/>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',

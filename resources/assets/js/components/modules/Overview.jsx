@@ -8,6 +8,9 @@ import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
 import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import { Row, Col } from 'react-flexbox-grid';
+import IconHome from 'material-ui/svg-icons/action/home';
+import IconZoomIn from 'material-ui/svg-icons/action/zoom-in';
+import IconZoomOut from 'material-ui/svg-icons/action/zoom-out';
 
 
 export default class Overview extends Component {
@@ -41,6 +44,38 @@ export default class Overview extends Component {
 		return (
 			<div>
 				<Paper zDepth={1}>
+					<div style={{ width: '99%', marginTop: this.props.isOverviewFullscreen ? 0 : 48, display: 'flex', justifyContent: 'space-between'}}>
+						<IconButton
+							style={{ zIndex: 100}}
+							tooltip="Auto Zoom"
+							iconStyle={{background: complementaryColor, color: 'white', border: '3px solid ' + complementaryColor, borderRadius: '5px', }}
+							tooltipPosition='bottom-right'
+							onClick={() => {this.graph.home()}}>
+
+							<IconHome/>
+						</IconButton>
+
+						<div>
+							<IconButton
+								style={{ zIndex: 100}}
+								tooltip="Zoom In"
+								iconStyle={{background: complementaryColor, color: 'white', border: '3px solid ' + complementaryColor, borderRadius: '5px', }}
+								tooltipPosition='bottom-right'
+								onClick={() => {this.graph.zoomIn(0.2)}}>
+
+								<IconZoomIn/>
+							</IconButton>
+							<IconButton
+								style={{ zIndex: 100}}
+								tooltip="Zoom Out"
+								iconStyle={{background: complementaryColor, color: 'white', border: '3px solid ' + complementaryColor, borderRadius: '5px', }}
+								tooltipPosition='bottom-right'
+								onClick={() => {this.graph.zoomOut(0.2)}}>
+
+								<IconZoomOut/>
+							</IconButton>
+						</div>
+					</div>
 					<GridTile
 						title={this.props.col != 12 ? "Overview" : ""}
 						titlePosition="top"
@@ -50,7 +85,8 @@ export default class Overview extends Component {
 							boxSizing: 'border-box',
 							background: 'white',
 							height: this.state.legendShow ? 'calc(100% - 79px)' : '100%',
-							marginBottom: this.state.legendShow ? 0 : -48
+							marginBottom: this.state.legendShow ? 0 : -48,
+							marginTop: this.props.isOverviewFullscreen ? -48 : -96
 						}}
 						actionIcon={
 							<IconButton 
@@ -62,21 +98,24 @@ export default class Overview extends Component {
 							</IconButton>
 						}
 					>
-						<DndGraph 
-							nodes={this.props.nodes}
-							links={this.props.links}
-							width={this.props.width}
-							height={this.props.height} 
-							selectedDrug={this.props.selectedDrug}
-							onClickNode={this.onClickNodeTour}
-							onClickEdge={this.onClickEdgeTour}
-							isFetching={this.props.isFetching}
-							filter={this.props.filter}
-							minScore={this.props.minScore}
-							maxScore={this.props.maxScore}
-							isUpdating={this.props.isUpdating}
-							scoreRange={this.props.scoreRange}
-						/>
+						<div style={{height: this.props.isOverviewFullscreen ? '100%' : 'calc(100% - 48px)', marginTop: this.props.isOverviewFullscreen ? 0 : 48}}>
+							<DndGraph 
+								nodes={this.props.nodes}
+								links={this.props.links}
+								width={this.props.width}
+								height={this.props.height} 
+								selectedDrug={this.props.selectedDrug}
+								onClickNode={this.onClickNodeTour}
+								onClickEdge={this.onClickEdgeTour}
+								isFetching={this.props.isFetching}
+								filter={this.props.filter}
+								minScore={this.props.minScore}
+								maxScore={this.props.maxScore}
+								isUpdating={this.props.isUpdating}
+								scoreRange={this.props.scoreRange}
+								ref={(graph) => {this.graph = graph;}}
+							/>
+						</div>
 					</GridTile>
 					{/* LEGEND */}
 					{

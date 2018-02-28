@@ -204,7 +204,7 @@ export class InteractionProfile extends Component {
 
   render() {
     return (
-      <div id="treeWrapper" width="100%" style={{position: 'relative', minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div id="treeWrapper" width="100%" style={{position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         {(this.props.mainDrug != '' || this.props.mainRule != '') ?
           <D3Tree scoreRange={this.props.scoreRange} 
             treeData={this.state.myTreeData}

@@ -47,33 +47,35 @@ export default class GalaxyView extends Component {
 							boxSizing: 'border-box',
 							background: 'white',
 							height: this.state.legendShow ? 'calc(100% - 79px)' : '100%',
-							marginBottom: this.state.legendShow ? 0 : -48
+							marginBottom: this.state.legendShow ? 0 : -48,
 						}}
 					>
-						{
-							_.isEmpty(this.props.currentDrugs) ? 
-							<div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-								<h4 style={{ color: 'grey' }}>
-									No drugs are being selected
-								</h4>
-							</div> :
-							<DndTreeContainer 
-								currentDrugs={this.props.currentDrugs}
-								filter={this.props.filter}
-								minScore={this.props.minScore}
-								maxScore={this.props.maxScore}
-								width={this.props.width}
-								height={this.props.height} 
-								onClickNode={this.props.onClickNode}
-								onClickEdge={this.props.onClickEdge}
-								onDeleteNode={this.props.onDeleteNode}
-								onClearDrug={this.props.onClearDrug}
-								cols={this.props.col}
-								selectedDrug={this.props.selectedDrug}
-								handleOpen={this.props.handleOpen}
-								scoreRange={this.props.scoreRange}
-								dmeRange={this.props.dmeRange}/>
-						}
+						<div style={{height: this.props.isGalaxyFullscreen ? '100%' : 'calc(100% - 48px)', marginTop: this.props.isGalaxyFullscreen ? 0 : 48}}>
+							{
+								_.isEmpty(this.props.currentDrugs) ? 
+								<div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+									<h4 style={{ color: 'grey' }}>
+										No drugs are being selected
+									</h4>
+								</div> :
+								<DndTreeContainer 
+									currentDrugs={this.props.currentDrugs}
+									filter={this.props.filter}
+									minScore={this.props.minScore}
+									maxScore={this.props.maxScore}
+									width={this.props.width}
+									height={this.props.height} 
+									onClickNode={this.props.onClickNode}
+									onClickEdge={this.props.onClickEdge}
+									onDeleteNode={this.props.onDeleteNode}
+									onClearDrug={this.props.onClearDrug}
+									cols={this.props.col}
+									selectedDrug={this.props.selectedDrug}
+									handleOpen={this.props.handleOpen}
+									scoreRange={this.props.scoreRange}
+									dmeRange={this.props.dmeRange}/>
+							}
+						</div>
 					</GridTile>
 					 
 					{

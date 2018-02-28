@@ -64,14 +64,16 @@ export default class GalaxyView extends Component {
 							</IconButton>
 						}
 					>
-						<InteractionProfile 
-							mainDrug={this.props.selectedDrug} 
-							mainRule={this.props.selectedRule}
-							scoreRange={this.props.scoreRange}
-							filter={this.props.filter}
-							minScore={this.props.minScore}
-							maxScore={this.props.maxScore}
-						/>
+						<div style={{height: this.props.isProfileFullscreen ? '100%' : 'calc(100% - 48px)', marginTop: this.props.isProfileFullscreen ? 0 : 48}}>
+							<InteractionProfile 
+								mainDrug={this.props.selectedDrug} 
+								mainRule={this.props.selectedRule}
+								scoreRange={this.props.scoreRange}
+								filter={this.props.filter}
+								minScore={this.props.minScore}
+								maxScore={this.props.maxScore}
+							/>
+						</div>
 					</GridTile>
 					{
 						this.state.legendShow ? (

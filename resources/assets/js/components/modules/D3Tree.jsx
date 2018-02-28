@@ -55,7 +55,7 @@ const removeTree = (svgDomNode) => {
 
 const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
-  const height = svgDomNode.parentNode.parentNode.parentNode.parentNode.parentNode.clientHeight
+  const height = svgDomNode.parentNode.clientHeight
   // console.log(treeData);
   const width = '100%';
   const duration = 750;
