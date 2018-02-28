@@ -66,6 +66,12 @@ export default class Overview extends Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if(prevProps.col !== this.props.col || prevProps.isOverviewFullscreen !== this.props.isOverviewFullscreen) {
+			this.graph.home();
+		}
+	}
+
 	render() {
 
 		return (
@@ -75,7 +81,7 @@ export default class Overview extends Component {
 					style={{
 						position: 'absolute',
 						right: 20,
-						top: 110,
+						top: this.props.isOverviewFullscreen ? 62 : 110,
 						zIndex: 100,
 					}}
 					backgroundColor="white"
@@ -90,7 +96,7 @@ export default class Overview extends Component {
 					style={{
 						position: 'absolute',
 						right: 20,
-						top: 160,
+						top: this.props.isOverviewFullscreen ? 112 : 160,
 						zIndex: 100,
 					}}
 					backgroundColor="white"
@@ -105,7 +111,7 @@ export default class Overview extends Component {
 					style={{
 						position: 'absolute',
 						right: 20,
-						top: 60,
+						top: this.props.isOverviewFullscreen ? 12 : 60,
 						zIndex: 100,
 					}}
 					backgroundColor="white"
