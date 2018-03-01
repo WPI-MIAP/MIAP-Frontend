@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import Tree from 'react-d3-tree'
-import D3Tree from './D3Tree'
-import axios from 'axios'
-import _ from 'lodash'
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Tree from 'react-d3-tree';
+import D3Tree from './D3Tree';
+import axios from 'axios';
+import _ from 'lodash';
 
 const dummyData = {
   currentDrugs: [
@@ -64,11 +64,13 @@ export class InteractionProfile extends Component {
     super(props);
 
     this.state = {
-      myTreeData: [{ name: '', children: [] }]
+      myTreeData: [{ name: '', children: [] }],
+      domNode: null
     }
   }
 
   componentDidMount() {
+    this.setState({domNode: ReactDOM.findDOMNode(this)});
     if(this.props.helpExample) {
       //use dummy data if it is the help example
       let mainDrug, myTreeData, rules, drugs;
@@ -211,6 +213,8 @@ export class InteractionProfile extends Component {
             filter={this.props.filter}
             minScore={this.props.minScore}
             maxScore={this.props.maxScore}
+            width={(this.state.domNode !== null) ? this.state.domNode.clientWidth : 0}
+            height={(this.state.domNode !== null) ? this.state.domNode.clientHeight : 0}
           /> :
           <h4 style={{color: 'grey'}}>No interaction profiles are being selected</h4>
         }

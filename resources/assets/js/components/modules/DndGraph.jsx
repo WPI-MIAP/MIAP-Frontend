@@ -122,14 +122,7 @@ export default class DndGraph extends Component {
 		}
 	}
 
-	render() {
-		if(this.state.network !== null)
-		{
-			console.log('selected nodes: ' + this.state.network.getSelectedNodes());
-			console.log('selected edges: ' + this.state.network.getSelectedEdges());
-			// 	console.log(this.state.network.getScale());
-		}
-		
+	render() {		
 		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 

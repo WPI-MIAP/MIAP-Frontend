@@ -28,7 +28,8 @@ export default class D3Tree extends Component {
 
   componentWillReceiveProps(nextProps) {
     // if (nextProps.treeData[0].children.length > 0) {
-      if (this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
+      if (nextProps.width != this.props.width || nextProps.height != this.props.height ||
+        this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
         (this.state.previousDrug.toLowerCase() === nextProps.treeData[0].name.toLowerCase() && 
         ! _.isEqual(this.state.previousData.children, nextProps.treeData[0].children)
         ) 
@@ -55,7 +56,7 @@ const removeTree = (svgDomNode) => {
 
 const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
-  const height = svgDomNode.parentNode.clientHeight
+  const height = svgDomNode.parentNode.clientHeight;
   // console.log(treeData);
   const width = '100%';
   const duration = 750;
