@@ -4,28 +4,16 @@ import SearchBarContainer from '../../containers/SearchBarContainer';
 import { Row, Col } from 'react-flexbox-grid';
 import { primaryColor, wpiLogo } from '../../utilities/constants';
 import Help from './Help';
-import Filters from './Filters';
+// import Filters from './Filters';
 import DistributionRangeSlider from './DistributionRangeSlider';
 import UploadFAERS from './UploadFAERS';
 import KnownUnknownDropDown from './KnownUnknownDropDown';
-import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import Badge from 'material-ui/Badge';
-import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
-import Share from 'material-ui/svg-icons/social/share';
-import Brightness1 from 'material-ui/svg-icons/image/brightness-1';
-import medicines from '../../../../images/medicines.svg'
-import connection from '../../../../images/connection.svg'
-import SvgIcon from 'material-ui/SvgIcon';
-import SVG  from 'react-inlinesvg';
 import { countDrugInteraction } from '../../utilities/functions'; 
+import {medicines, connection} from '../../utilities/constants';
 
 const styles = {
   root: {
@@ -98,10 +86,7 @@ export default class GlobalFilterNav extends React.Component {
             style={{top: -5, left: 50}}
           >
             <IconButton tooltip="Number of Drugs" iconStyle={{color: 'white'}}>
-            <SVG
-              src={medicines}
-            >
-            </SVG>
+            {medicines}
             </IconButton>
           </Badge>
           <Badge
@@ -111,10 +96,7 @@ export default class GlobalFilterNav extends React.Component {
             style={{top: -5, left: 20}}
           >
             <IconButton tooltip="Number Of Interactions" iconStyle={{color: 'white'}}>
-              <SVG
-                src={connection}
-              >
-              </SVG>
+              {connection}
             </IconButton>
           </Badge>
           <UploadFAERS />

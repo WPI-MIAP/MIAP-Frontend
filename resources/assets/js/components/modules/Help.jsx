@@ -344,12 +344,14 @@ export default class Help extends Component {
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
-									<Paper zDepth={1} style={{background: primaryColor, width: 185, height: 64}}>
-										<KnownUnknownDropDown
-											isUpdating={() => {}}
-											onClick={() => {}}/>
+									<Paper zDepth={1} style={{background: primaryColor, width: 200, height: 65, paddingTop: 5, paddingLeft: 5}}>
+										<div style={{width: 190}}>
+											<KnownUnknownDropDown
+												isUpdating={() => {}}
+												onClick={() => {}}/>
+										</div>
 									</Paper>
-									<Paper zDepth={1} style={{background: primaryColor, width: 320, height: 64, marginTop: 10, paddingLeft: 4}}>
+									<Paper zDepth={1} style={{background: primaryColor, width: 320, height: 65, marginTop: 10, paddingTop: 5, paddingLeft: 5}}>
 									{
 										<DistributionRangeSlider
 											rules={this.props.rules} 

@@ -276,7 +276,6 @@ export default class MainView extends Component {
 			const drugsString = this.props.selectedRule.split(' --- ').map(drug => _.capitalize(drug)).join(' - ');
 			profileTitle += `: ${drugsString}`;
 		}
-		// const profileTitle = this.state.col != 12 ? ('Interaction Profile ' + drugString) : '';
 
 		return (
 			<div>
@@ -366,7 +365,8 @@ export default class MainView extends Component {
 								handleOpen={this.handleOpen}
 								scoreRange={this.props.scoreRange}
 								dmeRange={this.props.dmeRange}
-								isGalaxyFullscreen={this.state.isGalaxyFullscreen}/>	
+								isGalaxyFullscreen={this.state.isGalaxyFullscreen}
+								selectedDrug={this.props.selectedDrug}/>	
 						</Col>
 						<Col xs={12} md={this.state.col} style={{ 
 							display: (this.state.col === 12 && (this.state.isGalaxyFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',

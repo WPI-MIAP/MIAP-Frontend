@@ -24,7 +24,6 @@ export default class DndTreeContainer extends Component {
 
 	onDeleteNode(drug) {
 		this.props.onDeleteNode(drug);
-
 		if (this.props.selectedDrug === drug) {
 			this.props.onClearDrug();
 		}
