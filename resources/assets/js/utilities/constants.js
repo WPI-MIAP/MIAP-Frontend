@@ -47,3 +47,8 @@ import React from 'react';
 		marginLeft: 20,
 	}} 
 	src={require('../../../images/WPI_Inst_Prim_White_Rev.png')} />;
+
+	export const teamPhoto = <img style={{
+		width: '100%'
+	}} 
+	src={require('../../../images/team_picture.jpg')} />;

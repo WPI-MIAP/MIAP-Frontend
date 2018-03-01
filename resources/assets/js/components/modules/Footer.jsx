@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import {Row, Col} from 'react-flexbox-grid';
+import {teamPhoto} from '../../utilities/constants';
 
 export default class Footer extends Component {
   constructor(props) {
@@ -39,22 +40,30 @@ export default class Footer extends Component {
             onRequestClose={() => {this.setState({aboutUs: false})}}
             autoScrollBodyContent={true}
         >
-          <br/>
-          This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
-          was composed of: <br/><br/>
-          <b>Undergraduate Students:</b> 
-          <ul>
-            <li><b>Brian McCarthy</b>, Senior, CS '18</li>
-            <li><b>Andrew Schade</b>, Senior, CS '18</li>
-            <li><b>Huy Tran</b>, Senior, CS '18</li>
-            <li><b>Brian Zylich</b>, BS/MS Candidate, CS '19</li>
-          </ul>
-          <b>Graduate Student Mentors:</b>
-          <ul>
-            <li><b>Xiao Qin</b>, PhD Candidate</li>
-            <li><b>Tabassum Kakar</b>, PhD Candidate</li>
-          </ul>
-          <b>Faculty:</b> <b>Prof. Rundensteiner</b> and <b>Prof. Harrison</b><br/>
+          <Row>
+            <Col sm={12} md={6}>
+              <br/>
+              This system for analysis and visualization of multi-drug interactions was developed at Worcester Polytechnic Institute as part of a Major Qualifying Project. The project team
+              was composed of: <br/><br/>
+              <b>Undergraduate Students:</b> 
+              <ul>
+                <li><b>Brian McCarthy</b>, Senior, CS '18</li>
+                <li><b>Andrew Schade</b>, Senior, CS '18</li>
+                <li><b>Huy Tran</b>, Senior, CS '18</li>
+                <li><b>Brian Zylich</b>, BS/MS Candidate, CS '19</li>
+              </ul>
+              <b>Graduate Student Mentors:</b>
+              <ul>
+                <li><b>Xiao Qin</b>, PhD Candidate</li>
+                <li><b>Tabassum Kakar</b>, PhD Candidate</li>
+              </ul>
+              <b>Faculty:</b> <b>Prof. Rundensteiner</b> and <b>Prof. Harrison</b><br/>
+              </Col>
+              <Col sm={12} md={6}>
+                <br/>
+                {teamPhoto}
+              </Col>
+          </Row>
           <b>FDA:</b>
           <ul>
             <li><b>Suranjan De</b>, MS, MBA.<br/>{'Deputy Director, Regulatory Science Staff (RSS), Office of Surveillance & Epidemiology, CDER, FDA'}</li>
