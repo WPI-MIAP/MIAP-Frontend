@@ -85,6 +85,10 @@ export default class MainView extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		if(nextProps.tourRunning !== this.props.tourRunning && nextProps.tourRunning === true) {
+			this.setState({col: 4, isGalaxyFullscreen: false, isOverviewFullscreen: false, isProfileFullscreen: false});
+		}
+
 		nextProps.currentDrugs.forEach(drug => {
 			if (! _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(drug[0])) && ! chip.drugs[1]))) {
 				let chips = this.state.reportChips;
@@ -142,7 +146,6 @@ export default class MainView extends Component {
 		if (this.state.currentReport !== '' && this.state.currentReport.type === report.type &&
 			_.isEqual(this.state.currentReport.drugs, report.drugs)
 		) {
-			console.log('here handle open');
 			this.setState({
 				open: true,
 				tableTitle: 'Reports for ' + title,

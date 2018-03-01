@@ -11,8 +11,6 @@ const filterTreeView = (currentDrugs, sortByTerm) => {
 		return [key, currentDrugs[key]];
 	});
 
-	console.log(currentDrugsArray);
-
 	switch (sortByTerm) {
 		case 'latest':
 			return currentDrugsArray.reverse()

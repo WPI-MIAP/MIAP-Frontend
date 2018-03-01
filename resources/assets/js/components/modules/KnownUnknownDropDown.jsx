@@ -44,7 +44,7 @@ export default class KnownUnknownDropDown extends Component {
 		return (
 			<Paper style={{background: 'rgba(255,255,255,0.1)', height: 55}}>
 				<DropDownMenu 
-					// className="knownUnknown"
+					className="knownUnknown"
 					value={this.state.value}
 					onChange={this.handleChange} 
 					style={styles.dropDown}
