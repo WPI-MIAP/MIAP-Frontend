@@ -11,11 +11,9 @@ import { Row, Col } from 'react-flexbox-grid';
 import IconHome from 'material-ui/svg-icons/action/home';
 import IconZoomIn from 'material-ui/svg-icons/action/zoom-in';
 import IconZoomOut from 'material-ui/svg-icons/action/zoom-out';
-import SVG from 'react-inlinesvg';
-import tracker from '../../../../images/tracker.svg'
+// import SVG from 'react-inlinesvg';
+// import tracker from '../../../../images/tracker.svg'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import { blue500, red500, greenA200, grey500 } from 'material-ui/styles/colors';
 import SvgIcon from 'material-ui/SvgIcon';
 
 
@@ -68,7 +66,7 @@ export default class Overview extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.col !== this.props.col || prevProps.isOverviewFullscreen !== this.props.isOverviewFullscreen) {
-			this.graph.home();
+			this.graph.reposition();
 		}
 	}
 

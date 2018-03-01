@@ -80,6 +80,24 @@ export default class DndGraph extends Component {
 		this.setState({ network: nw });
 	}
 
+	reposition() {
+		if(this.state.network.getSelectedNodes().length > 0) {
+			this.state.network.focus(this.state.network.getSelectedNodes()[0], {scale: 1.0});
+		}
+		else if(this.state.network.getSelectedEdges().length > 0) {
+			var x, y = 0;
+			var drugs = _.map(_.split(this.state.network.getSelectedEdges()[0], '---'), drug => _.trim(drug));
+			var positions = this.state.network.getPositions([drugs[0], drugs[1]]);
+			positions = [positions[drugs[0]], positions[drugs[1]]];
+			x = _.meanBy(positions,p => p.x);
+			y = _.meanBy(positions,p => p.y);
+			this.state.network.moveTo({scale: 1.0, position: {x: x, y: y},});
+		}
+		else{
+			this.state.network.fit({animation: false});
+		}
+	}
+
 	home() {
 		this.state.network.fit({animation: true});
 	}
@@ -106,7 +124,12 @@ export default class DndGraph extends Component {
 
 	render() {
 		if(this.state.network !== null)
-			console.log(this.state.network.getScale());
+		{
+			console.log('selected nodes: ' + this.state.network.getSelectedNodes());
+			console.log('selected edges: ' + this.state.network.getSelectedEdges());
+			// 	console.log(this.state.network.getScale());
+		}
+		
 		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
 		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
 
@@ -182,7 +205,7 @@ export default class DndGraph extends Component {
 		const events = {
 			select: (event) => {
 				const { nodes, edges } = event;
-				console.log(nodes);
+				// console.log(nodes);
 				if (typeof nodes[0] !== undefined && nodes.length !== 0) {
 					this.props.onClickNode(nodes[0]);
 				} 
