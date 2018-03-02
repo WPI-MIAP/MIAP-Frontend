@@ -177,6 +177,15 @@ var exec = require('child_process').exec;
 		}
 	}
 
+	public async getStatus(req: Request, res: Response, next: NextFunction) {
+		try {
+			let status = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/status.json', 'utf8'));
+			res.json(status);
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	public async getDMEs(req: Request, res: Response, next: NextFunction) {
 		try {
 			let DMEs = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');

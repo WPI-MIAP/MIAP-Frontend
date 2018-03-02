@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, selectRule, isUpdating, clearRule } from '../actions'
+import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, selectRule, isUpdating, clearRule, fetchStatus } from '../actions'
 import MainView from '../components/layouts/MainView'
 
 const getIsFetching = (rules, filter) => {
@@ -35,7 +35,8 @@ const mapStateToProps = state => {
 		minScore: state.selectMinScore,
 		maxScore: state.selectMaxScore,
 		scoreRange: state.rulesByStatus.all.scoreRange,
-		dmeRange: state.rulesByStatus.all.dmeRange
+		dmeRange: state.rulesByStatus.all.dmeRange,
+		status: state.status,
 	}
 }
 
@@ -67,6 +68,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		clearSearchTerm: () => {
 			dispatch(clearSearchTerm());
+		},
+		getStatus: () => {
+			dispatch(fetchStatus())
 		}
 	}
 }

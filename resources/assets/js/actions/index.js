@@ -112,6 +112,32 @@ export const receiveDrugs = (drug, json) => {
 	}
 }
 
+export const requestStatus = () => {
+	return {
+		type: 'REQUEST_STATUS'
+	}
+}
+
+export const receiveStatus = (json) => {
+	return {
+		type: 'RECEIVE_STATUS',
+		status: json.status,
+		updated: json.updated,
+		sources: json.sources
+	}
+}
+
+export function fetchStatus() {
+	return function (dispatch) {
+		dispatch(requestStatus());
+
+		return axios.get('/csv/status')
+			.then(response => {
+				dispatch(receiveStatus(response.data))
+			})
+	}
+}
+
 export function fetchRules(status) {
 	return function (dispatch) {
 		dispatch(requestRules(status));

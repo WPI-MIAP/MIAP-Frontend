@@ -37,8 +37,8 @@ export default class GalaxyView extends Component {
 									tooltipPosition='bottom-left'
 									onClick={this.props.toggleFullscreenGalaxy}
 								>
-								<IconFullscreen />	
-							</IconButton>
+									<IconFullscreen />	
+								</IconButton>
 								<TreeViewFilterContainer /> 
 							</div>
 						}

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore, isUpdating } from '../actions'
+import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore, isUpdating, fetchStatus } from '../actions'
 import GlobalFilterNav from '../components/modules/GlobalFilterNav'
 
 
@@ -12,7 +12,8 @@ const mapStateToProps = state => {
 		dmeRange: state.rulesByStatus.all.dmeRange,
 		minScore: state.selectMinScore,
 		maxScore: state.selectMaxScore,
-		filter: state.visibilityFilter
+		filter: state.visibilityFilter,
+		status: state.status,
   }
 }
 
@@ -32,6 +33,10 @@ const mapDispatchToProps = dispatch => {
 
 		isUpdating: value => {
 			dispatch(isUpdating(value))
+		},
+
+		getStatus: () => {
+			dispatch(fetchStatus())
 		}
 	}
 }

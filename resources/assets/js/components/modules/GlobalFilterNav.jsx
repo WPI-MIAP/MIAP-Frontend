@@ -99,7 +99,7 @@ export default class GlobalFilterNav extends React.Component {
               {connection}
             </IconButton>
           </Badge>
-          <UploadFAERS />
+          <UploadFAERS status={this.props.status} getStatus={this.props.getStatus}/>
           <Help 
             scoreRange={this.props.scoreRange}
             dmeRange={this.props.dmeRange}

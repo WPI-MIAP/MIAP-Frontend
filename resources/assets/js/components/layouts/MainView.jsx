@@ -347,7 +347,9 @@ export default class MainView extends Component {
 								isUpdating={this.props.isUpdating}
 								scoreRange={this.props.scoreRange}
 								nextTourStep={this.props.nextTourStep}
-								isOverviewFullscreen={this.state.isOverviewFullscreen}/>
+								isOverviewFullscreen={this.state.isOverviewFullscreen}
+								status={this.props.status}
+								getStatus={this.props.getStatus}/>
 						</Col>
 						<Col xs={12} md={this.state.col} style={{
 							display: (this.state.col === 12 && (this.state.isProfileFullscreen || this.state.isOverviewFullscreen)) ? 'none' : 'block',

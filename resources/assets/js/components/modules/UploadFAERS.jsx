@@ -12,6 +12,8 @@ import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
+import { Row, Col } from 'react-flexbox-grid';
+import {StatusInformation} from './StatusInformation';
 
 export default class UploadFAERS extends Component {
 	constructor(props) {
@@ -23,6 +25,7 @@ export default class UploadFAERS extends Component {
 			prevFiles: [],
 			uploadSnackbar: false,
 			uploadSnackbarMessage: '',
+			currentlyRunning: props.status.status === 'inprogress'
 		};
 
 		this.openUploadDialog = this.openUploadDialog.bind(this);
@@ -31,8 +34,20 @@ export default class UploadFAERS extends Component {
 		this.onFilesChange = this.onFilesChange.bind(this);
 		this.createRemoveFileHandler = this.createRemoveFileHandler.bind(this);
 	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.status.status !== undefined) {
+			if(nextProps.status.status === 'inprogress') {
+				this.setState({currentlyRunning: true});
+			}
+			else {
+				this.setState({currentlyRunning: false});
+			}
+		}
+	}
 	
 	openUploadDialog(){
+		this.props.getStatus();
 		this.setState({uploadDialog: true});
 	};
 	
@@ -127,6 +142,7 @@ export default class UploadFAERS extends Component {
 			  label="Upload"
 			  primary={true}
 			  onClick={this.beginMARAS}
+			  disabled={this.state.currentlyRunning}
 			/>
 		];
 
@@ -147,56 +163,72 @@ export default class UploadFAERS extends Component {
 					onRequestClose={() => {this.setState({uploadSnackbar: false})}}/>
 				<Dialog
 					title="Upload FAERS data"
-					contentStyle={{width: "60%", maxWidth: "none"}}
+					contentStyle={{width: "80%", maxWidth: "none"}}
 					actions={uploadFileActions}
 					modal={false}
 					open={this.state.uploadDialog}
 					onRequestClose={this.closeUploadDialog}
 					autoScrollBodyContent={true}>
-					<Files
-						className='files-dropzone'
-						onChange={this.onFilesChange}
-						onError={this.onFilesError}
-						accepts={['application/x-zip-compressed']}
-						multiple
-						maxFileSize={1000000000}
-						minFileSize={0}
-						clickable
-						>
-						<Paper zDepth={1} style={{height: 114, lineHeight: '38px', textAlign: 'center'}}>
-						<div>
-							Drop files here or click to upload (File format must be .zip)<br/>
-							Zip files can be downloaded from&nbsp;
-							<a target="_blank" onClick={(event) => {event=event || window.event; event.stopPropagation();}} href="https://www.fda.gov/Drugs/GuidanceComplianceRegulatoryInformation/Surveillance/AdverseDrugEffects/ucm082193.htm">
-								this link
-							</a>. <br/>
-							Note: Please upload the ASCII version.
-						</div>
-						</Paper>
-					</Files>
-					<List>
-						<ListItem primaryText={'Example:'} disabled={true}/>
-						<ListItem
-							leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
-							rightIconButton={<IconButton onClick={() => {}}><NavigationClose/></IconButton>}
-							primaryText={'faers_ascii_2013q1.zip'}
-							disabled={true}
-							/>
-						<ListItem primaryText={'Files to Upload:'} disabled={true}/>
 						{
-							(this.state.uploadFiles.length == 0) ? (
-								<ListItem primaryText={'No files have been added.'} disabled={true}/>
-							) :
-							(this.state.uploadFiles.map((file) => (
-								<ListItem
-									key={file.name}
-									leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
-									rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
-									primaryText={file.name}
-									/>
-							)))
+							(this.state.currentlyRunning) ? (
+								<div style={{textAlign: 'center'}}>
+									Analysis is currently in progress. Please wait for analysis to complete before uploading
+									any more files.
+								</div>
+							) : (
+								<Row>
+									<Col md={8}>
+										<Files
+											className='files-dropzone'
+											onChange={this.onFilesChange}
+											onError={this.onFilesError}
+											accepts={['application/x-zip-compressed']}
+											multiple
+											maxFileSize={1000000000}
+											minFileSize={0}
+											clickable
+											>
+											<Paper zDepth={1} style={{height: 114, lineHeight: '38px', textAlign: 'center'}}>
+											<div>
+												Drop files here or click to upload (File format must be .zip)<br/>
+												Zip files can be downloaded from&nbsp;
+												<a target="_blank" onClick={(event) => {event=event || window.event; event.stopPropagation();}} href="https://www.fda.gov/Drugs/GuidanceComplianceRegulatoryInformation/Surveillance/AdverseDrugEffects/ucm082193.htm">
+													this link
+												</a>. <br/>
+												Note: Please upload the ASCII version.
+											</div>
+											</Paper>
+										</Files>
+										<List>
+											<ListItem primaryText={'Example:'} disabled={true}/>
+											<ListItem
+												leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
+												rightIconButton={<IconButton onClick={() => {}}><NavigationClose/></IconButton>}
+												primaryText={'faers_ascii_2013q1.zip'}
+												disabled={true}
+												/>
+											<ListItem primaryText={'Files to Upload:'} disabled={true}/>
+											{
+												(this.state.uploadFiles.length == 0) ? (
+													<ListItem primaryText={'No files have been added.'} disabled={true}/>
+												) :
+												(this.state.uploadFiles.map((file) => (
+													<ListItem
+														key={file.name}
+														leftAvatar={<Avatar icon={<FileCreateNewFolder/>}/>}
+														rightIconButton={<IconButton onClick={this.createRemoveFileHandler(file.name)}><NavigationClose/></IconButton>}
+														primaryText={file.name}
+														/>
+												)))
+											}
+										</List>
+									</Col>
+									<Col md={4}>
+										<StatusInformation status={this.props.status} />
+									</Col>
+								</Row>
+							)
 						}
-					</List>
 				</Dialog>
 			</div>
 		);

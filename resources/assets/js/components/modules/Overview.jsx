@@ -15,6 +15,7 @@ import IconZoomOut from 'material-ui/svg-icons/action/zoom-out';
 // import tracker from '../../../../images/tracker.svg'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import SvgIcon from 'material-ui/SvgIcon';
+import StatusInformationButton from './StatusInformation';
 
 
 const Tracker = () => (
@@ -149,13 +150,16 @@ export default class Overview extends Component {
 							// marginTop: this.props.isOverviewFullscreen ? -48 : -96
 						}}
 						actionIcon={
-							<IconButton 
-								tooltip="Go Fullscreen"
-								iconStyle={{ color: 'white' }}
-								tooltipPosition='bottom-left'
-								onClick={this.props.toggleFullscreenOverview}>
-								<IconFullscreen />	
-							</IconButton>
+							<Row style={{margin: 0}}>
+								<IconButton 
+									tooltip="Go Fullscreen"
+									iconStyle={{ color: 'white' }}
+									tooltipPosition='bottom-left'
+									onClick={this.props.toggleFullscreenOverview}>
+									<IconFullscreen />	
+								</IconButton>
+								<StatusInformationButton status={this.props.status} getStatus={this.props.getStatus}/>
+							</Row>
 						}
 					>
 
