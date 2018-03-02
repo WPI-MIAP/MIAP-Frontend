@@ -98,9 +98,16 @@ export default class Report extends React.Component {
         />
       ];
 
+      var numReports = 0;
+      this.props.tableData.forEach(row => {
+        if(row !== null) {
+          numReports += 1;
+        }
+      });
+
       return (
         <Dialog
-          title={_.upperFirst(this.props.tableTitle) + ' (' + this.props.tableData.length + ' results)'}
+          title={_.upperFirst(this.props.tableTitle) + ' (' + numReports + ' results)'}
           actions={actions}
           modal={false}
           open={this.props.open}
@@ -116,109 +123,117 @@ export default class Report extends React.Component {
             </span>
           ) : (
             <div>
-              <BarChart style={{margin: '0 auto'}} width={this.props.windowWidth * 0.8} height={100} data={this.state.drugFreqs}>
-                <XAxis tick={false} hide={false} dataKey="name">
-                  <Label value="Drug Co-occurrences" offset={10} position="insideBottom" />
-                </XAxis>
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="freq" onClick={this.handleBarClick}>
-                  {
-                    this.state.drugFreqs.map((entry, index) => (
-                      <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? barSelectedColor : barColor} key={`cell-${index}`}/>
-                    ))
-                  }
-                </Bar>
-              </BarChart>
-              <Table
-                autoDetectWindowHeight={false} 
-                autoScrollBodyContent={true}
-                fixedFooter={false}
-                fixedHeader={false} 
-                style={{ width: "auto",  overflow: 'auto' }}
-                bodyStyle={{overflow:'visible'}}
-                displayBorder={true}
-              >
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-              >
-                <TableRow>
-                  <TableHeaderColumn style={{color: 'black'}}>ID</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>EVENT_DT</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>REPT_DT</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>REPT_COD</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>OCCR_COUNTRY</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>AGE</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>AGE_COD</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>AGE_GRP</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>SEX</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>WT</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>WT_COD</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>LIST OF DRUG NAMES</TableHeaderColumn> 
-                  <TableHeaderColumn style={{color: 'black'}}>ADVERSARY EFFECTS</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>OCCP_COD</TableHeaderColumn>
-                  <TableHeaderColumn style={{color: 'black'}}>REPORTER COUNTRY</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                displayRowCheckbox={false}
-                stripedRows={false}
-                showRowHover={true}
-                preScanRows={true}
-              >
-                {
-                  this.props.tableData === null ? [] :
-                  this.props.tableData.map((data, index) => {
-                    if (data == null) {
-                      return null;
-                    }
-                    return (
-                      <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: barSelectedColor, color: 'black'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
-                      >
-                        <TableRowColumn>{data.primaryId}</TableRowColumn>
-                        <TableRowColumn>{data.event_dt}</TableRowColumn>
-                        <TableRowColumn>{data.rept_dt}</TableRowColumn>
-                        <TableRowColumn>{data.rept_cod}</TableRowColumn>
-                        <TableRowColumn>{data.occr_country}</TableRowColumn>
-                        <TableRowColumn>{data.age}</TableRowColumn>
-                        <TableRowColumn>{data.age_cod}</TableRowColumn>
-                        <TableRowColumn>{data.age_grp}</TableRowColumn>
-                        <TableRowColumn>{data.sex}</TableRowColumn>
-                        <TableRowColumn>{data.wt}</TableRowColumn>
-                        <TableRowColumn>{data.wt_cod}</TableRowColumn>
-                        <TableRowColumn style={{
-                          whiteSpace: 'normal',
-                          wordWrap: 'break-word',
-                          padding: 10,
-                          }}
-                        >
-                          {
-                            _.split(data.drugname, ',').map((drug, index, array) => (
-                              <div  key={drug}>
-                                <a style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {color: 'black'} : {}} onClick={this.createOnClickDrugListener(drug)}>{_.capitalize(_.trim(drug))}</a>
-                                {(index !== array.length-1) ? ',' : ''}
-                              </div>
-                            ))
-                          }
-                        </TableRowColumn>
-
-                        <TableRowColumn style={{
-                          whiteSpace: 'normal',
-                          padding: 10,
-                          wordWrap: 'break-word'
-                          }}
-                        >
-                          {data.SideEffect}
-                        </TableRowColumn>
-                        <TableRowColumn>{data.occp_cod}</TableRowColumn>
-                        <TableRowColumn>{data.reporter_country}</TableRowColumn>
+              {
+                (numReports === 0) ? (
+                  <div style={{textAlign: 'center'}}>No reports were found.</div>
+                ) : (
+                  <div>
+                    <BarChart style={{margin: '0 auto'}} width={this.props.windowWidth * 0.8} height={100} data={this.state.drugFreqs}>
+                      <XAxis tick={false} hide={false} dataKey="name">
+                        <Label value="Drug Co-occurrences" offset={10} position="insideBottom" />
+                      </XAxis>
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="freq" onClick={this.handleBarClick}>
+                        {
+                          this.state.drugFreqs.map((entry, index) => (
+                            <Cell cursor="pointer" fill={_.toLower(_.replace(entry['name'], /\W+/g, '')) === this.state.selectedDrug ? barSelectedColor : barColor} key={`cell-${index}`}/>
+                          ))
+                        }
+                      </Bar>
+                    </BarChart>
+                    <Table
+                      autoDetectWindowHeight={false} 
+                      autoScrollBodyContent={true}
+                      fixedFooter={false}
+                      fixedHeader={false} 
+                      style={{ width: "auto",  overflow: 'auto' }}
+                      bodyStyle={{overflow:'visible'}}
+                      displayBorder={true}
+                    >
+                    <TableHeader
+                      displaySelectAll={false}
+                      adjustForCheckbox={false}
+                    >
+                      <TableRow>
+                        <TableHeaderColumn style={{color: 'black'}}>ID</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>EVENT_DT</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>REPT_DT</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>REPT_COD</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>OCCR_COUNTRY</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>AGE</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>AGE_COD</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>AGE_GRP</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>SEX</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>WT</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>WT_COD</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>LIST OF DRUG NAMES</TableHeaderColumn> 
+                        <TableHeaderColumn style={{color: 'black'}}>ADVERSARY EFFECTS</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>OCCP_COD</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: 'black'}}>REPORTER COUNTRY</TableHeaderColumn>
                       </TableRow>
-                    )
-                  })
-                }
-              </TableBody>
-              </Table>
+                    </TableHeader>
+                    <TableBody
+                      displayRowCheckbox={false}
+                      stripedRows={false}
+                      showRowHover={true}
+                      preScanRows={true}
+                    >
+                      {
+                        this.props.tableData === null ? [] :
+                        this.props.tableData.map((data, index) => {
+                          if (data == null) {
+                            return null;
+                          }
+                          return (
+                            <TableRow style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {background: barSelectedColor, color: 'black'} : (index % 2 == 0) ? {background: 'white'} : {background: 'white'}} key={data.primaryId} selectable={false} displayBorder={true}
+                            >
+                              <TableRowColumn>{data.primaryId}</TableRowColumn>
+                              <TableRowColumn>{data.event_dt}</TableRowColumn>
+                              <TableRowColumn>{data.rept_dt}</TableRowColumn>
+                              <TableRowColumn>{data.rept_cod}</TableRowColumn>
+                              <TableRowColumn>{data.occr_country}</TableRowColumn>
+                              <TableRowColumn>{data.age}</TableRowColumn>
+                              <TableRowColumn>{data.age_cod}</TableRowColumn>
+                              <TableRowColumn>{data.age_grp}</TableRowColumn>
+                              <TableRowColumn>{data.sex}</TableRowColumn>
+                              <TableRowColumn>{data.wt}</TableRowColumn>
+                              <TableRowColumn>{data.wt_cod}</TableRowColumn>
+                              <TableRowColumn style={{
+                                whiteSpace: 'normal',
+                                wordWrap: 'break-word',
+                                padding: 10,
+                                }}
+                              >
+                                {
+                                  _.split(data.drugname, ',').map((drug, index, array) => (
+                                    <div  key={drug}>
+                                      <a style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {color: 'black'} : {}} onClick={this.createOnClickDrugListener(drug)}>{_.capitalize(_.trim(drug))}</a>
+                                      {(index !== array.length-1) ? ',' : ''}
+                                    </div>
+                                  ))
+                                }
+                              </TableRowColumn>
+      
+                              <TableRowColumn style={{
+                                whiteSpace: 'normal',
+                                padding: 10,
+                                wordWrap: 'break-word'
+                                }}
+                              >
+                                {data.SideEffect}
+                              </TableRowColumn>
+                              <TableRowColumn>{data.occp_cod}</TableRowColumn>
+                              <TableRowColumn>{data.reporter_country}</TableRowColumn>
+                            </TableRow>
+                          )
+                        })
+                      }
+                    </TableBody>
+                    </Table>
+                  </div>
+                )
+              }
             </div>
           )
         }
