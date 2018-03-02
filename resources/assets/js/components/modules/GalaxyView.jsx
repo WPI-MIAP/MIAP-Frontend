@@ -103,7 +103,7 @@ export default class GalaxyView extends Component {
 												</Row>
 												<Row style={{paddingBottom: 5}}>
 													{scoreColors.map(scoreColor => (
-														<Col xs={3} md={3}>
+														<Col xs={3} md={3} key={scoreColor.color}>
 															<div style={{height: 5, width: 50, background: scoreColor.color, margin: '0 auto'}}/>
 															<div style={{textAlign: 'center'}}>{scoreColor.text}</div>
 														</Col>
@@ -136,7 +136,7 @@ export default class GalaxyView extends Component {
 										<Row style={{paddingBottom: 5}}>
 										{
 											dmeColors.map(dmeColor => (
-												<Col xs={2.4} md={2.4}>
+												<Col xs={2.4} md={2.4} key={dmeColor.color}>
 													<div style={{height: 5, width: 50, background: dmeColor.color, margin: '0 auto'}}/>
 													<div style={{textAlign: 'center'}}>{dmeColor.text}</div>
 												</Col>

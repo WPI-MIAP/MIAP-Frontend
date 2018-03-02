@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer';
-import Paper from 'material-ui/Paper';
-import Share from 'material-ui/svg-icons/social/share';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Chip from 'material-ui/Chip';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
 import axios from 'axios';
-import Avatar from 'material-ui/Avatar';
-import { complementaryColor, selectedColor, baseNodeColor } from '../../utilities/constants';
-import { generateColor } from '../../utilities/functions';
-import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
-import Slider from 'react-slick';
-import SwipeableViews from 'react-swipeable-views';
+import { complementaryColor, selectedColor } from '../../utilities/constants';
 import Overview from '../modules/Overview';
 import GalaxyView from '../modules/GalaxyView';
 import ProfileView from '../modules/ProfileView';
+import ReportChipContainer from '../modules/ReportChipContainer';
 
 
 const styles = {
@@ -26,10 +18,6 @@ const styles = {
 		display: 'flex',
 		flexWrap: 'wrap',
 		justifyContent: 'space-around',
-	},
-	chip: {
-		margin: 4,
-		height: 32
 	},
 	floatingButton: {
 		position: 'absolute',
@@ -48,24 +36,20 @@ export default class MainView extends Component {
 			isGalaxyFullscreen: false,
 			isOverviewFullscreen: false,
 			isProfileFullscreen: false,
-			reportChips: [],
 			tableData: [],
 			tableTitle: '',
 			tableDrugs: [],
 			open: false,
 			width: 0,
 			height: 0,
-			hover: false,
 			currentReport: ''
 		}
 
-		this.toggleHover = this.toggleHover.bind(this);
+		
 		this.toggleFullscreenOverview = this.toggleFullscreenOverview.bind(this);
 		this.toggleFullscreenGalaxy = this.toggleFullscreenGalaxy.bind(this);
 		this.toggleFullscreenProfile = this.toggleFullscreenProfile.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		this.renderChip = this.renderChip.bind(this);
-		this.handleRequestDelete = this.handleRequestDelete.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -88,58 +72,6 @@ export default class MainView extends Component {
 		if(nextProps.tourRunning !== this.props.tourRunning && nextProps.tourRunning === true) {
 			this.setState({col: 4, isGalaxyFullscreen: false, isOverviewFullscreen: false, isProfileFullscreen: false});
 		}
-
-		nextProps.currentDrugs.forEach(drug => {
-			if (! _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(drug[0])) && ! chip.drugs[1]))) {
-				let chips = this.state.reportChips;
-				chips.unshift({type: 'drug', drugs: [_.toLower(_.trim(drug[0]))]});
-				this.setState({reportChips: chips});
-			}
-		})
-
-		this.setState((prevState, props) => {
-			return {
-				reportChips: prevState.reportChips.filter(chip => {
-					return _.find(props.currentDrugs, drug => (drug[0] == _.toLower(_.trim(chip.drugs[0])))) || chip.type == "adr"
-				})
-			}
-		});
-
-		if(this.props.selectedRule !== nextProps.selectedRule && nextProps.selectedRule !== undefined && 
-			nextProps.selectedRule !== '') {
-			var drugs = _.split(nextProps.selectedRule, '---').map((drug) => (_.toLower(_.trim(drug))));
-			if(_.find(this.state.reportChips, chip => ((chip.drugs[0] == drugs[0] && chip.drugs[1] == drugs[1]) || (chip.drugs[0] == drugs[1] && chip.drugs[1] == drugs[0]))) == undefined) {
-				var chips = this.state.reportChips;
-				chips.unshift({type: 'adr', drugs: drugs});
-				this.setState({reportChips: chips});
-			}
-		}	
-	}
-
-	renderChip(report) {
-		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
-		const drug1 = report.drugs[0];
-		const drug2 = report.drugs[1];
-
-		const avatarColor = report.type === 'drug' ? baseNodeColor : generateColor(this.props.links.filter((link) => {
-			var match = ((_.toLower(link.Drug1.name) === drug1 && _.toLower(link.Drug2.name) === drug2) || 
-			(_.toLower(link.Drug1.name) === drug2 && _.toLower(link.Drug2.name) === drug1));
-			return match;
-		})[0].Score, this.props.scoreRange);
-		return (
-			<Chip
-				key={title}
-				onRequestDelete={() => this.handleRequestDelete(report)}
-				style={styles.chip}
-				onClick={() => this.handleOpen(report)}
-				>
-				{ report.type == 'drug' ?
-				<Avatar backgroundColor={avatarColor} color="white" /> :
-				<Avatar backgroundColor={avatarColor} color="white" icon={<Share />} />
-				}
-				{title}
-			</Chip>
-		);
 	}
 
 	handleOpen(report) {
@@ -195,27 +127,6 @@ export default class MainView extends Component {
 		}
 	}
 
-
-	handleRequestDelete(key) {	
-		this.reportChips = this.state.reportChips;
-		const chipToDelete = this.reportChips.indexOf(key);
-		this.reportChips.splice(chipToDelete, 1);
-		this.setState({reportChips: this.reportChips});
-
-		/**
-		 * Clear rule or drug when deleting the currently selected one
-		 */
-		if (key.type === "drug") {
-			this.props.deleteNode(key.drugs[0]);
-			if (this.props.selectedDrug === key.drugs[0]) {
-				this.props.clearSearchTerm();
-			}
-		}
-		if (key.type === "adr" && this.props.selectedRule === key.drugs.join(' --- ')) {
-			this.props.clearRule();
-		}
-	}
-
 	toggleFullscreenOverview() {
 		this.setState((prevState, props) => {
 			return {
@@ -247,10 +158,6 @@ export default class MainView extends Component {
 				isProfileFullscreen: true
 			}
 		})
-	}
-
-	toggleHover() {
-		this.setState({ hover: !this.state.hover });
 	}
 
 	getTabsIndex() {
@@ -296,22 +203,17 @@ export default class MainView extends Component {
 					>
 						<NavigationFullscreenExit />
 					</FloatingActionButton>
-					<Paper className='chipContainer' zDepth={1} style={{marginBottom: 10, display: 'flex'}}>
-						<EditorInsertChart color={complementaryColor} style={{height: 52, width: 52}}/>
-						<h4 style={{margin: 'auto', marginRight: 10}}>Reports</h4>
-						<div style={{ 
-							height: 52, 
-							width: '100%', 
-							overflowX: 'auto',
-							overflowY: 'hidden', 
-							whiteSpace: 'nowrap', 
-							display: 'flex', 
-						}}
-							onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}
-						>
-							{this.state.reportChips.map(this.renderChip, this)}
-						</div>
-					</Paper>
+
+					<ReportChipContainer 
+						selectedRule={this.props.selectedRule} 
+						deleteNode={this.props.deleteNode}
+						selectedDrug={this.props.selectedDrug}
+						clearSearchTerm={this.props.clearSearchTerm}
+						clearRule={this.props.clearRule}
+						links={this.props.links}
+						scoreRange={this.props.scoreRange}
+						handleOpen={this.handleOpen}
+						currentDrugs={this.props.currentDrugs}/>
 
 					<Row>
 						<Col xs={12} md={12}> 

@@ -121,7 +121,7 @@ export default class DndTreeContainer extends Component {
 									>
 										<h5 className="card-title" style={drug[1].drugDMEs == undefined ? styles.title : getStyleByDMECount(drug[1].drugDMEs.length, this.props.dmeRange)}
 											onClick={() => this.props.onClickNode(drug[0])}>
-											<span style={styles.titleText}>{(drug[0].length <= 20) ? _.capitalize(drug[0]) : _.capitalize(_.trim(drug[0].substring(0, 17)) + '...')}</span>
+											<span style={styles.titleText}>{(drug[0].length <= 15) ? _.capitalize(drug[0]) : _.capitalize(_.trim(drug[0].substring(0, 12)) + '...')}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
 												<IconButton tooltip="Show Profile"

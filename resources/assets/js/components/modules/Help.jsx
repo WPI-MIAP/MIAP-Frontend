@@ -238,10 +238,10 @@ export default class Help extends Component {
 										{'Interaction Score'}
 										</Row>
 										{scoreColors.map(scoreColor => (
-										<Row>
-											<div style={{width: 34, height: 34, background: scoreColor.color, marginRight: 10}}/>
-											<div><p>{scoreColor.text}</p></div>
-										</Row>
+											<Row key={scoreColor.color}>
+												<div style={{width: 34, height: 34, background: scoreColor.color, marginRight: 10}}/>
+												<div><p>{scoreColor.text}</p></div>
+											</Row>
 										))}
 									</Col>
 									</Row>
@@ -283,10 +283,10 @@ export default class Help extends Component {
 										{'Severe ADR Count'}
 										</Row>
 										{dmeColors.map(dmeColor => (
-										<Row style={{height: 35}}>
-											<div style={{width: 34, background: dmeColor.color, marginRight: 10}}/>
-											<div><p>{dmeColor.text}</p></div>
-										</Row>
+											<Row style={{height: 35}} key={dmeColor.color}>
+												<div style={{width: 34, background: dmeColor.color, marginRight: 10}}/>
+												<div><p>{dmeColor.text}</p></div>
+											</Row>
 										))}
 									</Col>
 									</Row>

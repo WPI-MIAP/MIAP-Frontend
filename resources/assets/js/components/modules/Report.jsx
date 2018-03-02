@@ -195,8 +195,8 @@ export default class Report extends React.Component {
                         >
                           {
                             _.split(data.drugname, ',').map((drug, index, array) => (
-                              <div>
-                                <a style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {color: 'black'} : {}} onClick={this.createOnClickDrugListener(drug)} key={drug}>{_.capitalize(_.trim(drug))}</a>
+                              <div  key={drug}>
+                                <a style={(_.toLower(_.replace(data.drugname, /\W+/g, '')).indexOf(this.state.selectedDrug) !== -1) ? {color: 'black'} : {}} onClick={this.createOnClickDrugListener(drug)}>{_.capitalize(_.trim(drug))}</a>
                                 {(index !== array.length-1) ? ',' : ''}
                               </div>
                             ))
