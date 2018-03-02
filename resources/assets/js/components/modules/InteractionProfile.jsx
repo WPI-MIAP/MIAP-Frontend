@@ -134,7 +134,7 @@ export class InteractionProfile extends Component {
               .filter(rule => (_.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name) &&
                 rule.Score >= nextProps.minScore && rule.Score <= nextProps.maxScore
               )
-              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, count: rule.id.split(',').length }))
+              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, reports: _.filter(_.map(rule.id.split(','), r => _.trim(r)), r => (r !== '')), count: _.filter(rule.id.split(','), r => (r !== '')).length }))
 
             if (interactions.length === 0) {
               myTreeData[0].children[i] = {}
@@ -143,7 +143,17 @@ export class InteractionProfile extends Component {
               let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
               child.maxScore = sortedInteractions[0] ? sortedInteractions[0].Score : -2;
               child.maxScoreStatus = sortedInteractions[0] ? sortedInteractions[0].status : -2;
-              child.totalCount = _.sumBy(interactions, i => i.count);
+
+              // perform set union of all reports for any ADR between two drugs
+              var allReports = [];
+              interactions.forEach(i => {
+                i.reports.forEach(r => {
+                  if(allReports.indexOf(r) == -1) {
+                    allReports.push(r);
+                  }
+                });
+              });
+              child.totalCount = allReports.length;//_.sumBy(interactions, i => i.count);
             }
           }
 
@@ -181,7 +191,7 @@ export class InteractionProfile extends Component {
               .filter(rule => (_.capitalize(rule.Drug1.name) == child.name || _.capitalize(rule.Drug2.name) == child.name) &&
                 rule.Score >= nextProps.minScore && rule.Score <= nextProps.maxScore
               )
-              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, count: rule.id.split(',').length }))
+              .map(rule => ({ name: rule.ADR, Score: rule.Score, Rank: rule.Rank, critical: _.includes(drugDMEs, rule.ADR), status: rule.status, reports: _.filter(_.map(rule.id.split(','), r => _.trim(r)), r => (r !== '')), count: _.filter(rule.id.split(','), r => (r !== '')).length }))
 
 
             if (interactions.length === 0) {
@@ -191,7 +201,17 @@ export class InteractionProfile extends Component {
               let sortedInteractions = _.orderBy(interactions, ['status', 'Score'], ['desc', 'desc']);
               child.maxScore = sortedInteractions[0] ? sortedInteractions[0].Score : -2;
               child.maxScoreStatus = sortedInteractions[0] ? sortedInteractions[0].status : -2;
-              child.totalCount = _.sumBy(interactions, i => i.count);
+              // perform set union of all reports for any ADR between two drugs
+              var allReports = [];
+              interactions.forEach(i => {
+                i.reports.forEach(r => {
+                  if(allReports.indexOf(r) == -1) {
+                    allReports.push(r);
+                  }
+                });
+              });
+              child.totalCount = allReports.length;
+              // child.totalCount = _.sumBy(interactions, i => i.count);
             }
           }
   
