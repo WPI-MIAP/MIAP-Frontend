@@ -7,12 +7,12 @@ import {baseNodeColor} from '../../utilities/constants';
 
 let network = null;
 
-const generateTitle = ({ ADR, Score, id, Drug1, Drug2, status }) => {
+const generateTitle = ({ ADR, Score, Drug1, Drug2, status }, numADRs) => {
 	return `
 		<div>Drugs: ${_.startCase(Drug1.name)} - ${_.startCase(Drug2.name)}</div>
-		<div>ADR: ${ADR}</div>
-		<div>Report Count: ${id.split(',').length}</div>
-		<div>Score: ${Score}</div>
+		<div>Number of ADRs: ${numADRs}</div>
+		<div>Highest-scored ADR: ${ADR}</div>
+		<div>Score: ${_.round(parseFloat(Score), 2)}</div>
 		<div>Status: ${status}</div>
 	`	
 }
@@ -123,8 +123,17 @@ export default class DndGraph extends Component {
 	}
 
 	render() {		
-		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc'])
-		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname')
+		const sortedLinks = _.orderBy(this.props.links, ['r_Drugname', 'Score'], ['asc', 'desc']);
+		var numADRs = {};
+		sortedLinks.forEach(link => {
+			if(link.r_Drugname in numADRs) {
+				numADRs[link.r_Drugname]++;
+			}
+			else{
+				numADRs[link.r_Drugname] = 1;
+			}
+		});
+		const uniqueLinks = _.uniqBy(sortedLinks, 'r_Drugname');
 
 		const nodesArray = this.props.nodes.map(node => ({
 			id: node, 
@@ -137,7 +146,7 @@ export default class DndGraph extends Component {
 			id: link.Drug1.name + ' --- ' + link.Drug2.name,
 			from: link.Drug1.name, 
 			to: link.Drug2.name, 
-			title: generateTitle(link),
+			title: generateTitle(link, numADRs[link.r_Drugname]),
 			dashes: link.status === 'known',
 			width: link.status === 'known' ? 2 : 4,
 			color: {
