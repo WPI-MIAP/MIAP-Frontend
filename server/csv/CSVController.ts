@@ -166,7 +166,7 @@ var exec = require('child_process').exec;
 				let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
 				rules = rules.filter(rule => _.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug1))}] [${_.toLower(_.trim(req.query.drug2))}]` || 
 				_.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug2))}] [${_.toLower(_.trim(req.query.drug1))}]`);
-				const reportIds = _.uniq(_.flattenDeep(rules.map(rule => rule.id.split(','))));
+				const reportIds = _.uniq(_.flattenDeep(rules.map(rule => _.map(rule.id.split(','), r => (_.trim(r))))));
 				reports = _.at(_.keyBy(reports, 'primaryId'), reportIds);
 				res.send(reports);
 			}
