@@ -86,7 +86,14 @@ height|||
 
 ### `resources\assets\js\components\modules\Tour.jsx`
 
-**Tour** 
+**Tour** This component contains all of the tour steps and controls operation of the tour.
+@see https://github.com/gilbarbara/react-joyride
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+updateTourSelector|PropType func|yes|Callback used when the selector the tour is pointing to is changed. Takes the classname of the currently selected component as a parameter.
+stopTour|PropType func|yes|Function that can be called to stop the tour.
+tourRunning|PropType bool|yes|Boolean indicating whether the tour should be running or not.
 
 ### `resources\assets\js\components\modules\TreeViewFilter.jsx`
 
@@ -98,6 +105,6 @@ height|||
 
 Property | Type | Required | Description
 :--- | :--- | :--- | :---
-status|PropType object||The status of the last analysis ran.
+status|PropType object|yes|The status of the last analysis ran.
 getStatus|PropType func|yes|A function that can be called to get the updated analysis status.
 

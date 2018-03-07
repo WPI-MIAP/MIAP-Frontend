@@ -211,8 +211,7 @@ class Tour extends React.Component {
 
 Tour.propTypes = {
 	/**
-	 * Callback used when the selector the tour is pointing to is changed.
-	 * @param selector The classname of the currently selected component
+	 * Callback used when the selector the tour is pointing to is changed. Takes the classname of the currently selected component as a parameter.
 	 */
 	updateTourSelector: PropTypes.func.isRequired, 
 	/**
