@@ -94,7 +94,7 @@ height|||
 
 ### `resources\assets\js\components\modules\UploadFAERS.jsx`
 
-**UploadFAERS** 
+**UploadFAERS** This component is used to upload FAERS data zip files and show status information about the last analysis ran.
 
 Property | Type | Required | Description
 :--- | :--- | :--- | :---

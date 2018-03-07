@@ -1,6 +1,10 @@
 import React from 'react';
 import Joyride from 'react-joyride';
+import PropTypes from 'prop-types';
 
+/**
+ * Define all of the tour steps.
+ */
 const steps = [
 	{
 		title: "Welcome!",
@@ -95,7 +99,11 @@ const steps = [
 	},
 ];
 
-export default class Tour extends React.Component {
+/**
+ * This component contains all of the tour steps and controls operation of the tour.
+ * @see https://github.com/gilbarbara/react-joyride
+ */
+class Tour extends React.Component {
     constructor(props) {
         super(props);
 
@@ -112,10 +120,19 @@ export default class Tour extends React.Component {
 		this.getJoyride = this.getJoyride.bind(this);
 	}
 
+	/**
+	 * Used to access the underlying component that runs the tour.
+	 * @see https://github.com/gilbarbara/react-joyride
+	 */
 	getJoyride() {
 		return this.joyride;
 	}
 
+	/**
+	 * Callback called periodically throughout the operation of the tour.
+	 * @param {object} data Contains information about the current status of the tour.
+	 * @see https://github.com/gilbarbara/react-joyride
+	 */
 	callback(data) {
 		if(data.type === 'finished' || (data.action === 'close' && data.type === 'step:after')) {
 			this.joyride.reset();
@@ -147,6 +164,9 @@ export default class Tour extends React.Component {
 		}
 	}
 
+	/**
+	 * Render the tour.
+	 */
 	render() {
 		const {
 			joyrideOverlay,
@@ -188,3 +208,21 @@ export default class Tour extends React.Component {
 		)
 	}
 }
+
+Tour.propTypes = {
+	/**
+	 * Callback used when the selector the tour is pointing to is changed.
+	 * @param selector The classname of the currently selected component
+	 */
+	updateTourSelector: PropTypes.func.isRequired, 
+	/**
+	 * Function that can be called to stop the tour.
+	 */
+	stopTour: PropTypes.func.isRequired,
+	/**
+	 * Boolean indicating whether the tour should be running or not.
+	 */
+	tourRunning: PropTypes.bool.isRequired
+};
+
+export default Tour;
