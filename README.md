@@ -47,12 +47,32 @@ You normally want to run those two commands above at the same time. One is to wa
 
 ### How to generate documentation
 
-To watch for changes and dynamically build documentation
+To watch for changes and dynamically build interactive react documentation
 ```js static
 $ npm run styleguide
 ```
 
-To build a static version of the documentation
+To build a static version of the interactive react documentation
 ```js static
 $ npm run styleguide:build
+```
+
+To build a markdown version of the react documentation
+```js static
+$ npm run react-docs
+```
+
+To build a markdown version of the JavaScript documentation
+```js static
+$ npm run js-docs
+```
+
+To build a markdown version of the TypeScript documentation
+```js static
+$ npm run ts-docs
+```
+
+To build a markdown versions of all documentation (Note: they can be found in the /documentation/ directory)
+```js static
+$ npm run docs
 ```
