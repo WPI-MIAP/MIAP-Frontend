@@ -28,7 +28,7 @@ const styles = {
 	}
 };
 
-export default class GalaxyView extends Component {
+export default class ProfileView extends Component {
     constructor(props) {
 		super(props);
 

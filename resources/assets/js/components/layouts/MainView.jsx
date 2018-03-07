@@ -75,15 +75,24 @@ export default class MainView extends Component {
 	}
 
 	handleOpen(report) {
-		if (this.state.currentReport !== '' && this.state.currentReport.type === report.type &&
-			_.isEqual(this.state.currentReport.drugs, report.drugs)
-		) {
-			this.setState({
+		// This part was commented out to avoid a waiting period before opening the report view for the drug/interaction that was last
+		// opened in the report view
+
+		// if (this.state.currentReport !== '' && this.state.currentReport.type === report.type &&
+		// 	_.isEqual(this.state.currentReport.drugs, report.drugs)
+		// ) {
+		// 	this.setState({
+		// 		open: true,
+		// 	});		
+		// } else {
+			const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
+			
+			this.setState({ 
+				currentReport: report, 
+				tableData: [],
 				open: true,
 				tableTitle: 'Reports for ' + title,
-			});		
-		} else {
-			this.setState({ currentReport: report })
+			})
 			if (report.type === 'drug') {
 				axios.get('/csv/reports?drug=' + report.drugs[0])
 					.then(response => {
@@ -106,21 +115,14 @@ export default class MainView extends Component {
 						});	
 					});
 			}
-		}
-
-		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
-
-		this.setState({
-			open: true,
-			tableTitle: 'Reports for ' + title,
-		});
+		// }
   	}
 
 	handleClose() {
 		this.setState({
 			open: false,
-			tableTitle: '',
-			tableData: [],
+			// tableTitle: '',
+			// tableData: [],
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();

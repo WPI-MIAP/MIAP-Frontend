@@ -14,7 +14,9 @@
     "fdev": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "fwatch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "fhot": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "fproduction": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "fproduction": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build"
   },
   "keywords": [],
   "author": "",
@@ -38,13 +40,16 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-shell": "^0.6.3",
     "gulp-tslint": "^8.0.0",
-    "laravel-mix": "1.4.5",
+    "laravel-mix": "^1.4.5",
     "mocha": "^3.4.1",
     "node": "0.0.0",
     "node-sass": "4.5.3",
+    "react-styleguidist": "^6.2.6",
     "sinon": "^2.2.0",
     "tslint": "^5.2.0",
-    "typescript": "^2.3.2"
+    "typescript": "^2.3.2",
+    "webpack": "^3.11.0",
+    "webpack-blocks": "^1.0.0-rc.2"
   },
   "dependencies": {
     "axios": "0.17.0",

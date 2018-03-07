@@ -54,6 +54,6 @@ import SVG  from 'react-inlinesvg';
 	}} 
 	src={require('../../../images/team_picture.jpg')} />;
 
-	export const medicines = <SVG src={require('../../../images/medicines.svg')} />;
+	export const medicines = <SVG src={require('../../../fonts/medicines.svg')} />;
 
-	export const connection = <SVG src={require('../../../images/connection.svg')} />;
+	export const connection = <SVG src={require('../../../fonts/connection.svg')} />;
