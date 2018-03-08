@@ -3,6 +3,7 @@ import { AutoComplete } from 'material-ui';
 import SearchBar from 'material-ui-search-bar';
 import Paper from 'material-ui/Paper';
 import IconButton from 'material-ui/IconButton';
+import PropTypes from 'prop-types';
 
 const getStyles = (props, state) => {
     const {disabled, iconButtonStyle} = props
@@ -50,11 +51,17 @@ const getStyles = (props, state) => {
     }
 }
 
+/**
+ * This component extends the SearchBar component to add search functionality when an autocomplete option is selected.
+ */
 class ModifiedSearchBar extends SearchBar {
     constructor(props) {
         super(props);
     }
 
+    /**
+     * Render the component.
+     */
     render () {
         const styles = getStyles(this.props, this.state)
         const {value} = this.state
@@ -114,7 +121,10 @@ class ModifiedSearchBar extends SearchBar {
     }
 }
 
-export default class SearchBarComponent extends React.Component {
+/**
+ * This component allows users to search for drugs in the context of this application.
+ */
+class SearchBarComponent extends React.Component {
     constructor(props) {
         super(props);
 
@@ -125,10 +135,18 @@ export default class SearchBarComponent extends React.Component {
         }
     }
 
+    /**
+     * Update the state's search value whenever the text in the searchbar is changed.
+     * 
+     * @param {string} input New text in the search bar
+     */
     onUpdateInput(input) {
         this.setState({ value: input }) 
     }
 
+    /**
+     * Perform the search actions for the drug name in the search bar.
+     */
     onNewRequest() {
         var lowerCaseDrugs = this.props.drugs.map((drug) => (_.toLower(drug)));
         var index = lowerCaseDrugs.indexOf(_.toLower(this.state.value));
@@ -137,14 +155,31 @@ export default class SearchBarComponent extends React.Component {
         }
     }
 
+    /**
+     * Render the component.
+     */
     render() {
         return (
             <ModifiedSearchBar
-            onChange={this.onUpdateInput}
-            onRequestSearch={this.onNewRequest}
-            dataSource={this.props.drugs}
-            filter={AutoComplete.caseInsensitiveFilter}
-            />    
+              onChange={this.onUpdateInput}
+              onRequestSearch={this.onNewRequest}
+              dataSource={this.props.drugs}
+              filter={AutoComplete.caseInsensitiveFilter}
+              />    
             )
     }
 }
+
+SearchBarComponent.propTypes = {
+  /**
+   * Array of all drug names to be used for AutoComplete.
+   */
+  drugs: PropTypes.array.isRequired,
+  
+  /**
+   * Function to handle the request for a given drug when it is searched. Takes the selected drug name as a parameter.
+   */
+  handleSearchRequest: PropTypes.func.isRequired
+};
+
+export default SearchBarComponent;
