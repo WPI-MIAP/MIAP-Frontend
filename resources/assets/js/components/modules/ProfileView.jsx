@@ -8,6 +8,7 @@ import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import { dmeColors, scoreColors, complementaryColor, secondaryColor, adrBorderColor, regularADRColor, severeADRColor } from '../../utilities/constants';
 import InteractionProfile from '../modules/InteractionProfile';
+import PropTypes from 'prop-types';
 
 const styles = {
 	legendSevere: {
@@ -28,7 +29,10 @@ const styles = {
 	}
 };
 
-export default class ProfileView extends Component {
+/**
+ * This component is used to render the Interaction Profile View.
+ */
+class ProfileView extends Component {
     constructor(props) {
 		super(props);
 
@@ -162,3 +166,57 @@ export default class ProfileView extends Component {
 		);
 	}
 }
+
+ProfileView.propTypes = {
+	/**
+	 * Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+	 */
+	col: PropTypes.number.isRequired,
+
+	/**
+	 * Function that fullscreens the Profile View.
+	 */
+	toggleFullscreenProfile: PropTypes.func.isRequired,
+
+	/**
+	 * Name of the currently selected drug.
+	 */
+	selectedDrug: PropTypes.string.isRequired,
+
+	/**
+	 * Name of the currently selected rule (of format: drug_1 --- drug_2).
+	 */
+	selectedRule: PropTypes.string.isRequired,
+	
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+	filter: PropTypes.string.isRequired,
+
+	/**
+	 * Minimum score for filtering interactions.
+	 */
+	minScore: PropTypes.number.isRequired,
+
+	/**
+	 * Maximum score for filtering interactions.
+	 */
+	maxScore: PropTypes.number.isRequired,
+
+	/**
+	 * Indicates whether this view is fullscreened or not.
+	 */
+	isProfileFullscreen: PropTypes.bool.isRequired,
+
+	/**
+	 * Used as the title for this view.
+	 */
+	profileTitle: PropTypes.string.isRequired
+};
+
+export default ProfileView;

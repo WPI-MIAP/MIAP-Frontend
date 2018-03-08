@@ -2,10 +2,6 @@
 
 **App** 
 
-### `resources\assets\js\components\layouts\Card.jsx`
-
-**Card** 
-
 ### `resources\assets\js\components\layouts\DndTreeContainer.jsx`
 
 **DndTreeContainer** 
@@ -25,47 +21,170 @@ height|||
 
 ### `resources\assets\js\components\modules\D3Tree.jsx`
 
-**D3Tree** 
+**D3Tree** This component renders the tree seen in the Profile View. This component should not be used directly. Instead, use InteractionProfile.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+treeData|PropType object|yes|Information about how to structure the tree.
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+width|PropType number|yes|Width of the parent node.
+height|PropType number|yes|Height of the parent node.
 
 ### `resources\assets\js\components\modules\DistributionRangeSlider.jsx`
 
-**DistributionRangeSlider** 
+**DistributionRangeSlider** This component shows a distribution of the scores of all links over a range slider used to filter by score.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+rules|PropType array|yes|Array of rules representing all interaction between pairs of drugs in the visualization.
+updateMinScore|PropType func||Used to set the new minimum score. Takes the new minimum score (a number) as a paramter.
+updateMaxScore|PropType func||Used to set the new maximum score. Takes the new maximum score (a number) as a paramter.
+isUpdating|PropType func||Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+helpExample|PropType bool||Indicates whether this is the version found in the help menu (defaults to false).
 
 ### `resources\assets\js\components\modules\DndGraph.jsx`
 
-**DndGraph** 
+**DndGraph** This component renders the graph seen in the Overview.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+nodes|PropType array|yes|Array of nodes representing all drugs in the visualization.
+links|PropType array|yes|Array of links representing all interaction between pairs of drugs in the visualization.
+width|PropType number|yes|Width of the browser window.
+height|PropType number|yes|Height of the browser window.
+selectedDrug|PropType string||Name of the currently selected drug.
+onClickNode|PropType func||Callback used when a node is clicked. Takes the node as a parameter.
+onClickEdge|PropType func||Callback used when an edge is clicked. Takes the edge as a parameter.
+isFetching|PropType bool||Indicates whether the data is still being fetched for the nodes and links.
+filter|PropType string||Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number||Minimum score for filtering interactions.
+maxScore|PropType number||Maximum score for filtering interactions.
+isUpdating|PropType func||Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
 
 ### `resources\assets\js\components\modules\DndTree.jsx`
 
-**DndTree** 
+**DndTree** This component controls and renders a single galaxy view inside of a DndTreeContainer.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+helpExample|PropType bool||Indicates whether this is the version found in the help menu (defaults to false).
+currentDrug|PropType string|yes|Name of the central drug.
+data|PropType object|yes|Contains information such as rules that allow for rendering the graph.
+filter|PropType string||Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number||Minimum score for filtering interactions.
+maxScore|PropType number||Maximum score for filtering interactions.
+onClickEdge|PropType func||Callback used when an edge is clicked. Takes the edge as a parameter.
 
 ### `resources\assets\js\components\modules\Footer.jsx`
 
-**Footer** 
+**Footer** This component defines the footer shown fixed at the bottom of the page.
 
 ### `resources\assets\js\components\modules\GalaxyView.jsx`
 
-**GalaxyView** 
+**GalaxyView** This component renders the Galaxy View.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+col|PropType number|yes|Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+toggleFullscreenGalaxy|PropType func|yes|Function that fullscreens the Galaxy View.
+currentDrugs|PropType array|yes|Array of drugs currently in the Galaxy View.
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+width|PropType number|yes|Width of the browser window.
+height|PropType number|yes|Height of the browser window.
+onClickNode|PropType func|yes|Callback used when a node is clicked. Takes the node as a parameter.
+onClickEdge|PropType func|yes|Callback used when a edge is clicked. Takes the edge as a parameter.
+onDeleteNode|PropType func|yes|Callback used when a drug is removed from the galaxy view. Takes the drug name as a parameter.
+onClearDrug|PropType func|yes|Clears the selectedDrug.
+handleOpen|PropType func|yes|Used to open the reports view. Takes a report object containing information about the drug for which to retrieve reports.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+dmeRange|PropType array|yes|Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+isGalaxyFullscreen|PropType bool|yes|Indicates whether the Galaxy View is currently fullscreened.
+selectedDrug|PropType string|yes|Name of the currently selected drug.
 
 ### `resources\assets\js\components\modules\Help.jsx`
 
-**Help** 
+**Help** This component renders and controls the help menu.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+dmeRange|PropType array|yes|Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+startTour|PropType func|yes|Used to start the tour.
+rules|PropType array|yes|Array of all rules in the visualization
 
 ### `resources\assets\js\components\modules\InteractionProfile.jsx`
 
-**InteractionProfile** 
+**InteractionProfile** This component is a wrapper for the D3Tree component. It controls what nodes/links are passed to the D3Tree, applying all filters.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+helpExample|PropType bool||Indicates whether this is the version found in the help menu (defaults to false).
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+mainDrug|PropType string||Name of the currently selected drug.
+mainRule|PropType string||Name of the currently selected rule (of format: drug_1 --- drug_2).
+filter|PropType string||Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number||Minimum score for filtering interactions.
+maxScore|PropType number||Maximum score for filtering interactions.
 
 ### `resources\assets\js\components\modules\KnownUnknownDropDown.jsx`
 
-**KnownUnknownDropDown** 
+**KnownUnknownDropDown** This component controls and renders the filter for selecting all rules, only known rules, or only unknown rules.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+isUpdating|PropType func|yes|Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+onClick|PropType func|yes|Used to apply the known/unknown filter. Takes the value of the selected option (&#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unknown&#x27;).
 
 ### `resources\assets\js\components\modules\Overview.jsx`
 
-**Overview** 
+**Overview** This component controls and renders the Overview.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+col|PropType number|yes|Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+toggleFullscreenOverview|PropType func|yes|Function that fullscreens the Overview.
+onClickNode|PropType func|yes|Callback used when a node is clicked. Takes the node as a parameter.
+onClickEdge|PropType func|yes|Callback used when an edge is clicked. Takes the edge as a parameter.
+currentSelector|PropType string|yes|Class name of the component the tour is currently looking at.
+nodes|PropType array|yes|Array of nodes representing all drugs in the visualization.
+links|PropType array|yes|Array of links representing all interaction between pairs of drugs in the visualization.
+width|PropType number|yes|Width of the browser window.
+height|PropType number|yes|Height of the browser window.
+selectedDrug|PropType string|yes|Name of the currently selected drug.
+isFetching|PropType bool|yes|Indicates whether the data is still being fetched for the nodes and links.
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+isUpdating|PropType func|yes|Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+nextTourStep|PropType func|yes|Advances the tour to the next step.
+isOverviewFullscreen|PropType bool|yes|Indicates whether the Overview is currently fullscreened.
+status|PropType object|yes|Contains information about the status of the last MARAS analysis ran.
+getStatus|PropType func|yes|Used to get updated information about the status of the last MARAS analysis ran.
 
 ### `resources\assets\js\components\modules\ProfileView.jsx`
 
-**ProfileView** 
+**ProfileView** This component is used to render the Interaction Profile View.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+col|PropType number|yes|Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+toggleFullscreenProfile|PropType func|yes|Function that fullscreens the Profile View.
+selectedDrug|PropType string|yes|Name of the currently selected drug.
+selectedRule|PropType string|yes|Name of the currently selected rule (of format: drug_1 --- drug_2).
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+isProfileFullscreen|PropType bool|yes|Indicates whether this view is fullscreened or not.
+profileTitle|PropType string|yes|Used as the title for this view.
 
 ### `resources\assets\js\components\modules\Report.jsx`
 

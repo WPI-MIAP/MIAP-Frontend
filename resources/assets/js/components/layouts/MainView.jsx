@@ -265,8 +265,8 @@ export default class MainView extends Component {
 								filter={this.props.filter}
 								minScore={this.props.minScore}
 								maxScore={this.props.maxScore}
-								width={this.props.width}
-								height={this.props.height}
+								width={this.state.width}
+								height={this.state.height}
 								onClickNode={this.props.showDetailNode}
 								onClickEdge={this.props.onClickEdge}
 								onDeleteNode={this.props.deleteNode}
@@ -285,7 +285,6 @@ export default class MainView extends Component {
 								toggleFullscreenProfile={this.toggleFullscreenProfile}
 								selectedDrug={this.props.selectedDrug}
 								selectedRule={this.props.selectedRule}
-								toggleFullscreenProfile={this.toggleFullscreenProfile}
 								scoreRange={this.props.scoreRange}
 								filter={this.props.filter}
 								minScore={this.props.minScore}

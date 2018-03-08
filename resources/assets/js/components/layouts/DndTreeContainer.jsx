@@ -62,7 +62,7 @@ export default class DndTreeContainer extends Component {
 			}
 		};
 
-		return this.props.testExample ? (
+		return this.props.helpExample ? (
 			//HELP PAGE VERSION
 			<div>
 				{this.props.currentDrugs.map(drug => (
@@ -100,7 +100,7 @@ export default class DndTreeContainer extends Component {
 											</span>
 										</h5>	
 										<div className="card-body" style={{ position: 'relative', top: -13 }}>
-											<DndTree scoreRange={this.props.scoreRange} testExample={true} currentDrug={drug[0]} data={drug[1]} filter={this.props.filter} minScore={this.props.minScore} maxScore={this.props.maxScore} />
+											<DndTree scoreRange={this.props.scoreRange} helpExample={true} currentDrug={drug[0]} data={drug[1]} />
 										</div>
 									</div>
 								</Col>

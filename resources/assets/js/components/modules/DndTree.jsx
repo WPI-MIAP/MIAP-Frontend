@@ -3,8 +3,14 @@ import * as d3 from 'd3';
 import Graph from 'react-graph-vis'
 import {baseNodeColor} from '../../utilities/constants';
 import {generateColor} from '../../utilities/functions';
+import PropTypes from 'prop-types';
 
-
+/**
+ * Generates a tooltip for an edge.
+ * 
+ * @param {object} param0 Information used to generate tooltip
+ * @param {number} numADRs Number of ADRs between Drug1 and Drug2
+ */
 const generateTitle = ({ ADR, Score, Drug1, Drug2, status }, numADRs) => {
 	return `
 		<div>Drugs: ${_.startCase(Drug1.name)} - ${_.startCase(Drug2.name)}</div>
@@ -15,6 +21,16 @@ const generateTitle = ({ ADR, Score, Drug1, Drug2, status }, numADRs) => {
 	`	
 }
 
+/**
+ * Determines whether to show a node or not given current filters.
+ * 
+ * @param {string} filter Known/unknown filter. Can be 'all', 'known', or 'unknown'
+ * @param {array} rules Array of all rules in visualization
+ * @param {string} drug Drug name
+ * @param {strng} currentDrug Name of central drug
+ * @param {number} minScore Minimum score to filter by
+ * @param {number} maxScore Maximum score to filter by
+ */
 const isNodeHidden = (filter, rules, drug, currentDrug, minScore, maxScore) => {
 	const currentRule = rules.find(el => (el.Drug1.name == drug || el.Drug2.name == drug))
 
@@ -29,6 +45,15 @@ const isNodeHidden = (filter, rules, drug, currentDrug, minScore, maxScore) => {
 	return true
 }
 
+/**
+ * Determines whether to show an edge or not given current filters.
+ * 
+ * @param {string} filter Known/unknown filter. Can be 'all', 'known', or 'unknown'
+ * @param {string} status 'known' or 'unknown' depending on the status of the current edge
+ * @param {number} score Score of the current edge
+ * @param {number} minScore Minimum score to filter by
+ * @param {number} maxScore Maximum score to filter by
+ */
 const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
 	return ! ((filter === 'known' && status === 'known') || 
 		(filter === 'unknown' && status === 'unknown') || 
@@ -36,7 +61,10 @@ const isEdgeHidden = (filter, status, score, minScore, maxScore) => {
 		(score > maxScore || score < minScore)
 }
 
-export default class DndTree extends Component {
+/**
+ * This component controls and renders a single galaxy view inside of a DndTreeContainer.
+ */
+class DndTree extends Component {
 	constructor(props) {
 		super(props);
 
@@ -47,6 +75,9 @@ export default class DndTree extends Component {
 		this.setNetworkInstance = this.setNetworkInstance.bind(this);
 	}
 
+	/**
+	 * Make sure that the network is centered and rerendered if updated props are received.
+	 */
 	componentDidUpdate() {
 		if (this.state.network != null) {
 			this.state.network.redraw();
@@ -54,6 +85,11 @@ export default class DndTree extends Component {
 		}
 	}
 
+	/**
+	 * Assign the network ref to a state variable.
+	 * 
+	 * @param {*} nw The network ref from the Graph component
+	 */
 	setNetworkInstance(nw) {
 		this.setState({ network: nw });
 	}
@@ -105,7 +141,7 @@ export default class DndTree extends Component {
 		}
 
 		const options = {
-			height: this.props.testExample ? 140 + 'px' : 240 + 'px',
+			height: this.props.helpExample ? 140 + 'px' : 240 + 'px',
 			// width: 180 + 'px',
 			edges: {
 				color: "#000000",
@@ -131,7 +167,7 @@ export default class DndTree extends Component {
 		const events = {
 			select: (event) => {
 				const { nodes, edges } = event;
-				console.log(nodes);
+				// console.log(nodes);
 				// if (typeof nodes[0] !== undefined && nodes.length !== 0) {
 				// 	this.props.onClickNode(nodes[0]);
 				// } 
@@ -155,3 +191,55 @@ export default class DndTree extends Component {
 		)
 	}
 }
+
+DndTree.propTypes = {
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+ 
+	/**
+	 * Indicates whether this is the version found in the help menu (defaults to false).
+	 */
+	helpExample: PropTypes.bool,
+ 
+	/**
+	 * Name of the central drug.
+	 */
+	currentDrug: PropTypes.string.isRequired,
+ 
+	/**
+	 * Contains information such as rules that allow for rendering the graph.
+	 */
+	data: PropTypes.object.isRequired,
+ 
+	/**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+	filter: PropTypes.string,
+ 
+	/**
+	 * Minimum score for filtering interactions.
+	 */
+	minScore: PropTypes.number,
+ 
+	/**
+	 * Maximum score for filtering interactions.
+	 */
+	maxScore: PropTypes.number,
+
+	/**
+	 * Callback used when an edge is clicked. Takes the edge as a parameter.
+	 */
+	onClickEdge: PropTypes.func
+};
+
+DndTree.defaultProps = {
+	helpExample: false,
+	filter: 'all',
+	minScore: -50,
+	maxScore: 50,
+	onClickEdge: () => {}
+}
+
+export default DndTree;

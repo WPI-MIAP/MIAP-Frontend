@@ -4,7 +4,11 @@ import Tree from 'react-d3-tree';
 import D3Tree from './D3Tree';
 import axios from 'axios';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
+/**
+ * This data is used to construct the simplified version of the Interaction Profile found in the help menu.
+ */
 const dummyData = {
   currentDrugs: [
     ['Drug 2', {drugs: ['Drug 1', 'Drug 2', 'Drug 3'], 
@@ -59,7 +63,10 @@ const dummyData = {
   selectedDrug: 'Drug 2',
 };
 
-export class InteractionProfile extends Component {
+/**
+ * This component is a wrapper for the D3Tree component. It controls what nodes/links are passed to the D3Tree, applying all filters.
+ */
+class InteractionProfile extends Component {
   constructor(props) {
     super(props);
 
@@ -69,6 +76,9 @@ export class InteractionProfile extends Component {
     }
   }
 
+  /**
+   * If this is the version used in the help example, populate the view using dummy data.
+   */
   componentDidMount() {
     this.setState({domNode: ReactDOM.findDOMNode(this)});
     if(this.props.helpExample) {
@@ -106,8 +116,10 @@ export class InteractionProfile extends Component {
 
   }
 
+  /**
+   * If this is the version not in the help menu, retrieve the relevant rules and drugs to display whenever props are received.
+   */
   componentWillReceiveProps(nextProps) {
-
     
     if(!nextProps.helpExample) {
       let mainDrug, myTreeData, rules, drugs, drugDMEs;
@@ -116,7 +128,6 @@ export class InteractionProfile extends Component {
         this.props.maxScore !== nextProps.maxScore || 
         this.props.minScore !== nextProps.minScore
       ) {
-        console.log('change');
         mainDrug = nextProps.mainDrug
         axios.get('/csv/rules?drug=' + mainDrug + '&status=' + nextProps.filter).then(res => {
           rules = res.data.rules;
@@ -158,8 +169,6 @@ export class InteractionProfile extends Component {
           }
 
           myTreeData[0].children = myTreeData[0].children.filter(c => ! _.isEmpty(c));
-
-          console.log(myTreeData[0].children);
   
           this.setState({
             myTreeData
@@ -172,7 +181,6 @@ export class InteractionProfile extends Component {
         this.props.maxScore !== nextProps.maxScore ||
         this.props.minScore !== nextProps.minScore
       ) {        
-        console.log('change rule');
         const drugNames = nextProps.mainRule.split(' --- ');
         mainDrug = drugNames[0];
         axios.get('/csv/rules?drug=' + drugNames[0] + '&drug=' + drugNames[1] + '&status=' + nextProps.filter).then(res => {
@@ -211,7 +219,6 @@ export class InteractionProfile extends Component {
                 });
               });
               child.totalCount = allReports.length;
-              // child.totalCount = _.sumBy(interactions, i => i.count);
             }
           }
   
@@ -228,7 +235,8 @@ export class InteractionProfile extends Component {
     return (
       <div id="treeWrapper" width="100%" style={{position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         {(this.props.mainDrug != '' || this.props.mainRule != '') ?
-          <D3Tree scoreRange={this.props.scoreRange} 
+          <D3Tree 
+            scoreRange={this.props.scoreRange} 
             treeData={this.state.myTreeData}
             filter={this.props.filter}
             minScore={this.props.minScore}
@@ -242,4 +250,49 @@ export class InteractionProfile extends Component {
     )
   }
 }
+
+InteractionProfile.propTypes = {
+  /**
+   * Indicates whether this is the version found in the help menu (defaults to false).
+   */
+  helpExample: PropTypes.bool,
+
+  /**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+  scoreRange: PropTypes.array.isRequired,
+
+  /**
+	 * Name of the currently selected drug.
+	 */
+  mainDrug: PropTypes.string,
+ 
+  /**
+	 * Name of the currently selected rule (of format: drug_1 --- drug_2).
+	 */
+  mainRule: PropTypes.string,
+
+  /**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+  filter: PropTypes.string,
+
+  /**
+	 * Minimum score for filtering interactions.
+	 */
+  minScore: PropTypes.number,
+
+  /**
+	 * Maximum score for filtering interactions.
+	 */
+  maxScore: PropTypes.number
+};
+
+InteractionProfile.defaultProps = {
+  helpExample: false,
+  filter: 'all',
+  minScore: -50,
+  maxScore: 50
+};
+
 export default InteractionProfile;

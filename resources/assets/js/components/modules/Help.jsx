@@ -15,10 +15,17 @@ import MenuItem from 'material-ui/MenuItem';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
 import DistributionRangeSlider from './DistributionRangeSlider';
 import KnownUnknownDropDown from './KnownUnknownDropDown';
+import PropTypes from 'prop-types';
 
+/**
+ * Used to make the example barchart.
+ */
 const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
   
 
+/**
+ * Used to make the examples for the Overview and Galaxy View.
+ */
 const dummyData = {
   nodes: [
     'Drug 1',
@@ -124,8 +131,10 @@ const dummyData = {
   selectedDrug: 'Drug 2',
 };
 
-
-export default class Help extends Component {
+/**
+ * This component renders and controls the help menu.
+ */
+class Help extends Component {
 	constructor(props) {
 	  super(props);
 	  this.state = {
@@ -136,6 +145,9 @@ export default class Help extends Component {
 	  this.startTour = this.startTour.bind(this);
 	}
 
+	/**
+	 * Start the tour.
+	 */
 	startTour() {
 		this.setState({dialogOpen: false});
 		this.props.startTour();
@@ -153,26 +165,7 @@ export default class Help extends Component {
 			  primary={true}
 			  onClick={() => {this.setState({dialogOpen: false})}}
 			/>
-		  ];
-
-		  const dummyMarks = {
-			[this.props.minScore]: {
-				style: {
-				  position: 'absolute',
-				  zIndex: 1100,
-				  color: 'white',
-				  top: 0,
-				}, label: 'Min Score: ' + (this.props.minScore === undefined ? -1 : this.props.minScore.toFixed(2)),
-			  },
-			[this.props.maxScore]: {
-			  style: {
-				position: 'absolute',
-				zIndex: 1100,
-				color: 'white',
-				top: 0,
-			  }, label: 'Max Score: ' + (this.props.maxScore === undefined ? 1 : this.props.maxScore.toFixed(2)),
-			}
-		  };
+		];
 
 		return (
 			<div>
@@ -222,14 +215,7 @@ export default class Help extends Component {
 											nodes={dummyData.nodes}
 											links={dummyData.edges}
 											width={100}
-											height={100} 
-											selectedDrug=''
-											onClickNode={() => {}}
-											onClickEdge={() => {}}
-											isFetching={false}
-											filter='all'
-											minScore={-50}
-											maxScore={50}
+											height={100}
 											scoreRange={this.props.scoreRange}
 											/>
 									</Paper>
@@ -273,7 +259,7 @@ export default class Help extends Component {
 										onDeleteNode={() => {}}
 										cols={4}
 										selectedDrug={dummyData.selectedDrug}
-										testExample={true}
+										helpExample={true}
 										scoreRange={this.props.scoreRange}
 										dmeRange={this.props.dmeRange}
 										/>
@@ -354,10 +340,7 @@ export default class Help extends Component {
 									<Paper zDepth={1} style={{background: primaryColor, width: 320, height: 65, marginTop: 10, paddingTop: 5, paddingLeft: 5}}>
 									{
 										<DistributionRangeSlider
-											rules={this.props.rules} 
-											updateMinScore={() => {}} 
-											updateMaxScore={() => {}}
-											isUpdating={() => {}}
+											rules={this.props.rules}
 											helpExample={true}/>
 									}
 									</Paper>
@@ -407,3 +390,27 @@ export default class Help extends Component {
 		);
 	}
 }
+
+Help.propTypes = {
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+	 */
+	dmeRange: PropTypes.array.isRequired,
+
+	/**
+	 * Used to start the tour.
+	 */
+	startTour: PropTypes.func.isRequired,
+
+	/**
+	 * Array of all rules in the visualization
+	 */
+	rules: PropTypes.array.isRequired,
+};
+
+export default Help;

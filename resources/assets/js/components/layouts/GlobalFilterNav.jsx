@@ -70,8 +70,7 @@ export default class GlobalFilterNav extends React.Component {
 
           <ToolbarSeparator style={{opacity: 0}} />
 
-          <DistributionRangeSlider 
-            style={{marginLeft: 20}}
+          <DistributionRangeSlider
             rules={this.props.rules} 
             updateMinScore={this.props.updateMinScore} 
             updateMaxScore={this.props.updateMaxScore}
