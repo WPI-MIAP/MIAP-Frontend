@@ -9,7 +9,7 @@ import Paper from 'material-ui/Paper';
 import DndGraph from './DndGraph';
 import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
-import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor, overviewName, galaxyViewName, interactionProfileName } from '../../utilities/constants';
+import { dmeColors, scoreColors, regularADRColor, severeADRColor, primaryColor, secondaryColor, barColor, barSelectedColor, overviewName, galaxyViewName, interactionProfileName } from '../../utilities/constants';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
@@ -295,11 +295,11 @@ class Help extends Component {
 											/>
 										<Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
 											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: severeADRColor, borderStyle: 'solid'}}/>
 												<div>Severe ADR</div>
 											</Col>
 											<Col>
-												<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: regularADRColor, borderStyle: 'solid'}}/>
 												<div>Normal ADR</div>
 											</Col>
 										</Row>

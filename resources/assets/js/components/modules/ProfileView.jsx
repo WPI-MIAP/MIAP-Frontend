@@ -6,14 +6,14 @@ import IconFullscreen from 'material-ui/svg-icons/navigation/fullscreen';
 import IconButton from 'material-ui/IconButton';
 import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import { dmeColors, scoreColors, complementaryColor, secondaryColor, adrBorderColor, regularADRColor, severeADRColor } from '../../utilities/constants';
+import { dmeColors, scoreColors, complementaryColor, secondaryColor, regularADRColor, severeADRColor } from '../../utilities/constants';
 import InteractionProfile from '../modules/InteractionProfile';
 import PropTypes from 'prop-types';
 
 const styles = {
 	legendSevere: {
 		backgroundColor: severeADRColor,
-		border: '3px solid ' + adrBorderColor,
+		border: '3px solid ' + severeADRColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,
@@ -21,7 +21,7 @@ const styles = {
 	},
 	legendNormal: {
 		backgroundColor: regularADRColor,
-		border: '3px solid ' + adrBorderColor,
+		border: '3px solid ' + regularADRColor,
 		borderRadius: '50%',
 		height: 25,
 		width: 25,

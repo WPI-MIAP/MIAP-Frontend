@@ -36,7 +36,7 @@ import SVG  from 'react-inlinesvg';
 
 	export const severeADRColor = '#6A51A3';
 	export const regularADRColor = '#A9B0B7';
-	export const adrBorderColor = '#A9B0B7';
+	// export const adrBorderColor = '#A9B0B7'; not used
 
 	export const barColor = '#73B8F0';
 	export const barSelectedColor = '#2C98F0';

@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import ReactDOM from 'react-dom';
 import * as _ from 'lodash'
 import { generateColor, generateScoreBorderColor } from '../../utilities/functions';
-import { baseNodeColor, baseNodeBorderColor, adrBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
+import { baseNodeColor, baseNodeBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
 import PropTypes from 'prop-types';
 
 /**
@@ -243,7 +243,13 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       .style("stroke", d => {
         if(d.data.Score) {
           //border for ADR
-          return adrBorderColor;
+            if (d.data.critical) {
+              //border for severe ADRs
+              return severeADRColor;
+            }
+            else{
+              return regularADRColor;
+            }
         }
         else if(d.data.name === root.data.name) {
           //border for base node
