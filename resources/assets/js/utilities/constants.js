@@ -52,7 +52,7 @@ import SVG  from 'react-inlinesvg';
 	export const teamPhoto = <img style={{
 		width: '100%'
 	}} 
-	src={require('../../../images/team_picture.jpg')} />;
+	src={require('../../../images/team_picture.png')} />;
 
 	export const medicines = <SVG src={require('../../../fonts/medicines.svg')} />;
 
