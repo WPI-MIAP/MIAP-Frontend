@@ -46,7 +46,7 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-shell": "^0.6.3",
     "gulp-tslint": "^8.0.0",
-    "laravel-mix": "^1.4.5",
+    "laravel-mix": "^1.7.2",
     "mocha": "^3.4.1",
     "node": "0.0.0",
     "node-sass": "4.5.3",
