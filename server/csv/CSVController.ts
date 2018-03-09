@@ -2,6 +2,7 @@ import { Request, Response, NextFunction} from 'express';
 import * as fs from 'fs';
 import * as csv from 'csvtojson';
 import * as _ from 'lodash';
+import { Many } from 'lodash';
 var exec = require('child_process').exec;
 /**
  * {
@@ -60,10 +61,10 @@ var exec = require('child_process').exec;
 				let maxScore = _.max(rules.map((rule) => (parseFloat(rule.Score))));
 				let minScore = _.min(rules.map((rule) => (parseFloat(rule.Score))));
 
-				let range = maxScore - minScore;
+				let range = Number(maxScore) - Number(minScore);
 				let numColors = 4;
 				for(var i=1; i <= numColors; i++) {
-					scoreRange.push(minScore + (i * range)/numColors);
+					scoreRange.push(Number(minScore) + (i * range)/numColors);
 				}
 
 				
@@ -72,8 +73,8 @@ var exec = require('child_process').exec;
 				let maxNumDMEs = 0;
 				drugs.forEach(drug => {
 					let rulesCopy = rules.filter(
-						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(drug) ||
-						_.lowerCase(rule.Drug2.name) === _.lowerCase(drug)
+						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(String(drug)) ||
+						_.lowerCase(rule.Drug2.name) === _.lowerCase(String(drug))
 					);
 
 					let drugDMEs = [];
@@ -166,7 +167,7 @@ var exec = require('child_process').exec;
 				let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
 				rules = rules.filter(rule => _.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug1))}] [${_.toLower(_.trim(req.query.drug2))}]` || 
 				_.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug2))}] [${_.toLower(_.trim(req.query.drug1))}]`);
-				const reportIds = _.uniq(_.flattenDeep(rules.map(rule => _.map(rule.id.split(','), r => (_.trim(r))))));
+				let reportIds : Many<string> = _.uniq(_.flattenDeep(rules.map(rule => String(_.map(rule.id.split(','), r => (_.trim(String(r))))))));
 				reports = _.at(_.keyBy(reports, 'primaryId'), reportIds);
 				res.send(reports);
 			}
