@@ -93,8 +93,8 @@ class GlobalFilterNav extends React.Component {
             badgeStyle={{top: 20, right: 20}}
             style={{top: -5, left: 50}}
           >
-            <IconButton tooltip="Number of Drugs" iconStyle={{color: 'white'}}>
-            {medicines}
+            <IconButton tooltip="Number of Drugs" iconStyle={{color: 'white'}} disableTouchRipple={true} hoveredStyle={{cursor: 'default'}}>
+              {medicines}
             </IconButton>
           </Badge>
           <Badge
@@ -103,7 +103,7 @@ class GlobalFilterNav extends React.Component {
             badgeStyle={{top: 20, right: 20}}
             style={{top: -5, left: 20}}
           >
-            <IconButton tooltip="Number Of Interactions" iconStyle={{color: 'white'}}>
+            <IconButton tooltip="Number Of Interactions" iconStyle={{color: 'white'}} disableTouchRipple={true} hoveredStyle={{cursor: 'default'}}>
               {connection}
             </IconButton>
           </Badge>

@@ -17,6 +17,7 @@ export class StatusInformation extends Component {
 			status: props.status.status,
 			updated: props.status.updated,
 			sources: props.status.sources,
+			message: props.status.message
 		};
 	}
 
@@ -28,7 +29,8 @@ export class StatusInformation extends Component {
 			this.setState({
 				status: nextProps.status.status,
 				updated: nextProps.status.updated,
-				sources: nextProps.status.sources
+				sources: nextProps.status.sources,
+				message: nextProps.status.message
 			});
 		}
 	}
@@ -60,6 +62,15 @@ export class StatusInformation extends Component {
 							<Row style={{margin: 0}}>
 								Status of last analysis:&nbsp;<p style={{color: statusColor}}>{statusText}</p>
 							</Row>
+							{
+								(this.state.message !== undefined && this.state.message.length > 0) ? (
+									<Row style={{margin: 0}}>
+										Status message:&nbsp;<p style={{color: statusColor}}>{this.state.message}</p>
+									</Row>
+								) : (
+									[]
+								)
+							}
 							<Row style={{margin: 0}}>
 								Last updated:&nbsp;<p>{this.state.updated}</p>
 							</Row>
