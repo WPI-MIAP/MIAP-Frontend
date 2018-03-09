@@ -25,6 +25,7 @@ export class StatusInformation extends Component {
 	 * When new props are provided, update status only if new props are not undefined.
 	 */
 	componentWillReceiveProps(nextProps) {
+		console.log(nextProps.status.message);
 		if(nextProps.status.status !== undefined) {
 			this.setState({
 				status: nextProps.status.status,
@@ -63,7 +64,7 @@ export class StatusInformation extends Component {
 								Status of last analysis:&nbsp;<p style={{color: statusColor}}>{statusText}</p>
 							</Row>
 							{
-								(this.state.message !== undefined && this.state.message.length > 0) ? (
+								(this.state.message !== undefined) ? (
 									<Row style={{margin: 0}}>
 										Status message:&nbsp;<p style={{color: statusColor}}>{this.state.message}</p>
 									</Row>
