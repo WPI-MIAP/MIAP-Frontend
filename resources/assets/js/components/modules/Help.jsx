@@ -251,18 +251,12 @@ class Help extends Component {
 									<Row>
 									<Paper zDepth={1} style={{height: 210, width: 230}}>
 										<DndTreeContainer 
-										currentDrugs={dummyData.currentDrugs}
-										filter='all'
-										minScore={-50}
-										maxScore={50}
-										onClickNode={() => {}}
-										onDeleteNode={() => {}}
-										cols={4}
-										selectedDrug={dummyData.selectedDrug}
-										helpExample={true}
-										scoreRange={this.props.scoreRange}
-										dmeRange={this.props.dmeRange}
-										/>
+											helpExample={true}
+											currentDrugs={dummyData.currentDrugs}
+											selectedDrug={dummyData.selectedDrug}
+											scoreRange={this.props.scoreRange}
+											dmeRange={this.props.dmeRange}
+											/>
 									</Paper>
 									<Col style={{marginLeft: 20}}>
 										<Row style={{height: 35}}>

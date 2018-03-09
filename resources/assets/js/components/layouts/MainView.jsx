@@ -11,7 +11,7 @@ import Overview from '../modules/Overview';
 import GalaxyView from '../modules/GalaxyView';
 import ProfileView from '../modules/ProfileView';
 import ReportChipContainer from '../modules/ReportChipContainer';
-
+import PropTypes from 'prop-types';
 
 const styles = {
 	root: {
@@ -27,7 +27,10 @@ const styles = {
 	}
 };
 
-export default class MainView extends Component {
+/**
+ * This component combines the ReportChipContainer, Overview, Galaxy View, Interaction Profile and Report View.
+ */
+class MainView extends Component {
 	constructor(props) {
 		super(props);
 
@@ -55,25 +58,42 @@ export default class MainView extends Component {
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
 
+	/**
+	 * Set initial window dimensions and create window resize listener to automatically update them.
+	 */
 	componentDidMount() {
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
 	}
 
+	/**
+	 * Remove window resize listener on unmount.
+	 */
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
 	}
 
+	/**
+	 * Update window dimensions using current measurements.
+	 */
 	updateWindowDimensions() {
 		this.setState({width: window.innerWidth, height: window.innerHeight});
 	}
 
+	/**
+	 * If the tour is started while in fullscreen mode, exit fullscreen mode. 
+	 */
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.tourRunning !== this.props.tourRunning && nextProps.tourRunning === true) {
 			this.setState({col: 4, isGalaxyFullscreen: false, isOverviewFullscreen: false, isProfileFullscreen: false});
 		}
 	}
 
+	/**
+	 * Open the reports view.
+	 * 
+	 * @param {object} report contains information about type of report (drug/adr) and the drugs involved in the report
+	 */
 	handleOpen(report) {
 		// This part was commented out to avoid a waiting period before opening the report view for the drug/interaction that was last
 		// opened in the report view
@@ -118,17 +138,21 @@ export default class MainView extends Component {
 		// }
   	}
 
+	/**
+	 * Close the reports view. If the tour is at the reports step, advance the tour.
+	 */
 	handleClose() {
 		this.setState({
 			open: false,
-			// tableTitle: '',
-			// tableData: [],
 		});
 		if(this.props.currentSelector === '.report') {
 			this.props.nextTourStep();
 		}
 	}
 
+	/**
+	 * Fullscreen the Overview.
+	 */
 	toggleFullscreenOverview() {
 		this.setState((prevState, props) => {
 			return {
@@ -140,6 +164,9 @@ export default class MainView extends Component {
 		})
 	}
 
+	/**
+	 * Fullscreen the Galaxy View.
+	 */
 	toggleFullscreenGalaxy() {
 		this.setState((prevState, props) => {
 			return {
@@ -151,6 +178,9 @@ export default class MainView extends Component {
 		})
 	}
 
+	/**
+	 * Fullscreen the Interaction Profile View.
+	 */
 	toggleFullscreenProfile() {
 		this.setState((prevState, props) => {
 			return {
@@ -162,6 +192,9 @@ export default class MainView extends Component {
 		})
 	}
 
+	/**
+	 * Return the current tab based on which view is fullscreened.
+	 */
 	getTabsIndex() {
 		if (this.state.isOverviewFullscreen) {
 			return 0;
@@ -174,6 +207,11 @@ export default class MainView extends Component {
 		}
 	}
 
+	/**
+	 * Handle changing the tab index.
+	 * 
+	 * @param {number} value new tab index
+	 */
 	handleChange(value) {
 		this.setState({
 		  value: value,
@@ -308,7 +346,106 @@ export default class MainView extends Component {
 	}
 }
 
-MainView.defaultProps = {
-	width: '100%',
-	height: '100%'
+MainView.propTypes = {
+	/**
+	 * Indicates whether the data is still being fetched for the nodes and links.
+	 */
+	isFetching: PropTypes.bool.isRequired,
+
+	/**
+	 * Array of links representing all interaction between pairs of drugs in the visualization.
+	 */
+	links: PropTypes.array.isRequired,
+
+	/**
+	 * Array of nodes representing all drugs in the visualization.
+	 */
+	nodes: PropTypes.array.isRequired,
+	
+	/**
+	 * Array of drugs currently in the Galaxy View.
+	 */
+	currentDrugs: PropTypes.array.isRequired,
+
+	/**
+	 * Name of the currently selected drug.
+	 */
+	selectedDrug: PropTypes.string.isRequired,
+
+	/**
+	 * Name of the currently selected rule (of format: drug_1 --- drug_2).
+	 */
+	selectedRule: PropTypes.string.isRequired,
+
+	/**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+	filter: PropTypes.string.isRequired,
+
+	/**
+	 * Minimum score for filtering interactions.
+	 */
+	minScore: PropTypes.number.isRequired,
+
+	/**
+	 * Maximum score for filtering interactions.
+	 */
+	maxScore: PropTypes.number.isRequired,
+
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+	 */
+	dmeRange: PropTypes.array.isRequired,
+
+	/**
+	 * Contains information about the status of the last MARAS analysis ran.
+	 */
+	status: PropTypes.object.isRequired,
+
+	/**
+	 * Callback used when a node is clicked. Takes the node as a parameter.
+	 */
+	onClickNode: PropTypes.func.isRequired,
+
+	/**
+	 * Callback used when an edge is clicked. Takes the edge as a parameter.
+	 */
+	onClickEdge: PropTypes.func.isRequired,
+
+	/**
+	 * Callback used when a node is clicked (Galaxy View). Takes the node as a parameter.
+	 */
+	showDetailNode: PropTypes.func.isRequired,
+
+	/**
+	 * Callback used when a drug is removed from the galaxy view. Takes the drug name as a parameter.
+	 */
+	deleteNode: PropTypes.func.isRequired,
+
+	/**
+	 * Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+	 */
+	isUpdating: PropTypes.func.isRequired,
+
+	/**
+	 * Remove the currently selected rule from the Interaction Profile.
+	 */
+	clearRule: PropTypes.func.isRequired,
+
+	/**
+	 * Remove the currently selected drug from the Interaction Profile.
+	 */
+	clearSearchTerm: PropTypes.func.isRequired,
+
+	/**
+	 * Used to get updated information about the status of the last MARAS analysis ran.
+	 */
+	getStatus: PropTypes.func.isRequired
 };
+
+export default MainView;

@@ -1,23 +1,74 @@
 ### `resources\assets\js\components\App.jsx`
 
-**App** 
+**App** This is the main component for the application. It contains the Tour, GlobalFilterNavContainer, MainviewContainer, and Footer components.
 
 ### `resources\assets\js\components\layouts\DndTreeContainer.jsx`
 
-**DndTreeContainer** 
-
-### `resources\assets\js\components\layouts\GlobalFilterNav.jsx`
-
-**GlobalFilterNav** 
-
-### `resources\assets\js\components\layouts\MainView.jsx`
-
-**MainView** 
+**DndTreeContainer** This component creates the windows for each of the current drugs displayed in the Galaxy View.
 
 Property | Type | Required | Description
 :--- | :--- | :--- | :---
-width|||
-height|||
+currentDrugs|PropType array|yes|Array of drugs currently in the Galaxy View.
+selectedDrug|PropType string|yes|Name of the currently selected drug.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+dmeRange|PropType array|yes|Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+filter|PropType string||Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number||Minimum score for filtering interactions.
+maxScore|PropType number||Maximum score for filtering interactions.
+onClickNode|PropType func||Callback used when a node is clicked. Takes the node as a parameter.
+onClickEdge|PropType func||Callback used when a edge is clicked. Takes the edge as a parameter.
+onDeleteNode|PropType func||Callback used when a drug is removed from the galaxy view. Takes the drug name as a parameter.
+onClearDrug|PropType func||Clears the selectedDrug.
+cols|PropType number||Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+handleOpen|PropType func||Used to open the reports view. Takes a report object containing information about the drug for which to retrieve reports.
+helpExample|PropType bool||Indicates whether this is the version found in the help menu (defaults to false).
+
+### `resources\assets\js\components\layouts\GlobalFilterNav.jsx`
+
+**GlobalFilterNav** This component renders the navbar, combining the filters, upload button, help button, and search bar.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+rules|PropType array|yes|Array of rules representing all interaction between pairs of drugs in the visualization.
+updating|PropType bool|yes|Indicates whether filters are currently being applied.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+dmeRange|PropType array|yes|Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+status|PropType object|yes|Contains information about the status of the last MARAS analysis ran.
+onClick|PropType func|yes|Used to apply the known/unknown filter. Takes the value of the selected option (&#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unknown&#x27;).
+updateMinScore|PropType func|yes|Used to set the new minimum score. Takes the new minimum score (a number) as a paramter.
+updateMaxScore|PropType func|yes|Used to set the new maximum score. Takes the new maximum score (a number) as a paramter.
+isUpdating|PropType func|yes|Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+getStatus|PropType func|yes|A function that can be called to get the updated analysis status.
+
+### `resources\assets\js\components\layouts\MainView.jsx`
+
+**MainView** This component combines the ReportChipContainer, Overview, Galaxy View, Interaction Profile and Report View.
+
+Property | Type | Required | Description
+:--- | :--- | :--- | :---
+isFetching|PropType bool|yes|Indicates whether the data is still being fetched for the nodes and links.
+links|PropType array|yes|Array of links representing all interaction between pairs of drugs in the visualization.
+nodes|PropType array|yes|Array of nodes representing all drugs in the visualization.
+currentDrugs|PropType array|yes|Array of drugs currently in the Galaxy View.
+selectedDrug|PropType string|yes|Name of the currently selected drug.
+selectedRule|PropType string|yes|Name of the currently selected rule (of format: drug_1 --- drug_2).
+filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
+minScore|PropType number|yes|Minimum score for filtering interactions.
+maxScore|PropType number|yes|Maximum score for filtering interactions.
+scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
+dmeRange|PropType array|yes|Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+status|PropType object|yes|Contains information about the status of the last MARAS analysis ran.
+onClickNode|PropType func|yes|Callback used when a node is clicked. Takes the node as a parameter.
+onClickEdge|PropType func|yes|Callback used when an edge is clicked. Takes the edge as a parameter.
+showDetailNode|PropType func|yes|Callback used when a node is clicked (Galaxy View). Takes the node as a parameter.
+deleteNode|PropType func|yes|Callback used when a drug is removed from the galaxy view. Takes the drug name as a parameter.
+isUpdating|PropType func|yes|Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+clearRule|PropType func|yes|Remove the currently selected rule from the Interaction Profile.
+clearSearchTerm|PropType func|yes|Remove the currently selected drug from the Interaction Profile.
+getStatus|PropType func|yes|Used to get updated information about the status of the last MARAS analysis ran.
 
 ### `resources\assets\js\components\modules\D3Tree.jsx`
 

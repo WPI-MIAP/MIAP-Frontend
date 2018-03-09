@@ -13,6 +13,7 @@ import Paper from 'material-ui/Paper';
 import Badge from 'material-ui/Badge';
 import { countDrugInteraction } from '../../utilities/functions'; 
 import {medicines, connection} from '../../utilities/constants';
+import PropTypes from 'prop-types';
 
 const styles = {
   root: {
@@ -25,7 +26,10 @@ const styles = {
   }
 };
 
-export default class GlobalFilterNav extends React.Component {
+/**
+ * This component renders the navbar, combining the filters, upload button, help button, and search bar.
+ */
+class GlobalFilterNav extends React.Component {
   constructor(props) {
     super(props);
 
@@ -35,6 +39,9 @@ export default class GlobalFilterNav extends React.Component {
     };
   }
 
+  /**
+   * Set initial drug and interaction counts.
+   */
   componentDidMount() {
     this.setState({
       drugsCount: countDrugInteraction(this.props.rules, this.props.filter, this.props.minScore, this.props.maxScore)[0],
@@ -42,6 +49,9 @@ export default class GlobalFilterNav extends React.Component {
     })
   }
 
+  /**
+   * When filters are updated, update drug and interaction counts.
+   */
   componentWillReceiveProps(nextProps) {
     this.setState({
       drugsCount: countDrugInteraction(nextProps.rules, nextProps.filter, nextProps.minScore, nextProps.maxScore)[0],
@@ -111,3 +121,72 @@ export default class GlobalFilterNav extends React.Component {
     )
   }
 }
+
+GlobalFilterNav.propTypes = {
+  /**
+	 * Array of rules representing all interaction between pairs of drugs in the visualization.
+	 */
+  rules: PropTypes.array.isRequired,
+  
+  /**
+	 * Indicates whether filters are currently being applied.
+	 */
+  updating: PropTypes.bool.isRequired,
+  
+  /**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+  scoreRange: PropTypes.array.isRequired,
+  
+  /**
+	 * Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+	 */
+  dmeRange: PropTypes.array.isRequired,
+  
+  /**
+	 * Minimum score for filtering interactions.
+	 */
+  minScore: PropTypes.number.isRequired,
+  
+  /**
+	 * Maximum score for filtering interactions.
+	 */
+  maxScore: PropTypes.number.isRequired,
+  
+  /**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+  filter: PropTypes.string.isRequired,
+  
+  /**
+	 * Contains information about the status of the last MARAS analysis ran.
+	 */
+  status: PropTypes.object.isRequired,
+  
+  /**
+	 * Used to apply the known/unknown filter. Takes the value of the selected option ('all', 'known', or 'unknown').
+	 */
+  onClick: PropTypes.func.isRequired,
+
+  /**
+	 * Used to set the new minimum score. Takes the new minimum score (a number) as a paramter.
+	 */
+  updateMinScore: PropTypes.func.isRequired,
+
+  /**
+	 * Used to set the new maximum score. Takes the new maximum score (a number) as a paramter.
+	 */
+  updateMaxScore: PropTypes.func.isRequired,
+
+  /**
+	 * Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+	 */
+  isUpdating: PropTypes.func.isRequired,
+
+  /**
+	 * A function that can be called to get the updated analysis status.
+	 */
+  getStatus: PropTypes.func.isRequired
+};
+
+export default GlobalFilterNav;
