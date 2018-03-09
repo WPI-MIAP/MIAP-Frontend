@@ -1,6 +1,8 @@
 import React from 'react';
 import Joyride from 'react-joyride';
 import PropTypes from 'prop-types';
+import { overviewName, galaxyViewName, interactionProfileName } from '../../utilities/constants';
+
 
 /**
  * Define all of the tour steps.
@@ -12,12 +14,12 @@ const steps = [
 		selector: '.mainContainer',
 	},
 	{
-		title: "Overview",
+		title: overviewName,
 		selector: '.overview',
 		text: 'This tab shows the network of all drugs (nodes) and their possible interactions (links between nodes).',
 	},
 	{
-		title: "Overview - Edges",
+		title: `${overviewName} - Edges`,
 		//note, this element was given a second classname as a workaround to force joyride to rerender the step (as the selector changed)
 		selector: '.overview2',
 		text: 'Clicking on an edge (or a node) will produce a "chip" that you can click on to access reports related to that interaction (or drug). Try clicking on an edge!',
@@ -33,7 +35,7 @@ const steps = [
 		text: 'This is where you can find any chips that you generate. You can click on them to access report information.',
 	},
 	{
-		title: "Overview - Nodes",
+		title: `${overviewName} - Nodes`,
 		//note, this element was given a third classname as a workaround to force joyride to rerender the step (as the selector changed)
 		selector: '.overview3',
 		text: 'Clicking on a node will allow you to view more information about that drug. Try it now!',
@@ -44,12 +46,12 @@ const steps = [
 		}
 	},
 	{
-		title: "Galaxy View",
+		title: galaxyViewName,
 		selector: '.galaxy',
-		text: 'The Galaxy View offers an overview of a specific drug, showing each of the drug\'s interactions.',
+		text: `The ${galaxyViewName} offers an overview of a specific drug, showing each of the drug\'s interactions.`,
 	},
 	{
-		title: "Galaxy View - Reports",
+		title: `${galaxyViewName} - Reports`,
 		selector: '.galaxyReports',
 		text: 'To view details about the reports behind the visualization, click on the reports icon.',
 		style: {
@@ -72,9 +74,9 @@ const steps = [
 		},
 	},
 	{
-		title: "Interaction Profile",
+		title: interactionProfileName,
 		selector: '.profile',
-		text: 'The Interaction Profile shows all drugs that interact with the selected drug and ADRs caused by those interactions.',
+		text: `The ${interactionProfileName} shows all drugs that interact with the selected drug and ADRs caused by those interactions.`,
 	},
 	{
 		title: "Known/Unknown Filter",

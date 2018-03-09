@@ -13,7 +13,7 @@ import axios from 'axios';
 import * as _ from 'lodash';
 import Report from '../modules/Report';
 import {getStyleByDMECount} from '../../utilities/functions';
-import {selectedColor} from '../../utilities/constants';
+import {selectedColor, interactionProfileName} from '../../utilities/constants';
 import PropTypes from 'prop-types';
 
 /**
@@ -88,7 +88,7 @@ class DndTreeContainer extends Component {
 											<span style={styles.titleText}>{_.capitalize(drug[0])}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
-												<IconButton tooltip="Show Profile"
+												<IconButton tooltip={`Show ${interactionProfileName}`}
 													iconStyle={{ color: 'white' }}
 													onClick={() => this.props.onClickNode(drug[0])}	
 												>
@@ -134,7 +134,7 @@ class DndTreeContainer extends Component {
 											<span style={styles.titleText}>{(drug[0].length <= 15) ? _.capitalize(drug[0]) : _.capitalize(_.trim(drug[0].substring(0, 12)) + '...')}</span>
 											<span className="pull-right" style={styles.cardButtons}>
 
-												<IconButton tooltip="Show Profile"
+												<IconButton tooltip={`Show ${interactionProfileName}`}
 													iconStyle={{ color: 'white' }}
 													onClick={(event) => {event=event || window.event; event.stopPropagation(); this.props.onClickNode(drug[0]);}}	
 												>

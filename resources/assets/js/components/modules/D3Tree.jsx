@@ -381,7 +381,7 @@ D3Tree.propTypes = {
   /**
 	 * Information about how to structure the tree.
 	 */
-  treeData: PropTypes.object.isRequired,
+  treeData: PropTypes.array.isRequired,
 
   /**
 	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
