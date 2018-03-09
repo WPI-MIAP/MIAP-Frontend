@@ -123,7 +123,8 @@ export const receiveStatus = (json) => {
 		type: 'RECEIVE_STATUS',
 		status: json.status,
 		updated: json.updated,
-		sources: json.sources
+		sources: json.sources,
+		message: json.message
 	}
 }
 
