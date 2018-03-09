@@ -9,7 +9,7 @@ import Paper from 'material-ui/Paper';
 import DndGraph from './DndGraph';
 import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
-import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor } from '../../utilities/constants';
+import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor, overviewName, galaxyViewName, interactionProfileName } from '../../utilities/constants';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
@@ -196,15 +196,16 @@ class Help extends Component {
 							<CardText expandable={true}>
 								<Row>
 								<Col sm={12} md={7}>
-									<h5>Overview</h5>
+									<h5>{overviewName}</h5>
 									<ul>
 										<li>Each <b>node</b> is a <b>drug</b></li>
-										<li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
-										<li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
+										<li>Each <b>edge</b> represents a possible <b>drug-drug interaction (DDI)</b></li>
+										<li>Each <b>edge (DDI)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
 										<li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
 										<li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
 										<li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
-										<li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
+										<li><b>Clicking on a node</b> causes that drug to appear in the <b>{galaxyViewName} and {interactionProfileName}</b></li>
+										<li><b>Clicking on an edge</b> causes that DDI to appear in the <b>Report Chip Container and {interactionProfileName}</b></li>
 										<li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
 									</ul>
 								</Col>
@@ -235,7 +236,7 @@ class Help extends Component {
 								</Row>
 								<Row style={{marginTop: 20}}>
 								<Col sm={12} md={7}>
-									<h5>Galaxy View</h5>
+									<h5>{galaxyViewName}</h5>
 									<ul>
 										<li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
 										<li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
@@ -244,7 +245,7 @@ class Help extends Component {
 										<li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
 										<li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
 										<li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
-										<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
+										<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the {interactionProfileName}</b>, <b>see reports for that drug</b>, or <b>remove the drug from the {galaxyViewName}</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
@@ -274,7 +275,7 @@ class Help extends Component {
 								</Row>
 								<Row style={{marginTop: 20}}>
 								<Col sm={12} md={7}>
-									<h5>Interaction Profile</h5>
+									<h5>{interactionProfileName}</h5>
 									<ul>
 										<li>Provides a detailed look at an <b>individual drug</b> using a <b>tree layout</b> with three levels</li>
 										<li>The <b>root node</b> is the <b>selected drug</b></li>
@@ -282,6 +283,7 @@ class Help extends Component {
 										<li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
 										<li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
 										<li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
+										<li><b>Hovering</b> over a node at the second (or third) level will display the <b>number of reports</b> associated with that <b>DDI (and specific ADR)</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>

@@ -6,7 +6,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import NavigationFullscreenExit from 'material-ui/svg-icons/navigation/fullscreen-exit';
 import Report from '../modules/Report'
 import axios from 'axios';
-import { complementaryColor, selectedColor } from '../../utilities/constants';
+import { complementaryColor, selectedColor, interactionProfileName, galaxyViewName, overviewName } from '../../utilities/constants';
 import Overview from '../modules/Overview';
 import GalaxyView from '../modules/GalaxyView';
 import ProfileView from '../modules/ProfileView';
@@ -219,7 +219,7 @@ class MainView extends Component {
 	}
 
 	render() {
-		let profileTitle = 'Interaction Profile';
+		let profileTitle = interactionProfileName;
 		if (this.props.selectedDrug != '') {
 			profileTitle += `: ${_.capitalize(this.props.selectedDrug)}`;
 		} else if (this.props.selectedRule != '') {
@@ -262,8 +262,8 @@ class MainView extends Component {
 								inkBarStyle={{background: selectedColor, height: '4px', marginTop: '-4px'}}
 								value={this.getTabsIndex()}
 								onChange={this.handleChange}>
-								<Tab label={'Overview'} style={{background: complementaryColor}} onActive={this.toggleFullscreenOverview} value={0}/>
-								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>Galaxy View <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: complementaryColor}} onActive={this.toggleFullscreenGalaxy} value={1}/>
+								<Tab label={overviewName} style={{background: complementaryColor}} onActive={this.toggleFullscreenOverview} value={0}/>
+								<Tab label={<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}><div style={{width: 48}}/>{galaxyViewName} <div style={{alignSelf: 'flex-end'}}><TreeViewFilterContainer /></div></div>} style={{background: complementaryColor}} onActive={this.toggleFullscreenGalaxy} value={1}/>
 								<Tab label={profileTitle} style={{background: complementaryColor}} onActive={this.toggleFullscreenProfile} value={2}/>
 							</Tabs>
 						</Col>

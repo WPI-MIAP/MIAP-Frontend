@@ -54,9 +54,9 @@ class KnownUnknownDropDown extends Component {
 					targetOrigin={{horizontal: 'right', vertical: 'top'}}
 					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
 					selectedMenuItemStyle={{ color: primaryColor }}>
-					<MenuItem value='all' primaryText="All DIARs" />
-					<MenuItem value='known' primaryText="Known DIARs" />
-					<MenuItem value='unknown' primaryText="Unknown DIARs" />
+					<MenuItem value='all' primaryText="All DDIs" />
+					<MenuItem value='known' primaryText="Known DDIs" />
+					<MenuItem value='unknown' primaryText="Unknown DDIs" />
 				</DropDownMenu>
 			</Paper>
 		);

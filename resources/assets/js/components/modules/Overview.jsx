@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DndGraph from '../modules/DndGraph';
-import { scoreColors, complementaryColor, secondaryColor } from '../../utilities/constants';
+import { scoreColors, complementaryColor, secondaryColor, overviewName } from '../../utilities/constants';
 import Paper from 'material-ui/Paper';
 import {GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
@@ -140,7 +140,7 @@ class Overview extends Component {
 
 				<Paper zDepth={1}>
 					<GridTile
-						title={this.props.col != 12 ? "Overview" : ""}
+						title={this.props.col != 12 ? overviewName : ""}
 						titlePosition="top"
 						className="overview overview2 overview3"
 						titleBackground={complementaryColor}

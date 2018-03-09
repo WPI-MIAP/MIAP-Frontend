@@ -1,6 +1,12 @@
 import React from 'react';
 import SVG  from 'react-inlinesvg';
 
+/**
+ * This file is used to define constants in one location that can be used throughout the application.
+ * Many of the colors of the application can be changed here, as well as the images used in the application, 
+ * and the names of each of the views.
+ */
+
 //COLORS
 	export const dmeColors = [
 		{ color: '#A9A9A9', text: 'None' },
@@ -57,3 +63,8 @@ import SVG  from 'react-inlinesvg';
 	export const medicines = <SVG src={require('../../../fonts/medicines.svg')} />;
 
 	export const connection = <SVG src={require('../../../fonts/connection.svg')} />;
+
+//view names
+	export const overviewName = 'Screening Overview';
+	export const galaxyViewName = 'Signal Triage View';
+	export const interactionProfileName = 'Signal Forensics View';

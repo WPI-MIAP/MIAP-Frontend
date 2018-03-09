@@ -8,7 +8,7 @@ import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer';
 import IconButton from 'material-ui/IconButton';
 import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import { dmeColors, scoreColors, complementaryColor, secondaryColor } from '../../utilities/constants';
+import { dmeColors, scoreColors, complementaryColor, secondaryColor, galaxyViewName } from '../../utilities/constants';
 import PropTypes from 'prop-types';
 
 /**
@@ -32,7 +32,7 @@ class GalaxyView extends Component {
 			<div>
 				<Paper zDepth={1}>
 					<GridTile
-						title={this.props.col != 12 ? "Galaxy View" : ""}
+						title={this.props.col != 12 ? galaxyViewName : ""}
 						titlePosition="top"
 						className="galaxy"
 						actionIcon={ 
