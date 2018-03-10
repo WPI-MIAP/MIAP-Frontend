@@ -241,7 +241,7 @@ class DndGraph extends Component {
 			},
 			physics:{
 				barnesHut: {
-					springLength: 75,//150,
+					springLength: 150,
 					avoidOverlap: 0.2,
 				},
 			},

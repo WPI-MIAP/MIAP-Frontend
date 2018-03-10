@@ -37,7 +37,7 @@ var exec = require('child_process').exec;
 			  success: true
 			})
 		}
-	 }
+	}
 
  	/**
  	 * Get rules in json
@@ -73,8 +73,8 @@ var exec = require('child_process').exec;
 				let maxNumDMEs = 0;
 				drugs.forEach(drug => {
 					let rulesCopy = rules.filter(
-						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(String(drug)) ||
-						_.lowerCase(rule.Drug2.name) === _.lowerCase(String(drug))
+						rule => _.lowerCase(rule.Drug1.name) === _.lowerCase(drug as string) ||
+						_.lowerCase(rule.Drug2.name) === _.lowerCase(drug as string)
 					);
 
 					let drugDMEs = [];
@@ -137,6 +137,7 @@ var exec = require('child_process').exec;
 					drugDMEs,
 					rules
 				});
+				return;
 			}
 
 	 		res.json({
@@ -148,31 +149,69 @@ var exec = require('child_process').exec;
  		} catch (err) {
  			console.log(err);
  		}
-	 }
+	}
 
-	 public async getReports(req: Request, res: Response, next: NextFunction) {
+	public async getReports(req: Request, res: Response, next: NextFunction) {
 		try {
-			let reports = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/reports.csv', 'utf8'));
+			//var reports = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/reports.csv', 'utf8'));
+			var stream = fs.createReadStream(__dirname + '/../../../storage/reports.csv', {flags: 'r', encoding: 'utf-8'});
+			var buf = '';
+			var reports = [];
+			var finished = false;
+			
+			stream.on('data', function(d) {
+				buf += d.toString(); // when data is read, stash it in a string buffer
+				// then process the buffer
+				var pos;
+				
+				while ((pos = buf.indexOf('\n')) >= 0) { // keep going while there's a newline somewhere in the buffer
+					if (pos == 0) { // if there's more than one newline in a row, the buffer will now start with a newline
+						buf = buf.slice(1); // discard it
+						continue; // so that the next iteration will start with data
+					}
 
-			if (req.query.drug) {
-				reports = reports.filter(report => {
-					let drugnames = report.drugname_matched.split(', ');
-					// let drugnames = report.drugname_updated.split(', ');
-					drugnames = drugnames.map(name => _.toLower(_.trim(name)));
-					return _.includes(drugnames, _.toLower(_.trim(req.query.drug)));
-				});
-			}
+					//process the line
+					var line = buf.slice(0,pos);
+					if (line[line.length-1] == '\r' || line[line.length-1] == '\n') line=line.substr(0,line.length-1);
+					if (line[line.length-1] == ']') line=line.substr(0,line.length-1);
+					if (line[0] == '[') line=line.substr(1,line.length);
+					if (line[0] == ',') line=line.substr(1,line.length);
+					
+					if (line.length > 0) { // ignore empty lines
+						var report = JSON.parse(line); // parse the JSON
+						reports.push(report);
+					}
 
-			if (req.query.drug1 && req.query.drug2) {
-				let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
-				rules = rules.filter(rule => _.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug1))}] [${_.toLower(_.trim(req.query.drug2))}]` || 
-				_.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug2))}] [${_.toLower(_.trim(req.query.drug1))}]`);
-				let reportIds : Many<string> = _.uniq(_.flattenDeep(rules.map(rule => String(_.map(rule.id.split(','), r => (_.trim(String(r))))))));
-				reports = _.at(_.keyBy(reports, 'primaryId'), reportIds);
-				res.send(reports);
-			}
+					buf = buf.slice(pos+1); // and slice the processed data off the buffer
+				}
+			});
 
-			res.json(reports);
+			stream.on('close', function() {
+				if (req.query.drug) {
+					reports = reports.filter(report => {
+						let drugnames = report.drugname_matched.split(', ');
+						// let drugnames = report.drugname_updated.split(', ');
+						drugnames = drugnames.map(name => _.toLower(_.trim(name)));
+						return _.includes(drugnames, _.toLower(_.trim(req.query.drug)));
+					});
+					res.send(reports);
+					finished = true;
+				}
+	
+				else if (req.query.drug1 && req.query.drug2) {
+					let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
+					rules = rules.filter(rule => _.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug1))}] [${_.toLower(_.trim(req.query.drug2))}]` || 
+					_.toLower(_.trim(rule.r_Drugname)) === `[${_.toLower(_.trim(req.query.drug2))}] [${_.toLower(_.trim(req.query.drug1))}]`);
+					let reportIds : string[] = _.uniq(_.flattenDeep(rules.map(rule => _.map(rule.id.split(','), r => (_.trim(r as string))))));
+					reports = _.at(_.keyBy(reports, 'primaryId'), reportIds);
+					res.send(reports);
+					finished = true;
+				}
+				else {
+					res.json(reports);
+					finished = true;
+				}
+			});
 		} catch (err) {
 			console.log(err);
 		}
