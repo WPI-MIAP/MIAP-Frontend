@@ -53,6 +53,8 @@
     "react-styleguidist": "^6.2.6",
     "sinon": "^2.2.0",
     "tslint": "^5.2.0",
+    "typedoc": "^0.11.1",
+    "typedoc-plugin-markdown": "^1.0.14",
     "typescript": "^2.3.2",
     "webpack": "^3.11.0",
     "webpack-blocks": "^1.0.0-rc.2"
@@ -117,6 +119,6 @@
     "simple-react-docgen": "^1.1.1",
     "slick-carousel": "^1.8.1",
     "throttle-debounce": "1.0.1",
-    "typedoc": "^0.11.0"
+    "typedoc-markdown-theme": "0.0.4"
   }
 }

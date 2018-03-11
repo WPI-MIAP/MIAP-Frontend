@@ -4,18 +4,20 @@ import * as csv from 'csvtojson';
 import * as _ from 'lodash';
 import { Many } from 'lodash';
 var exec = require('child_process').exec;
-/**
- * {
- * 	drugs: [...],
- * 	rules: rules
- * }
- */
 
 /**
  * Controller class to handle different requests for this feature
  */
- export default class CSVController {
-	 public async uploadReports(req: Request, res: Response, next: NextFunction) {
+export default class CSVController {
+	
+	/**
+	 * Used to upload FAERS files to the server. Files are passed in as req.files.
+	 * 
+	 * @param req 
+	 * @param res 
+	 * @param next 
+	 */
+	public async uploadReports(req: Request, res: Response, next: NextFunction) {
 		if (!req.files) {
 			console.log("No file received");
 			return res.send({
@@ -40,11 +42,12 @@ var exec = require('child_process').exec;
 	}
 
  	/**
- 	 * Get rules in json
- 	 * @param {Request}      req
- 	 * @param {Response}     res
- 	 * @param {NextFunction} next
- 	 */
+	  * Get rules, drugs, as well as score and severe ADR count distributions in json.
+	  *
+ 	  * @param {Request}      req
+ 	  * @param {Response}     res
+ 	  * @param {NextFunction} next
+ 	  */
  	public async getRules(req: Request, res: Response, next: NextFunction) {
  		try {
 			let rules = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/rules.csv', 'utf8'));
@@ -151,6 +154,13 @@ var exec = require('child_process').exec;
  		}
 	}
 
+	/**
+	 * Retrieve array of reports for a given drug (req.query.drug) or interaction (req.query.drug1 and req.query.drug2).
+	 * 
+	 * @param req 
+	 * @param res 
+	 * @param next 
+	 */
 	public async getReports(req: Request, res: Response, next: NextFunction) {
 		try {
 			//var reports = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/reports.csv', 'utf8'));
@@ -217,6 +227,13 @@ var exec = require('child_process').exec;
 		}
 	}
 
+	/**
+	 * Retrieve status information in json.
+	 * 
+	 * @param req 
+	 * @param res 
+	 * @param next 
+	 */
 	public async getStatus(req: Request, res: Response, next: NextFunction) {
 		try {
 			let status = JSON.parse(fs.readFileSync(__dirname + '/../../../storage/status.json', 'utf8'));
@@ -226,6 +243,13 @@ var exec = require('child_process').exec;
 		}
 	}
 
+	/**
+	 * Retrieve array of severe ADR names.
+	 * 
+	 * @param req 
+	 * @param res 
+	 * @param next 
+	 */
 	public async getDMEs(req: Request, res: Response, next: NextFunction) {
 		try {
 			let DMEs = fs.readFileSync(__dirname + '/../../../storage/DME.csv', 'utf8');
@@ -237,6 +261,11 @@ var exec = require('child_process').exec;
 	}
 }
 
+/**
+ * Convert a file in csv format to json.
+ * 
+ * @param csv file (in csv format) to convert
+ */
 function csvToJson(csv) {
 	let lines = csv.split("\n");
 	let result = [];
@@ -263,10 +292,15 @@ function csvToJson(csv) {
 	return result;
 }
 
+/**
+ * Get array of all drugs (no duplicates) contained in the rules.
+ * 
+ * @param rules 
+ */
 function getDrugsFromRules(rules) {
- 		const drugsList = rules.map((rule) => {
- 			return [rule.Drug1.name, rule.Drug2.name];
- 		});
+	const drugsList = rules.map((rule) => {
+		return [rule.Drug1.name, rule.Drug2.name];
+	});
 
- 		return _.uniq(_.flattenDeep(drugsList));
+	return _.uniq(_.flattenDeep(drugsList));
 }
