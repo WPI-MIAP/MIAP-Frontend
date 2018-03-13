@@ -5,7 +5,7 @@
 # Class: App
 
 
-This is App.ts
+Configure the server application.
 
 ## Index
 
@@ -70,8 +70,11 @@ ___
 
 
 
-*Defined in server/App.ts:26*
+*Defined in server/App.ts:28*
 
+
+
+Configure Express middleware.
 
 
 
@@ -92,8 +95,11 @@ ___
 
 
 
-*Defined in server/App.ts:35*
+*Defined in server/App.ts:39*
 
+
+
+Configure API endpoints.
 
 
 

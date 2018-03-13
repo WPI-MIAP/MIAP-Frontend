@@ -29,8 +29,11 @@ Controller class to handle different requests for this feature
 
 
 
-*Defined in server/csv/CSVController.ts:189*
+*Defined in server/csv/CSVController.ts:253*
 
+
+
+Retrieve array of severe ADR names.
 
 
 **Parameters:**
@@ -61,8 +64,11 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:152*
+*Defined in server/csv/CSVController.ts:164*
 
+
+
+Retrieve array of reports for a given drug (req.query.drug) or interaction (req.query.drug1 and req.query.drug2).
 
 
 **Parameters:**
@@ -93,11 +99,11 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:47*
+*Defined in server/csv/CSVController.ts:51*
 
 
 
-Get rules in json
+Get rules, drugs, as well as score and severe ADR count distributions in json.
 
 
 **Parameters:**
@@ -128,8 +134,11 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:180*
+*Defined in server/csv/CSVController.ts:237*
 
+
+
+Retrieve status information in json.
 
 
 **Parameters:**
@@ -160,8 +169,11 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:17*
+*Defined in server/csv/CSVController.ts:20*
 
+
+
+Used to upload FAERS files to the server. Files are passed in as req.files.
 
 
 **Parameters:**

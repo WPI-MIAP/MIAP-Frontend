@@ -31,7 +31,7 @@
 
 **●  exec**:  *`any`*  =  require('child_process').exec
 
-*Defined in server/csv/CSVController.ts:5*
+*Defined in server/csv/CSVController.ts:6*
 
 
 
@@ -49,15 +49,18 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:200*
+*Defined in server/csv/CSVController.ts:269*
 
+
+
+Convert a file in csv format to json.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| csv | `any`   |  - |
+| csv | `any`   |  file (in csv format) to convert |
 
 
 
@@ -79,8 +82,11 @@ ___
 
 
 
-*Defined in server/csv/CSVController.ts:226*
+*Defined in server/csv/CSVController.ts:300*
 
+
+
+Get array of all drugs (no duplicates) contained in the rules.
 
 
 **Parameters:**

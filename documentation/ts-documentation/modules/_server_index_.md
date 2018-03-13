@@ -28,8 +28,11 @@
 
 **●  port**:  *`string`⎮`number`⎮`true`⎮`false`*  =  normalizePort(process.env.PORT || 3000)
 
-*Defined in server/index.ts:8*
+*Defined in server/index.ts:11*
 
+
+
+Set default port to 3000.
 
 
 
@@ -42,8 +45,11 @@ ___
 
 **●  server**:  *`Server`*  =  http.createServer(App)
 
-*Defined in server/index.ts:11*
+*Defined in server/index.ts:17*
 
+
+
+Configure server.
 
 
 
@@ -60,15 +66,18 @@ ___
 
 
 
-*Defined in server/index.ts:16*
+*Defined in server/index.ts:27*
 
+
+
+Make sure port number is valid.
 
 
 **Parameters:**
 
 | Param | Type | Description |
 | ------ | ------ | ------ |
-| val | `number`⎮`string`   |  - |
+| val | `number`⎮`string`   |  port number |
 
 
 
@@ -90,8 +99,11 @@ ___
 
 
 
-*Defined in server/index.ts:27*
+*Defined in server/index.ts:43*
 
+
+
+Log error output.
 
 
 **Parameters:**
@@ -120,8 +132,11 @@ ___
 
 
 
-*Defined in server/index.ts:44*
+*Defined in server/index.ts:63*
 
+
+
+Print the port that the server is listening on.
 
 
 
