@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import { generateColor } from '../../utilities/functions';
 import { complementaryColor, baseNodeColor } from '../../utilities/constants';
+import PropTypes from 'prop-types';
 
 const styles = {
 	chip: {
@@ -14,7 +15,10 @@ const styles = {
 	}
 };
 
-export default class ReportChipContainer extends Component {
+/**
+ * This component holds chips that link to the report view for any drug or interaction that has been selected.
+ */
+class ReportChipContainer extends Component {
 	constructor(props) {
 		super(props);
 
@@ -28,6 +32,9 @@ export default class ReportChipContainer extends Component {
 		this.handleRequestDelete = this.handleRequestDelete.bind(this);
 	}
 
+	/**
+	 * Determines whether a new chip should be added. Also determines whether chips representing drugs should be removed.
+	 */
 	componentWillReceiveProps(nextProps) {
 		nextProps.currentDrugs.forEach(drug => {
 			if (! _.find(this.state.reportChips, chip => (chip.drugs[0] == _.toLower(_.trim(drug[0])) && ! chip.drugs[1]))) {
@@ -56,10 +63,18 @@ export default class ReportChipContainer extends Component {
 		}	
 	}
 
+	/**
+	 * Update state when hovering.
+	 */
 	toggleHover() {
 		this.setState({ hover: !this.state.hover });
 	}
 
+	/**
+	 * Remove the indicated chip from the container.
+	 * 
+	 * @param {object} key Object representing the chip to remove
+	 */
 	handleRequestDelete(key) {	
 		this.reportChips = this.state.reportChips;
 		const chipToDelete = this.reportChips.indexOf(key);
@@ -80,6 +95,11 @@ export default class ReportChipContainer extends Component {
 		}
 	}
 
+	/**
+	 * Render an individual chip.
+	 * 
+	 * @param {object} report Object representing the drug or interaction.
+	 */
 	renderChip(report) {
 		const title = report.type === 'drug' ? _.startCase(report.drugs[0]) : report.drugs.map((drug) => (_.startCase(drug))).join(" - ");
 		const drug1 = report.drugs[0];
@@ -106,6 +126,9 @@ export default class ReportChipContainer extends Component {
 		);
 	}
 
+	/**
+	 * Render the container component and all chips within it.
+	 */
 	render() {
 
 		return (
@@ -128,3 +151,52 @@ export default class ReportChipContainer extends Component {
 		);
 	}
 }
+
+ReportChipContainer.propTypes = {
+	/**
+	 * Array of the currently selected drugs (i.e. the drugs found in the Galaxy View)
+	 */
+	currentDrugs: PropTypes.array.isRequired,
+
+	/**
+	 * Array of the links between all drugs that interact with eachother.
+	 */
+	links: PropTypes.array.isRequired,
+
+	/**
+	 * Name of the currently selected drug.
+	 */
+	selectedDrug: PropTypes.string.isRequired,
+
+	/**
+	 * Name of the currently selected rule.
+	 */
+	selectedRule: PropTypes.string.isRequired,
+
+	/**
+	 * Removes the drug from the Galaxy View.
+	 */
+	deleteNode: PropTypes.func.isRequired,
+
+	/**
+	 * Remove the currently selected drug from the Interaction Profile.
+	 */
+	clearSearchTerm: PropTypes.func.isRequired,
+
+	/**
+	 * Remove the currently selected rule from the Interaction Profile.
+	 */
+	clearRule: PropTypes.func.isRequired,
+
+	/**
+	 * Distribution of scores used to generate color.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Open reports for a given drug or interaction.
+	 */
+	handleOpen: PropTypes.func.isRequired
+};
+  
+  export default ReportChipContainer;

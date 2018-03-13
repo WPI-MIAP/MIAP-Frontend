@@ -9,16 +9,23 @@ import Paper from 'material-ui/Paper';
 import DndGraph from './DndGraph';
 import DndTreeContainer from '../layouts/DndTreeContainer';
 import InteractionProfile from './InteractionProfile';
-import { dmeColors, scoreColors, regularADRColor, severeADRColor, adrBorderColor, primaryColor, secondaryColor, barColor, barSelectedColor } from '../../utilities/constants';
+import { dmeColors, scoreColors, regularADRColor, severeADRColor, primaryColor, secondaryColor, barColor, barSelectedColor, overviewName, galaxyViewName, interactionProfileName } from '../../utilities/constants';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import {BarChart, XAxis, YAxis, Tooltip, Legend, Bar, Cell, Label} from 'recharts';
 import DistributionRangeSlider from './DistributionRangeSlider';
 import KnownUnknownDropDown from './KnownUnknownDropDown';
+import PropTypes from 'prop-types';
 
+/**
+ * Used to make the example barchart.
+ */
 const dummyDrugFreqs = [{name: 'Drug 1', freq: 8}, {name: 'Drug 2', freq: 6}, {name: 'Drug 3', freq: 5}, {name: 'Drug 4', freq: 3}, {name: 'Drug 5', freq: 1}];
   
 
+/**
+ * Used to make the examples for the Overview and Galaxy View.
+ */
 const dummyData = {
   nodes: [
     'Drug 1',
@@ -124,8 +131,10 @@ const dummyData = {
   selectedDrug: 'Drug 2',
 };
 
-
-export default class Help extends Component {
+/**
+ * This component renders and controls the help menu.
+ */
+class Help extends Component {
 	constructor(props) {
 	  super(props);
 	  this.state = {
@@ -136,6 +145,9 @@ export default class Help extends Component {
 	  this.startTour = this.startTour.bind(this);
 	}
 
+	/**
+	 * Start the tour.
+	 */
 	startTour() {
 		this.setState({dialogOpen: false});
 		this.props.startTour();
@@ -153,26 +165,7 @@ export default class Help extends Component {
 			  primary={true}
 			  onClick={() => {this.setState({dialogOpen: false})}}
 			/>
-		  ];
-
-		  const dummyMarks = {
-			[this.props.minScore]: {
-				style: {
-				  position: 'absolute',
-				  zIndex: 1100,
-				  color: 'white',
-				  top: 0,
-				}, label: 'Min Score: ' + (this.props.minScore === undefined ? -1 : this.props.minScore.toFixed(2)),
-			  },
-			[this.props.maxScore]: {
-			  style: {
-				position: 'absolute',
-				zIndex: 1100,
-				color: 'white',
-				top: 0,
-			  }, label: 'Max Score: ' + (this.props.maxScore === undefined ? 1 : this.props.maxScore.toFixed(2)),
-			}
-		  };
+		];
 
 		return (
 			<div>
@@ -203,15 +196,16 @@ export default class Help extends Component {
 							<CardText expandable={true}>
 								<Row>
 								<Col sm={12} md={7}>
-									<h5>Overview</h5>
+									<h5>{overviewName}</h5>
 									<ul>
 										<li>Each <b>node</b> is a <b>drug</b></li>
-										<li>Each <b>edge</b> represents a possible <b>drug-drug interaction</b></li>
-										<li>Each <b>edge (drug-drug interaction)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
+										<li>Each <b>edge</b> represents a possible <b>drug-drug interaction (DDI)</b></li>
+										<li>Each <b>edge (DDI)</b> corresponds to an <b>adverse drug reaction (ADR)</b></li>
 										<li>A <b>dashed edge</b> means the interaction is <b>known</b></li>
 										<li>A <b>solid edge</b> means the interaction is <b>unknown</b></li>
 										<li>The <b>edge color</b> represents the highest <b>interaction score</b> of all interactions between the two drugs</li>
-										<li><b>Clicking on a node</b> causes that drug to appear in the <b>Galaxy and Interaction Profile Views</b></li>
+										<li><b>Clicking on a node</b> causes that drug to appear in the <b>{galaxyViewName} and {interactionProfileName}</b></li>
+										<li><b>Clicking on an edge</b> causes that DDI to appear in the <b>Report Chip Container and {interactionProfileName}</b></li>
 										<li><b>Hovering over an edge</b> will provide <b>additional information</b> about that <b>interaction (try it now)</b></li>
 									</ul>
 								</Col>
@@ -222,14 +216,7 @@ export default class Help extends Component {
 											nodes={dummyData.nodes}
 											links={dummyData.edges}
 											width={100}
-											height={100} 
-											selectedDrug=''
-											onClickNode={() => {}}
-											onClickEdge={() => {}}
-											isFetching={false}
-											filter='all'
-											minScore={-50}
-											maxScore={50}
+											height={100}
 											scoreRange={this.props.scoreRange}
 											/>
 									</Paper>
@@ -249,7 +236,7 @@ export default class Help extends Component {
 								</Row>
 								<Row style={{marginTop: 20}}>
 								<Col sm={12} md={7}>
-									<h5>Galaxy View</h5>
+									<h5>{galaxyViewName}</h5>
 									<ul>
 										<li>The <b>central drug (blue)</b> in a window is the <b>drug of interest</b></li>
 										<li>The <b>surrounding nodes</b> are drugs that <b>interact with the central drug</b></li>
@@ -258,25 +245,19 @@ export default class Help extends Component {
 										<li>Drugs in this view can be <b>sorted</b> by <b>name</b>, <b>interaction count</b>, or <b>number of severe ADRs</b></li>
 										<li>Surrounding nodes are <b>bigger</b> if there may be an <b>unknown interaction</b> with that drug</li>
 										<li>Surrounding nodes are <b>smaller</b> if there are only <b>known interactions</b> with that drug</li>
-										<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the Interaction Profile view</b>, <b>see reports for that drug</b>, or <b>remove the drug from the Galaxy view</b></li>
+										<li><b>Buttons on a window's header</b> allow you to <b>view a drug in the {interactionProfileName}</b>, <b>see reports for that drug</b>, or <b>remove the drug from the {galaxyViewName}</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
 									<Row>
 									<Paper zDepth={1} style={{height: 210, width: 230}}>
 										<DndTreeContainer 
-										currentDrugs={dummyData.currentDrugs}
-										filter='all'
-										minScore={-50}
-										maxScore={50}
-										onClickNode={() => {}}
-										onDeleteNode={() => {}}
-										cols={4}
-										selectedDrug={dummyData.selectedDrug}
-										testExample={true}
-										scoreRange={this.props.scoreRange}
-										dmeRange={this.props.dmeRange}
-										/>
+											helpExample={true}
+											currentDrugs={dummyData.currentDrugs}
+											selectedDrug={dummyData.selectedDrug}
+											scoreRange={this.props.scoreRange}
+											dmeRange={this.props.dmeRange}
+											/>
 									</Paper>
 									<Col style={{marginLeft: 20}}>
 										<Row style={{height: 35}}>
@@ -294,7 +275,7 @@ export default class Help extends Component {
 								</Row>
 								<Row style={{marginTop: 20}}>
 								<Col sm={12} md={7}>
-									<h5>Interaction Profile</h5>
+									<h5>{interactionProfileName}</h5>
 									<ul>
 										<li>Provides a detailed look at an <b>individual drug</b> using a <b>tree layout</b> with three levels</li>
 										<li>The <b>root node</b> is the <b>selected drug</b></li>
@@ -302,6 +283,7 @@ export default class Help extends Component {
 										<li>The <b>third level</b> represents the <b>ADRs that may result</b> from that interaction</li>
 										<li><b>Severe ADRs</b> are <b>purple</b>, while <b>other ADRs</b> are <b>grey</b></li>
 										<li><b>Clicking</b> on a node at the first or second level will <b>minimize/maximize sections of the tree</b></li>
+										<li><b>Hovering</b> over a node at the second (or third) level will display the <b>number of reports</b> associated with that <b>DDI (and specific ADR)</b></li>
 									</ul>
 								</Col>
 								<Col sm={12} md={5}>
@@ -313,11 +295,11 @@ export default class Help extends Component {
 											/>
 										<Row style={{float: 'right', position: 'relative', zIndex: 1600, marginRight: 10, marginTop: -60}}>
 											<Col style={{marginRight: 10}}>
-												<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: severeADRColor, border: severeADRColor, borderStyle: 'solid'}}/>
 												<div>Severe ADR</div>
 											</Col>
 											<Col>
-												<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: adrBorderColor, borderStyle: 'solid'}}/>
+												<div style={{height: 35, width: 34, margin: '0 auto', background: regularADRColor, border: regularADRColor, borderStyle: 'solid'}}/>
 												<div>Normal ADR</div>
 											</Col>
 										</Row>
@@ -354,10 +336,7 @@ export default class Help extends Component {
 									<Paper zDepth={1} style={{background: primaryColor, width: 320, height: 65, marginTop: 10, paddingTop: 5, paddingLeft: 5}}>
 									{
 										<DistributionRangeSlider
-											rules={this.props.rules} 
-											updateMinScore={() => {}} 
-											updateMaxScore={() => {}}
-											isUpdating={() => {}}
+											rules={this.props.rules}
 											helpExample={true}/>
 									}
 									</Paper>
@@ -407,3 +386,27 @@ export default class Help extends Component {
 		);
 	}
 }
+
+Help.propTypes = {
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+	 */
+	dmeRange: PropTypes.array.isRequired,
+
+	/**
+	 * Used to start the tour.
+	 */
+	startTour: PropTypes.func.isRequired,
+
+	/**
+	 * Array of all rules in the visualization
+	 */
+	rules: PropTypes.array.isRequired,
+};
+
+export default Help;

@@ -16,6 +16,9 @@ import { Row, Col } from 'react-flexbox-grid';
 import {StatusInformation} from './StatusInformation';
 import PropTypes from 'prop-types';
 
+/**
+ * This component is used to upload FAERS data zip files and show status information about the last analysis ran.
+ */
 class UploadFAERS extends Component {
 	constructor(props) {
 		super(props)
@@ -36,6 +39,10 @@ class UploadFAERS extends Component {
 		this.createRemoveFileHandler = this.createRemoveFileHandler.bind(this);
 	}
 
+	/*
+	 * When new props are received, check whether they are undefined before 
+	 * updating the state.
+	 */
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.status.status !== undefined) {
 			if(nextProps.status.status === 'inprogress') {
@@ -47,15 +54,24 @@ class UploadFAERS extends Component {
 		}
 	}
 	
+	/*
+	 * Called when the iconbutton is clicked to open the upload dialog.
+	 */
 	openUploadDialog(){
 		this.props.getStatus();
 		this.setState({uploadDialog: true});
 	};
 	
+	/*
+	 * Called when the the upload dialog is closed.
+	 */
 	closeUploadDialog(){
 		this.setState({uploadDialog: false, uploadFiles: []});
 	};
 	
+	/*
+	 * Begin the MARAS analysis using whatever data files have been added.
+	 */
 	beginMARAS(){
 		const files = this.state.uploadFiles;
 		if(this.state.uploadFiles.length > 0) {
@@ -86,6 +102,12 @@ class UploadFAERS extends Component {
 		}
 	};
 	
+	/*
+	 * Callback for when a file is added. Checks for new files added, removes duplicates, and adds
+	 * the resulting files to the list of files to be uploaded.
+	 * 
+	 * @param files List of all files added
+	 */
 	onFilesChange(files){
 		var newFiles = [];
 		//find any new files that have been added
@@ -111,12 +133,24 @@ class UploadFAERS extends Component {
 			uploadFiles: filesWithoutDuplicates,
 			prevFiles: files,
 		});
-	  };
+	};
 	
+	/*
+	 * Callback on error adding a file.
+	 * 
+	 * @param error The error being thrown
+	 * @param file The file causing the error
+	 */
 	onFilesError(error, file){
 		console.log(error.message);
 	};
 	
+	/*
+	 * Creates a function when a file is added to the list that can be used to remove that file from the
+	 * list of files to be uploaded.
+	 * 
+	 * @param file The file to be removed
+	 */
 	createRemoveFileHandler(file){
 		return function() {
 			var files = this.state.uploadFiles;
@@ -132,20 +166,10 @@ class UploadFAERS extends Component {
 		}.bind(this);
 	}
 
+	/*
+	 * Render this component.
+	 */
 	render() {
-		// const uploadFileActions = [
-		// 	<FlatButton
-		// 	  label="Cancel"
-		// 	  primary={false}
-		// 	  onClick={this.closeUploadDialog}
-		// 	/>, 
-		// 	<FlatButton
-		// 	  label="Upload"
-		// 	  primary={true}
-		// 	  onClick={this.beginMARAS}
-		// 	  disabled={this.state.currentlyRunning}
-		// 	/>
-		// ];
 
 		return (
 			<div>
@@ -177,7 +201,7 @@ class UploadFAERS extends Component {
 						  onClick={this.beginMARAS}
 						  disabled={this.state.currentlyRunning}
 						/>
-					]}//uploadFileActions}
+					]}
 					modal={false}
 					open={this.state.uploadDialog}
 					onRequestClose={this.closeUploadDialog}
@@ -252,7 +276,7 @@ UploadFAERS.propTypes = {
 	/**
 	 * The status of the last analysis ran.
 	 */
-	status: PropTypes.object,
+	status: PropTypes.object.isRequired,
 	/**
 	 * A function that can be called to get the updated analysis status.
 	 */

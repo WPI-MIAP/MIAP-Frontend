@@ -1,4 +1,4 @@
-export const selectRule = (state = [], action) => {
+export const selectRule = (state = '', action) => {
 	switch (action.type) {
     case 'SELECT_RULE':
       return action.rule === undefined ? state : action.rule; 

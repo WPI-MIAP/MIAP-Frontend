@@ -3,10 +3,13 @@ import * as d3 from 'd3'
 import ReactDOM from 'react-dom';
 import * as _ from 'lodash'
 import { generateColor, generateScoreBorderColor } from '../../utilities/functions';
-import { baseNodeColor, baseNodeBorderColor, adrBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
+import { baseNodeColor, baseNodeBorderColor, severeADRColor, regularADRColor } from '../../utilities/constants';
+import PropTypes from 'prop-types';
 
-
-export default class D3Tree extends Component {
+/**
+ * This component renders the tree seen in the Profile View. This component should not be used directly. Instead, use InteractionProfile.
+ */
+class D3Tree extends Component {
   constructor(props) {
     super(props);
 
@@ -15,8 +18,11 @@ export default class D3Tree extends Component {
       previousData: ''
     }
   }
+
+  /**
+   * After mounting, render tree using d3.
+   */
   componentDidMount() {
-    // const width = ReactDOM.findDOMNode(this).parentNode.clientWidth
     removeTree(ReactDOM.findDOMNode(this));
     // Render the tree usng d3 after first component mount
     if (this.props.treeData) {
@@ -26,19 +32,20 @@ export default class D3Tree extends Component {
     }
   }
 
+  /**
+   * Determines when to rerender the tree using d3 (i.e. window is resized, new drug/interaction selected).
+   */
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.treeData[0].children.length > 0) {
-      if (nextProps.width != this.props.width || nextProps.height != this.props.height ||
-        this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
-        (this.state.previousDrug.toLowerCase() === nextProps.treeData[0].name.toLowerCase() && 
-        ! _.isEqual(this.state.previousData.children, nextProps.treeData[0].children)
-        ) 
-      ) {
-        this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
-        removeTree(ReactDOM.findDOMNode(this));
-        renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
-      }
-    // }
+    if (nextProps.width != this.props.width || nextProps.height != this.props.height ||
+      this.state.previousDrug.toLowerCase() !== nextProps.treeData[0].name.toLowerCase() ||
+      (this.state.previousDrug.toLowerCase() === nextProps.treeData[0].name.toLowerCase() && 
+      ! _.isEqual(this.state.previousData.children, nextProps.treeData[0].children)) 
+    ) 
+    {
+      this.setState({ previousDrug: nextProps.treeData[0].name, previousData: nextProps.treeData[0] });
+      removeTree(ReactDOM.findDOMNode(this));
+      renderTree(nextProps.treeData[0], ReactDOM.findDOMNode(this), this.props.scoreRange);
+    }
   }
 
   render() {
@@ -50,14 +57,25 @@ export default class D3Tree extends Component {
 
 }
 
+/**
+ * Removes the existing tree in preparation for rendering a new tree.
+ * 
+ * @param {*} svgDomNode the existing tree
+ */
 const removeTree = (svgDomNode) => {
   d3.select(svgDomNode).selectAll("*").remove();
 }
 
+/**
+ * Render a new tree.
+ * 
+ * @param {object} treeData information about how to structure the tree
+ * @param {*} svgDomNode the existing tree
+ * @param {array} scoreRange array of score boundaries, indicating how to color nodes/edges based on score
+ */
 const renderTree = (treeData, svgDomNode, scoreRange) => {
   const margin = {top: 20, right: 10, bottom: 20, left: 100};
   const height = svgDomNode.parentNode.clientHeight;
-  // console.log(treeData);
   const width = '100%';
   const duration = 750;
 
@@ -225,7 +243,13 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
       .style("stroke", d => {
         if(d.data.Score) {
           //border for ADR
-          return adrBorderColor;
+            if (d.data.critical) {
+              //border for severe ADRs
+              return severeADRColor;
+            }
+            else{
+              return regularADRColor;
+            }
         }
         else if(d.data.name === root.data.name) {
           //border for base node
@@ -353,3 +377,42 @@ const renderTree = (treeData, svgDomNode, scoreRange) => {
   update(root);
   centerNode(root);
 }
+
+D3Tree.propTypes = {
+  /**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+  scoreRange: PropTypes.array.isRequired,
+ 
+  /**
+	 * Information about how to structure the tree.
+	 */
+  treeData: PropTypes.array.isRequired,
+
+  /**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+  filter: PropTypes.string.isRequired,
+
+  /**
+	 * Minimum score for filtering interactions.
+	 */
+  minScore: PropTypes.number.isRequired,
+
+  /**
+	 * Maximum score for filtering interactions.
+	 */
+  maxScore: PropTypes.number.isRequired,
+
+  /**
+   * Width of the parent node.
+   */
+  width: PropTypes.number.isRequired,
+  
+  /**
+   * Height of the parent node.
+   */
+  height: PropTypes.number.isRequired  
+};
+
+export default D3Tree;

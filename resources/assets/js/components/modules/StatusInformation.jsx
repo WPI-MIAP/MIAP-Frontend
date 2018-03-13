@@ -4,8 +4,103 @@ import IconButton from 'material-ui/IconButton';
 import IconInfoOutline from 'material-ui/svg-icons/action/info-outline';
 import { Row, Col } from 'react-flexbox-grid';
 import Dialog from 'material-ui/Dialog';
+import PropTypes from 'prop-types';
 
-export default class StatusInformationButton extends Component {
+/**
+ * This component shows status information about the last MARAS analysis ran.
+ */
+export class StatusInformation extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			status: props.status.status,
+			updated: props.status.updated,
+			sources: props.status.sources,
+			message: props.status.message
+		};
+	}
+
+	/**
+	 * When new props are provided, update status only if new props are not undefined.
+	 */
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps.status.message);
+		if(nextProps.status.status !== undefined) {
+			this.setState({
+				status: nextProps.status.status,
+				updated: nextProps.status.updated,
+				sources: nextProps.status.sources,
+				message: nextProps.status.message
+			});
+		}
+	}
+
+	/**
+	 * Render the component.
+	 */
+	render() {
+		var statusText;
+		var statusColor;
+		if(this.state.status === 'inprogress'){
+			statusText = 'In progress';
+			statusColor = 'black';
+		}
+		else if(this.state.status === 'completed'){
+			statusText = 'Completed successfully';
+			statusColor = 'green';
+		}
+		else{
+			statusText = 'Exited with errors';
+			statusColor = 'red';
+		}
+
+		return (
+			<Col sm={12}>
+				{
+					(this.state.status !== undefined && this.state.updated !== undefined && this.state.sources !== undefined) ? (
+						<div style={{width: '100%', padding: 20, paddingTop: 30, color: 'black', borderStyle: 'solid', borderColor: statusColor, borderRadius: 25}}>
+							<Row style={{margin: 0}}>
+								Status of last analysis:&nbsp;<p style={{color: statusColor}}>{statusText}</p>
+							</Row>
+							{
+								(this.state.message !== undefined) ? (
+									<Row style={{margin: 0}}>
+										Status message:&nbsp;<p style={{color: statusColor}}>{this.state.message}</p>
+									</Row>
+								) : (
+									[]
+								)
+							}
+							<Row style={{margin: 0}}>
+								Last updated:&nbsp;<p>{this.state.updated}</p>
+							</Row>
+							<Row style={{margin: 0}}>
+								<p>Current datasets:</p>
+							</Row>
+							<ul>
+								{
+									this.state.sources.map(source => (
+										<li key={source}>
+											{source}
+										</li>
+									))
+								}
+							</ul>
+						</div>
+					) : (
+						<div style={{paddingTop: 30, paddingBottom: 30, textAlign: 'center', color: 'black', borderStyle: 'solid', borderColor: 'black', borderRadius: 25}}>No status information is available for prior analyses.</div>
+					)
+				}
+			</Col>
+		)
+	}
+}
+
+/**
+ * This component is an icon button that shows a dialog with status information about the last MARAS run when pressed.
+ */
+class StatusInformationButton extends Component {
     constructor(props) {
 		super(props);
 
@@ -14,6 +109,9 @@ export default class StatusInformationButton extends Component {
 		};
 	}
 
+	/**
+	 * Render the component.
+	 */
 	render() {
 		const actions = [
 			<FlatButton
@@ -50,72 +148,15 @@ export default class StatusInformationButton extends Component {
 	}
 }
 
-export class StatusInformation extends Component {
-	constructor(props) {
-		super(props);
+StatusInformationButton.propTypes = {
+	/**
+	 * The status of the last analysis ran.
+	 */
+	status: PropTypes.object.isRequired,
+	/**
+	 * A function that can be called to get the updated analysis status.
+	 */
+	getStatus: PropTypes.func.isRequired,
+};
 
-		this.state = {
-			status: props.status.status,
-			updated: props.status.updated,
-			sources: props.status.sources,
-		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if(nextProps.status.status !== undefined) {
-			this.setState({
-				status: nextProps.status.status,
-				updated: nextProps.status.updated,
-				sources: nextProps.status.sources
-			});
-		}
-	}
-
-	render() {
-		var statusText;
-		var statusColor;
-		if(this.state.status === 'inprogress'){
-			statusText = 'In progress';
-			statusColor = 'black';
-		}
-		else if(this.state.status === 'completed'){
-			statusText = 'Completed successfully';
-			statusColor = 'green';
-		}
-		else{
-			statusText = 'Exited with errors';
-			statusColor = 'red';
-		}
-
-		return (
-			<Col sm={12}>
-				{
-					(this.state.status !== undefined && this.state.updated !== undefined && this.state.sources !== undefined) ? (
-						<div style={{width: '100%', padding: 20, paddingTop: 30, color: 'black', borderStyle: 'solid', borderColor: statusColor, borderRadius: 25}}>
-							<Row style={{margin: 0}}>
-								Status of last analysis:&nbsp;<p style={{color: statusColor}}>{statusText}</p>
-							</Row>
-							<Row style={{margin: 0}}>
-								Last updated:&nbsp;<p>{this.state.updated}</p>
-							</Row>
-							<Row style={{margin: 0}}>
-								<p>Current datasets:</p>
-							</Row>
-							<ul>
-								{
-									this.state.sources.map(source => (
-										<li key={source}>
-											{source}
-										</li>
-									))
-								}
-							</ul>
-						</div>
-					) : (
-						<div style={{paddingTop: 30, paddingBottom: 30, textAlign: 'center', color: 'black', borderStyle: 'solid', borderColor: 'black', borderRadius: 25}}>No status information is available for prior analyses.</div>
-					)
-				}
-			</Col>
-		)
-	}
-}
+export default StatusInformationButton;

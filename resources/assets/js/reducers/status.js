@@ -5,7 +5,8 @@ export const status = (state = {}, action) => {
 			return Object.assign({}, state, {
 				status: action.status,
 				updated: action.updated,
-				sources: action.sources
+				sources: action.sources,
+				message: action.message
 			})
 	    default:
 			return state

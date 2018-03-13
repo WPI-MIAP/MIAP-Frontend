@@ -4,7 +4,10 @@ import Dialog from 'material-ui/Dialog';
 import {Row, Col} from 'react-flexbox-grid';
 import {teamPhoto} from '../../utilities/constants';
 
-export default class Footer extends Component {
+/**
+ * This component defines the footer shown fixed at the bottom of the page.
+ */
+class Footer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,3 +92,5 @@ export default class Footer extends Component {
     )
   }
 }
+
+export default Footer;

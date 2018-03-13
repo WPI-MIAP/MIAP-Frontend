@@ -8,11 +8,17 @@ import TreeViewFilterContainer from '../../containers/TreeViewFilterContainer';
 import IconButton from 'material-ui/IconButton';
 import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import { dmeColors, scoreColors, complementaryColor, secondaryColor } from '../../utilities/constants';
+import { dmeColors, scoreColors, complementaryColor, secondaryColor, galaxyViewName } from '../../utilities/constants';
+import PropTypes from 'prop-types';
 
-export default class GalaxyView extends Component {
+/**
+ * This component renders the Galaxy View.
+ */
+class GalaxyView extends Component {
     constructor(props) {
 		super(props);
+
+		console.log(props.width)
 
 		this.state = {
 			legendShow: true,
@@ -26,7 +32,7 @@ export default class GalaxyView extends Component {
 			<div>
 				<Paper zDepth={1}>
 					<GridTile
-						title={this.props.col != 12 ? "Galaxy View" : ""}
+						title={this.props.col != 12 ? galaxyViewName : ""}
 						titlePosition="top"
 						className="galaxy"
 						actionIcon={ 
@@ -166,3 +172,93 @@ export default class GalaxyView extends Component {
 		);
 	}
 }
+
+GalaxyView.propTypes = {
+	/**
+	 * Number of columns currently being displayed in Mainview (4 if all views visible or 12 if one is fullscreened).
+	 */
+	col: PropTypes.number.isRequired,
+
+	/**
+	 * Function that fullscreens the Galaxy View.
+	 */
+	toggleFullscreenGalaxy: PropTypes.func.isRequired,
+
+	/**
+	 * Array of drugs currently in the Galaxy View.
+	 */
+	currentDrugs: PropTypes.array.isRequired,
+
+	/**
+	 * Can be 'all', 'known', or 'unkown'. Corresponds to filtering interactions by known/unknown.
+	 */
+	filter: PropTypes.string.isRequired,
+
+	/**
+	 * Minimum score for filtering interactions.
+	 */
+	minScore: PropTypes.number.isRequired,
+
+	/**
+	 * Maximum score for filtering interactions.
+	 */
+	maxScore: PropTypes.number.isRequired,
+
+	/**
+	 * Width of the browser window.
+	 */
+	width: PropTypes.number.isRequired,
+
+	/**
+	 * Height of the browser window.
+	 */
+	height: PropTypes.number.isRequired,
+
+	/**
+	 * Callback used when a node is clicked. Takes the node as a parameter.
+	 */
+	onClickNode: PropTypes.func.isRequired,
+
+	/**
+	 * Callback used when a edge is clicked. Takes the edge as a parameter.
+	 */
+	onClickEdge: PropTypes.func.isRequired,
+
+	/**
+	 * Callback used when a drug is removed from the galaxy view. Takes the drug name as a parameter.
+	 */
+	onDeleteNode: PropTypes.func.isRequired,
+
+	/**
+	 * Clears the selectedDrug.
+	 */
+	onClearDrug: PropTypes.func.isRequired,
+
+	/**
+	 * Used to open the reports view. Takes a report object containing information about the drug for which to retrieve reports.
+	 */
+	handleOpen: PropTypes.func.isRequired,
+
+	/**
+	 * Array of score boundaries, indicating how to color nodes/edges based on score.
+	 */
+	scoreRange: PropTypes.array.isRequired,
+
+	/**
+	 * Array of severe ADR count boundaries, indicating how to color galaxy view headers.
+	 */
+	dmeRange: PropTypes.array.isRequired,
+
+	/**
+	 * Indicates whether the Galaxy View is currently fullscreened.
+	 */
+	isGalaxyFullscreen: PropTypes.bool.isRequired,
+
+	/**
+	 * Name of the currently selected drug.
+	 */
+	selectedDrug: PropTypes.string.isRequired,
+
+};
+
+export default GalaxyView;

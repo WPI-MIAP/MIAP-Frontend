@@ -5,6 +5,9 @@ import * as cors from 'cors';
 
 import * as CSV from './csv';
 
+/**
+ * Configure the server application.
+ */
 class App {
     public express: express.Application;
 
@@ -19,7 +22,9 @@ class App {
         this.routes();
     }
 
-    // Configure Express middleware.
+    /**
+     * Configure Express middleware.
+     */
     private middleware(): void {
         this.express.use(express.static('public'));
         this.express.use(cors());
@@ -28,7 +33,9 @@ class App {
         this.express.use(bodyParser.urlencoded({extended: false}));
     }
 
-    // Configure API endpoints.
+    /**
+     * Configure API endpoints.
+     */
     private routes(): void {
         CSV.init(this.express);
     }

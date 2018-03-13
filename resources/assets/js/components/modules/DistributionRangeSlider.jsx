@@ -4,11 +4,12 @@ import LineChart from 'react-linechart';
 import 'react-linechart/dist/styles.css';
 import { secondaryColor } from '../../utilities/constants';
 import Paper from 'material-ui/Paper';
+import { primaryColor } from '../../utilities/constants';
+import PropTypes from 'prop-types';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
-import { primaryColor } from '../../utilities/constants';
 
 
 const styles = {
@@ -25,9 +26,12 @@ const styles = {
 	  placement: 'bottom',
 	  background: 'white'
 	}
-  };
+};
 
-export default class DistributionRangeSlider extends Component {
+/**
+ * This component shows a distribution of the scores of all links over a range slider used to filter by score.
+ */
+class DistributionRangeSlider extends Component {
 	constructor(props) {
 	  super(props);
 	  this.state = {
@@ -42,16 +46,27 @@ export default class DistributionRangeSlider extends Component {
 	  this.updateMinAndMax = this.updateMinAndMax.bind(this);
 	}
 
+	/**
+	 * If the rules changed, recalculate the frequency distribution.
+	 */
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.rules !== this.props.rules) {
 			this.findFrequencyDistribution();
 		}
 	}
 
+	/**
+	 * Find frequency distribution with initial rules.
+	 */
 	componentDidMount() {
 		this.findFrequencyDistribution();
 	}
 
+	/**
+	 * Updates the min and max labels shown on the range slider.
+	 * 
+	 * @param {array} value Array containing the max (value[1]) and the min (value[0])
+	 */
 	updateMinAndMax(value) {
 		if(value[1] !== this.state.filteredMax || value[0] !== this.state.filteredMin) {
 		  this.setState({
@@ -64,6 +79,9 @@ export default class DistributionRangeSlider extends Component {
 		}
 	}
 
+	/**
+	 * Calculates and scales the frequency distribution.
+	 */
 	findFrequencyDistribution(){
 		if(this.props.rules.length > 1) {
 		 	// find frequency distribution of rules by score, find max score and min score
@@ -96,6 +114,7 @@ export default class DistributionRangeSlider extends Component {
 				}
 			});
 		
+			//scale the distribution to make it easier to see
 			freqDist.forEach(entry => {
 				entry['Freq'] = (entry['Freq'] * 300) / ruleCount;
 			});
@@ -171,3 +190,39 @@ export default class DistributionRangeSlider extends Component {
 		);
 	}
 }
+
+DistributionRangeSlider.propTypes = {
+	/**
+	 * Array of rules representing all interaction between pairs of drugs in the visualization.
+	 */
+	rules: PropTypes.array.isRequired,
+ 
+	/**
+	 * Used to set the new minimum score. Takes the new minimum score (a number) as a paramter.
+	 */
+	updateMinScore: PropTypes.func,
+	
+	/**
+	 * Used to set the new maximum score. Takes the new maximum score (a number) as a paramter.
+	 */
+	updateMaxScore: PropTypes.func,
+	
+	/**
+	 * Used to indicate that the visualization is updating as a new filter has been applied. Takes a boolean indicating whether updating is in progress.
+	 */
+	isUpdating: PropTypes.func,
+	
+	/**
+	 * Indicates whether this is the version found in the help menu (defaults to false).
+	 */
+	helpExample: PropTypes.bool
+};
+
+DistributionRangeSlider.defaultProps = {
+	helpExample: false,
+	updateMinScore: () => {},
+	updateMaxScore: () => {},
+	isUpdating: () => {}
+};
+
+export default DistributionRangeSlider;

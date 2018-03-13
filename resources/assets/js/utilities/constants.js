@@ -1,6 +1,12 @@
 import React from 'react';
 import SVG  from 'react-inlinesvg';
 
+/**
+ * This file is used to define constants in one location that can be used throughout the application.
+ * Many of the colors of the application can be changed here, as well as the images used in the application, 
+ * and the names of each of the views.
+ */
+
 //COLORS
 	export const dmeColors = [
 		{ color: '#A9A9A9', text: 'None' },
@@ -30,7 +36,7 @@ import SVG  from 'react-inlinesvg';
 
 	export const severeADRColor = '#6A51A3';
 	export const regularADRColor = '#A9B0B7';
-	export const adrBorderColor = '#A9B0B7';
+	// export const adrBorderColor = '#A9B0B7'; not used
 
 	export const barColor = '#73B8F0';
 	export const barSelectedColor = '#2C98F0';
@@ -52,8 +58,13 @@ import SVG  from 'react-inlinesvg';
 	export const teamPhoto = <img style={{
 		width: '100%'
 	}} 
-	src={require('../../../images/team_picture.jpg')} />;
+	src={require('../../../images/team_picture.png')} />;
 
 	export const medicines = <SVG src={require('../../../fonts/medicines.svg')} />;
 
 	export const connection = <SVG src={require('../../../fonts/connection.svg')} />;
+
+//view names
+	export const overviewName = 'Screening Overview';
+	export const galaxyViewName = 'Signal Triage View';
+	export const interactionProfileName = 'Signal Forensics View';

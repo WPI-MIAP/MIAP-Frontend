@@ -1,10 +1,15 @@
-import React from 'react'
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import DropDownMenu from 'material-ui/DropDownMenu'
-import SortIcon from 'material-ui/svg-icons/content/sort'
+import React from 'react';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import SortIcon from 'material-ui/svg-icons/content/sort';
+import PropTypes from 'prop-types';
 
+/**
+ * This component is used to provide users with the option of sorting the drugs in the 
+ * galaxy view by various properties.
+ */
 const TreeViewFilter = ({ onClickRadio }) => {
 	const styles = {
 		root: {
@@ -38,5 +43,12 @@ const TreeViewFilter = ({ onClickRadio }) => {
 		</IconMenu>
 	)
 }
+
+TreeViewFilter.propTypes = {
+	/**
+	 * Function that can be called to sort the drugs in the Galaxy View. Takes a string parameter indicating what to sort by.
+	 */
+	onClickRadio: PropTypes.func.isRequired
+};
 
 export default TreeViewFilter
