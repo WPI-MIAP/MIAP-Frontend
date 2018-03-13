@@ -1,3 +1,8 @@
+/**
+ * Select a drug or remove the selected drug
+ * @param {string} state 
+ * @param {} action 
+ */
 export const selectDrug = (state = '', action) => {
 	switch (action.type) {
 		case 'SELECT_DRUG':

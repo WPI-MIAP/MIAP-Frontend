@@ -1,3 +1,8 @@
+/**
+ * Select a rule or remove the currently selected rule
+ * @param {string} state 
+ * @param {*} action 
+ */
 export const selectRule = (state = '', action) => {
 	switch (action.type) {
     case 'SELECT_RULE':

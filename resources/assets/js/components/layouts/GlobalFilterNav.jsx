@@ -60,13 +60,7 @@ class GlobalFilterNav extends React.Component {
   }
 
   render() {
-    
-		// const updating = this.props.updating ? (
-		// 		<i style={{position: 'relative', top: -102, left: 520}} className="MainView__Loading fa fa-spinner fa-spin fa-lg fa-fw" ></i>
-		// ) : null;
-
     return (
-
       <Paper zDepth={2}>
       <Toolbar style={styles.root}>
         <ToolbarGroup firstChild={true}>

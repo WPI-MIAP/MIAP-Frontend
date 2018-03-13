@@ -2,6 +2,10 @@ import { connect } from 'react-redux'
 import { fetchRules, fetchRulesByDrugName, clearSearchTerm, selectDrug, deleteDrug, selectRule, isUpdating, clearRule, fetchStatus } from '../actions'
 import MainView from '../components/layouts/MainView'
 
+/**
+ * Container for the MainView
+ */
+
 const getIsFetching = (rules, filter) => {
 		return rules.all.isFetching
 }

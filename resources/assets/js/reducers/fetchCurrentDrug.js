@@ -26,6 +26,11 @@ export const drugs = (
 	}
 }
 
+/**
+ * Fetch the drugs from the server and add to state object 
+ * @param {} state 
+ * @param {*} action 
+ */
 export const currentDrugs = (state = {}, action) => {
 	switch (action.type) {
 	    case 'RECEIVE_DRUGS':
