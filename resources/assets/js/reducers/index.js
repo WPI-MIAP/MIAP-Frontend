@@ -10,6 +10,9 @@ import { selectRule } from './selectRule'
 import { isUpdating } from './isUpdating'
 import { status } from './status'
 
+/* 
+ * All states in React container 
+ */
 const drugInteractionApp = combineReducers({
 	visibilityFilter,
 	rulesByStatus,

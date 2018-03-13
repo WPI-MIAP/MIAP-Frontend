@@ -2,6 +2,9 @@ import { connect } from 'react-redux'
 import { setFilter, clearSearchTerm, selectMinScore, selectMaxScore, isUpdating, fetchStatus } from '../actions'
 import GlobalFilterNav from '../components/layouts/GlobalFilterNav'
 
+/**
+ * This file is the container for the GlobalFilterNav
+ */
 
 const mapStateToProps = state => {
   return {

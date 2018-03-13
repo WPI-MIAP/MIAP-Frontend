@@ -32,7 +32,7 @@ class Footer extends Component {
           </p>
         </Col>
         <Col sm={6} style={{textAlign: 'right'}}>
-          <a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white'}}>About Us</a>
+          <a onClick={() => {this.setState({aboutUs: true})}} style={{color: 'white', cursor: 'pointer'}}>About Us</a>
         </Col>
         <Dialog
             title="About Us"

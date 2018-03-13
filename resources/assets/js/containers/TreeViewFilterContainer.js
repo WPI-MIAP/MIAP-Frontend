@@ -2,6 +2,10 @@ import { connect } from 'react-redux'
 import { sortBy, clearSearchTerm } from '../actions'
 import TreeViewFilter from '../components/modules/TreeViewFilter'
 
+/**
+ * Container for the TreeViewFilter
+ */
+
 const mapStateToProps = state => {
   return {
   }

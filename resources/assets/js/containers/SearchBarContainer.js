@@ -2,6 +2,10 @@ import { connect } from 'react-redux'
 import { selectDrug, fetchRulesByDrugName } from '../actions'
 import SearchBarComponent from '../components/modules/SearchBarComponent'
 
+/**
+ * Container for the SearchBar
+ */
+
 const mapStateToProps = state => {
 	return {
 		drugs: state.rulesByStatus.all.drugs

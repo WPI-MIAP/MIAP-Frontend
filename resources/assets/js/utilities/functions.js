@@ -1,6 +1,11 @@
 import {scoreColors, dmeColors, scoreBorderColors} from './constants';
 import * as _ from 'lodash';
 
+/**
+ * Color of edges in overview
+ * @param score 
+ * @param scoreRange 
+ */
 export const generateColor = (score, scoreRange) => {
 	if (score <= scoreRange[0]) {
 		return scoreColors[0].color;
@@ -16,6 +21,11 @@ export const generateColor = (score, scoreRange) => {
 	}
 }
 
+/**
+ * Border colors of galaxy view panels
+ * @param {*} score 
+ * @param {*} scoreRange 
+ */
 export const generateScoreBorderColor = (score, scoreRange) => {
 	if (score <= scoreRange[0]) {
 		return scoreBorderColors[0].color;
@@ -31,6 +41,11 @@ export const generateScoreBorderColor = (score, scoreRange) => {
 	}
 }
 
+/**
+ * Get the style of the background of galaxy panels based on number of DMEs
+ * @param {*} numDMEs 
+ * @param {*} dmeRange 
+ */
 export const getStyleByDMECount = (numDMEs, dmeRange) => {
 	var style = {
 		padding: '20px 0',

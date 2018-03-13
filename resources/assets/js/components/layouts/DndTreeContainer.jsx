@@ -49,8 +49,6 @@ class DndTreeContainer extends Component {
 				paddingTop: 10
 			},
 			title: {
-				// textAlign: 'center'
-				// height: 30,
 				padding: '20px 0',
 				background: 'black',
 				margin: 0,
