@@ -14,7 +14,15 @@
     "fdev": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "fwatch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "fhot": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "fproduction": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "fproduction": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build",
+    "react-docs": "simple-react-docgen ./resources -o ./documentation/reactDocumentation.md",
+    "ts-docs": "typedoc --allowJs --ignoreCompilerErrors --module commonjs --theme markdown --out ./documentation/ts-documentation/ --readme none --name \"TypeScript Documentation\"",
+    "ts-docs:help": "typedoc -h",
+    "js-docs": "jsdoc2md -f ./resources/**/*.js > ./documentation/jsDocumentation.md",
+    "js-docs:help": "jsdoc2md -h",
+    "docs": "npm run react-docs && npm run js-docs && npm run ts-docs"
   },
   "keywords": [],
   "author": "",
@@ -38,13 +46,16 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-shell": "^0.6.3",
     "gulp-tslint": "^8.0.0",
-    "laravel-mix": "1.4.5",
+    "laravel-mix": "^1.4.5",
     "mocha": "^3.4.1",
     "node": "0.0.0",
     "node-sass": "4.5.3",
+    "react-styleguidist": "^6.2.6",
     "sinon": "^2.2.0",
     "tslint": "^5.2.0",
-    "typescript": "^2.3.2"
+    "typescript": "^2.3.2",
+    "webpack": "^3.11.0",
+    "webpack-blocks": "^1.0.0-rc.2"
   },
   "dependencies": {
     "axios": "0.17.0",
@@ -64,6 +75,7 @@
     "express": "^4.14.0",
     "font-awesome": "4.7.0",
     "jquery": "3.2.1",
+    "jsdoc-to-markdown": "^4.0.1",
     "lodash": "4.17.4",
     "material-ui": "0.19.4",
     "material-ui-search-bar": "0.4.1",
@@ -102,7 +114,9 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.2.0",
     "shelljs": "0.7.8",
+    "simple-react-docgen": "^1.1.1",
     "slick-carousel": "^1.8.1",
-    "throttle-debounce": "1.0.1"
+    "throttle-debounce": "1.0.1",
+    "typedoc": "^0.11.0"
   }
 }

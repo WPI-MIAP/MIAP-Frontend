@@ -14,8 +14,9 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FileCreateNewFolder from 'material-ui/svg-icons/file/create-new-folder';
 import { Row, Col } from 'react-flexbox-grid';
 import {StatusInformation} from './StatusInformation';
+import PropTypes from 'prop-types';
 
-export default class UploadFAERS extends Component {
+class UploadFAERS extends Component {
 	constructor(props) {
 		super(props)
 	
@@ -132,19 +133,19 @@ export default class UploadFAERS extends Component {
 	}
 
 	render() {
-		const uploadFileActions = [
-			<FlatButton
-			  label="Cancel"
-			  primary={false}
-			  onClick={this.closeUploadDialog}
-			/>, 
-			<FlatButton
-			  label="Upload"
-			  primary={true}
-			  onClick={this.beginMARAS}
-			  disabled={this.state.currentlyRunning}
-			/>
-		];
+		// const uploadFileActions = [
+		// 	<FlatButton
+		// 	  label="Cancel"
+		// 	  primary={false}
+		// 	  onClick={this.closeUploadDialog}
+		// 	/>, 
+		// 	<FlatButton
+		// 	  label="Upload"
+		// 	  primary={true}
+		// 	  onClick={this.beginMARAS}
+		// 	  disabled={this.state.currentlyRunning}
+		// 	/>
+		// ];
 
 		return (
 			<div>
@@ -164,7 +165,19 @@ export default class UploadFAERS extends Component {
 				<Dialog
 					title="Upload FAERS data"
 					contentStyle={{width: "80%", maxWidth: "none"}}
-					actions={uploadFileActions}
+					actions={[
+						<FlatButton
+						  label="Cancel"
+						  primary={false}
+						  onClick={this.closeUploadDialog}
+						/>, 
+						<FlatButton
+						  label="Upload"
+						  primary={true}
+						  onClick={this.beginMARAS}
+						  disabled={this.state.currentlyRunning}
+						/>
+					]}//uploadFileActions}
 					modal={false}
 					open={this.state.uploadDialog}
 					onRequestClose={this.closeUploadDialog}
@@ -234,3 +247,16 @@ export default class UploadFAERS extends Component {
 		);
 	}
 }
+
+UploadFAERS.propTypes = {
+	/**
+	 * The status of the last analysis ran.
+	 */
+	status: PropTypes.object,
+	/**
+	 * A function that can be called to get the updated analysis status.
+	 */
+	getStatus: PropTypes.func.isRequired,
+  };
+
+export default UploadFAERS;

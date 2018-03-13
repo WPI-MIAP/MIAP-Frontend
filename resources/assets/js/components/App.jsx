@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import Sidebar from 'react-sidebar';
-
-import Navigation from './layouts/Navigation';
 import GlobalFilterNavContainer from '../containers/GlobalFilterNavContainer';
 import MainViewContainer from '../containers/MainViewContainer';
 import Footer from './modules/Footer';
