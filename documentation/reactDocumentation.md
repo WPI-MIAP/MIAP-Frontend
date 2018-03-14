@@ -77,7 +77,7 @@ getStatus|PropType func|yes|Used to get updated information about the status of 
 Property | Type | Required | Description
 :--- | :--- | :--- | :---
 scoreRange|PropType array|yes|Array of score boundaries, indicating how to color nodes/edges based on score.
-treeData|PropType object|yes|Information about how to structure the tree.
+treeData|PropType array|yes|Information about how to structure the tree.
 filter|PropType string|yes|Can be &#x27;all&#x27;, &#x27;known&#x27;, or &#x27;unkown&#x27;. Corresponds to filtering interactions by known/unknown.
 minScore|PropType number|yes|Minimum score for filtering interactions.
 maxScore|PropType number|yes|Maximum score for filtering interactions.

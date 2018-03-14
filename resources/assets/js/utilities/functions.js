@@ -2,9 +2,9 @@ import {scoreColors, dmeColors, scoreBorderColors} from './constants';
 import * as _ from 'lodash';
 
 /**
- * Color of edges in overview
- * @param score 
- * @param scoreRange 
+ * Generate color based on score 
+ * @param {number} score 
+ * @param {array} scoreRange 
  */
 export const generateColor = (score, scoreRange) => {
 	if (score <= scoreRange[0]) {
@@ -22,9 +22,9 @@ export const generateColor = (score, scoreRange) => {
 }
 
 /**
- * Border colors of galaxy view panels
- * @param {*} score 
- * @param {*} scoreRange 
+ * Border colors of interaction profile nodes based on score
+ * @param {number} score 
+ * @param {array} scoreRange 
  */
 export const generateScoreBorderColor = (score, scoreRange) => {
 	if (score <= scoreRange[0]) {
@@ -43,8 +43,8 @@ export const generateScoreBorderColor = (score, scoreRange) => {
 
 /**
  * Get the style of the background of galaxy panels based on number of DMEs
- * @param {*} numDMEs 
- * @param {*} dmeRange 
+ * @param {number} numDMEs 
+ * @param {array} dmeRange 
  */
 export const getStyleByDMECount = (numDMEs, dmeRange) => {
 	var style = {
@@ -73,10 +73,10 @@ export const getStyleByDMECount = (numDMEs, dmeRange) => {
 
 /**
  * Count number of drugs and interactions after applying filter
- * @param {*} rulesData 
- * @param {*} filter 
- * @param {*} minScore 
- * @param {*} maxScore 
+ * @param {array} rules
+ * @param {string} filter 
+ * @param {number} minScore 
+ * @param {number} maxScore 
  */
 export const countDrugInteraction = (rules, filter, minScore, maxScore) => {
 	rules = rules.filter(rule => {
