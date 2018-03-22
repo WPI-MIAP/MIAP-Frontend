@@ -10,6 +10,14 @@ $ npm install
 $ npm install -g gulp
 $ npm install -g nodemon
 ```
+
+### How to ensure the server keeps running after your session ends
+
+Before running the server or building the front-end react app, use the following command to create a new terminal instance that will remain after you terminate your session:
+```js static
+$ screen
+```
+
 ### How to build the front-end React app 
 
 The following commands build and bundle react app into plain js (choose one of the following). The compiled javascript file will be in public/ directory
@@ -72,7 +80,7 @@ To build a markdown version of the TypeScript documentation
 $ npm run ts-docs
 ```
 
-To build a markdown versions of all documentation (Note: they can be found in the /documentation/ directory)
+To build markdown versions of all documentation (Note: they can be found in the /documentation/ directory)
 ```js static
 $ npm run docs
 ```
