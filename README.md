@@ -1,5 +1,7 @@
 # DIVA Web Application
 
+![DIVA Interface](resources/images/interface.png)
+
 ## DIVA: Web Application for visualizing Drug Interactions
 
 ### Install dependencies for client and server application
