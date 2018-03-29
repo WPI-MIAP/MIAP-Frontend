@@ -1,6 +1,8 @@
 # DIVA Web Application
 
 ![DIVA Interface](resources/images/interface.png)
+[DEMO](http://diva.wpi.edu:3000/)
+
 
 ## DIVA: Web Application for visualizing Drug Interactions
 
